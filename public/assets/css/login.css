@@ -1,0 +1,317 @@
+
+body  {
+    background-size: cover; 
+    background-position: center;
+    padding:0;
+    margin:0;
+    height: 100vh;
+} 
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+    }
+
+#content {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}   
+#firstId {
+    margin-top: 150px;
+}
+#secondId {
+    margin: 100px 0px 150px 0px;
+}
+@media screen and (max-width : 700px){
+    .loginhome {
+        width: 100%;
+    }
+}
+@media screen and (max-width : 990px){
+    .loginhome {
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+@media screen and (max-width : 1920px){
+    .div-only-mobile, #dateTimeMobile{
+        visibility:visible;
+    }
+}
+@media screen and (max-width : 1366px){
+    .navbarbottom {
+        display: list-item;
+        list-style: none;
+        position: relative;
+        bottom: 50px;
+        width: 100%;
+        margin: auto;
+        text-align: right;
+        overflow-y: visible;
+        z-index: 0;
+    }
+}
+@media screen and (max-width : 700px){
+    .navbarbottom {
+        display: none;
+    }
+    #firstId {
+        margin: 0px;
+    }
+    #secondId {
+        margin: 0 auto;
+        width: 100% !important;
+    }
+    .loginsec1 {
+        margin: 1em;
+        max-width: 100%;
+
+    }
+    .loginsec1 .sclogoheader img {
+        box-shadow: 0px 1px 4px #000;
+        height: 250px;
+        width: 250px;
+        margin-top: 0%;
+        position: relative;
+        left: -8%;
+        margin-bottom: 5%;
+        border-radius: 200px;
+        text-align: center;
+    }
+    .dateTime, .gifLogin{
+        display:none;
+    }
+    #dateTimeMobile{
+        visibility:visible
+    }
+    .wrapper{
+        background: #fff!important;
+    }
+    div.message {
+        display: none;
+    }
+    .loginsec2 {
+        display: none;
+    }
+    .loginsec1 {
+        margin-top: 3%!important;
+    }
+}
+
+.container {
+    max-width: 1231px;
+}
+
+
+
+/* .chevron {
+    display: inline-block;
+    /* min-width: 1200px; */
+    /* text-align: center;
+    padding: 15px 0;
+    margin-right: -30px;
+    background: #2bbf74 ;
+    -webkit-clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%);
+    clip-path: polygon(0 0, 100% 0%, 75% 100%, 0% 100%);
+} */ 
+    /* .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #00539b;
+    color: white;
+    text-align: center; */
+
+    /* #1dafec */
+    /* } */
+    /* .button {
+    background-color: #1dafec;
+    border: none;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; */
+    /* margin: 4px 2px; */
+    /* cursor: pointer;
+    border-radius: 50px;
+    } */
+
+    /* .button:hover {
+    background-color: #f1f1f1;
+    } */
+    /* #257d4a */
+
+
+
+
+
+
+
+
+
+
+    
+#sidebar {
+float: right;
+width: 200px;
+padding: 15px 10px;}
+.school{
+    background-image: url("{{ asset('assets/images/Holy-Cross-of-Davao-College.jpg')}}") ;
+    background-size: cover;
+background-repeat: no-repeat;
+opacity: 0.5;
+}
+/* .cklogoheader{
+    display: inline-block;
+    padding: 0;
+} */
+/* .eslogoheader img{
+    height: 50px;
+    width: 200px;
+    padding-left: 2em;
+    float: center;
+} */
+.sclogoheader img{
+    box-shadow: 0px 1px 4px #000;
+    height: 250px;
+    width: 250px;
+    margin-top: 0%;
+    margin-left: 15%;
+    margin-bottom: 5%;
+    border-radius: 200px;
+    text-align: center;
+}
+/* .ckhlogo {
+    height: 60px;
+    width: 150px;
+    margin-top: 5px;
+} */
+/* .eshlogo {
+    height: 40px;
+    width: 150px;
+    padding-left: 1em;
+} */
+
+.loginhome {
+    margin: 0;
+}
+.loginheadercard {
+    background-color: #eaa5a5;
+    color: #000;
+    
+}
+
+
+.loginsec1 {
+    margin-top: 8%!important;
+}
+.message h1{
+    font-weight: 400;
+    font-size: 30px;
+    vertical-align:middle;
+    font-style: italic;
+    text-shadow: 1px 1px 3px #fdcdcd;
+    /* text-align: center; */
+}
+.submit {
+    background-color: #ff9797;
+    color: #fff;
+    width:70%; 
+    margin-top: 10px;
+    letter-spacing: 2px; 
+    box-shadow: 0px 1px 3px rgb(58, 57, 57);
+    text-shadow: 0px 1px 2px gray"
+
+}
+.loginsec2 {
+    margin-top: 0%;
+    height: 70vh; 
+    width: 100%; 
+    border-radius: 5px;
+}
+.datetime{
+    margin-top: 10px;
+}
+.imgDiv {
+        display: none;
+    }
+
+.adsimage {
+    height: 70vh!important;
+    width: 100%;
+    border-radius: 5px;
+    /* box-shadow: 0px 1px 4px #000; */
+    padding: 0;
+}
+.wrapper {
+    background-image: linear-gradient( 405deg, #ff9797 13%, #fbfbfb 13%, #fbfbfb 87%, #ff9797 68% );
+}
+.container {
+    max-width: 1231px;
+}
+.navbarlogin {
+    border-radius: 5px;
+    background-color: #ff9797;
+    position: relative;
+    justify-content: flex-end;
+    margin: 0 auto;
+}
+.navbarlogin ul li {
+    padding-top: 1em;
+    list-style: none;
+}
+.navbarlogin .preregi {
+
+}
+/* .navbarlogin a {
+    text-shadow: 1px 0px 1px rgb(2, 1, 1);
+    letter-spacing: 1px;
+    text-decoration: underline;
+    font-size: 16px;
+    color: #ffff;
+}
+.navbarlogin a:hover {
+    color: #fbfbfb;
+    text-decoration: underline;
+} */
+.navbarlogin select {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #fff;
+    border-radius: 0;
+    background-color: #ff9797;
+}
+.navbarlogin select option{
+    background-color: #fff;
+    color: #000;
+}
+.navbarbottom {
+    /* background-color:#ff9797; */
+    display: list-item;
+    list-style: none;
+    position: relative;
+    bottom: -10px;
+    width: 100%;
+    margin:auto;
+    text-align: right;
+    overflow-y: visible;
+
+}
+.navbarbottom .ckhlogo {
+    width: 160px;
+    height: 80px;
+}
+.navbarbottom .eshlogo {
+    width: 130px;
+    height: 50px;
+}
+.navbarbottom span {
+    font-size: 16px;
+}

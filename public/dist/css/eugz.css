@@ -1,0 +1,600 @@
+
+
+
+/* EUGZ CSS */
+
+
+.table-wrapper{
+    
+    height: 100%;
+    padding: 20px;
+    
+  } 
+  
+  .contents{
+    
+    margin-top: 20px;
+  } 
+  
+  .table th {
+
+    padding: 5px;
+  }
+
+
+
+  
+  
+  h1.page-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .subscbr-tbl{
+    
+    width: 100%;
+  
+  }
+
+  .table td {
+    padding: 5px;
+  }
+  
+  td.views {
+    text-align: center;
+  }
+  
+
+  th.operation {
+    text-align: center;
+}
+  
+  
+  /* BUTTONS */
+  
+  
+  a,
+  a:hover,
+  a:focus{
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  button.btn.btn-primary.add {
+    background: green;
+    border-color: green;
+    margin-bottom: 25px;
+  }
+
+  
+button.btn.btn-primary.edit {
+    background: green;
+    border-color: green;
+    margin-bottom: 25px;
+
+}
+  
+  
+  button.btn.deleteBtn.btn-primary,
+  button.btn.deleteBtnTable.btn-primary {
+    background: rgb(187, 76, 76);
+    border-color: rgb(187, 76, 76);
+
+  }
+  
+  
+  /* MODAL BUTTON */
+
+  label.form-check-label.terms,
+  label.form-check-label.termsEdit {
+    width: 100px;
+    height: 50px;
+    background: #0d6efd;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+  }
+
+  label.form-check-label.terms:hover{
+
+    border: 1px solid #0a48a5;
+    background: #0a48a5;
+  }
+
+  input#prelim:checked ~ label,
+  input#midterm:checked ~ label,
+  input#prefi:checked ~ label,
+  input#final:checked ~ label
+  {
+
+    background-color: green;
+    border-color: green;
+  }
+
+  input#prelimEdit:checked ~ label,
+  input#midtermEdit:checked ~ label,
+  input#prefiEdit:checked ~ label,
+  input#finalEdit:checked ~ label
+  {
+
+    background-color: green;
+    border-color: green;
+  }
+
+  .select-wrapper {
+    margin-bottom: 15px;
+}
+
+.form-check.form-switch {
+  margin-bottom: 15px;
+}
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    /* justify-items: center; */
+    width: 100%;
+    padding: 10px;
+}
+
+
+
+
+h4.card-title {
+  flex-basis: 95%;
+}
+
+h5.card-header.card-parent {
+  background: #383b3d;
+  color: white;
+}
+
+/* h5.card-header.card-child {
+  background: rgb(94, 94, 94);
+  color: white;
+} */
+
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.setup-button{
+
+  float: right;
+}
+
+p.card-text {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+
+.select {
+  margin-bottom: 20px;
+  /* box-shadow: 0px 0px 10px red; */
+  margin-top: 20px;
+}
+
+.terms-wapper {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+p.line {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.form-group input.transmuted-input{
+
+  width: 125px;
+}
+
+i.fa-solid.fa-chevron-down {
+  font-size: 20px;
+  padding: 5px;
+  transition: 0.3s;
+}
+
+i.fa-solid.fa-chevron-down:hover {
+  margin-left: 15px;
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.upper-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-group.mb-3 {
+  width: 500px;
+}
+
+.filter-wrapper {
+  display: flex;
+}
+
+.sy-wrapper {
+  margin-right: 30px;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  /* border: 1px solid #dee2e6; */
+  /* border: 0px; */
+}
+
+.base-rating-title{
+
+  flex-basis: 93%;
+}
+
+
+.base_rating { 
+
+  margin: 10px;
+  display: flex;
+
+}
+
+
+.base_rating:hover{
+
+  cursor: pointer;
+
+}
+
+ul.rating_ul { 
+
+  list-style: none;
+  padding-left: 20px;
+}
+
+
+.edit, .delete_values_item, .edit_deportment_values, .delete_deportment_values, .delete_deportment, .edit_deportment {
+
+  border: 0px;
+  right: 10px;
+  top: 58%;
+  padding: 0px;
+  /* color: transparent; */
+  background-color: transparent;
+  font-size: 17px;
+  transition: 4ms;
+
+}
+
+.delete_values_item{
+
+  margin-right: 5px;
+}
+
+
+.edit, .edit_deportment_values{
+
+  /* color: #0d6efd; */
+  margin-right: 5px;
+
+}
+
+button.remove_input {
+    background: transparent;
+    color: #c54955;
+    border: 0px;
+}
+
+.delete_values_item:hover{
+
+  color: #c54955;
+
+}
+
+.edit:hover{
+
+  color: #0d6efd;
+
+} 
+
+button.btn.dark-light.btn_values_item {
+  margin-left: 4%;
+  transition: all 0.3s;
+}
+
+button.btn.dark-light.btn_values_item:hover {
+  padding-left: 20px;
+}
+
+.add_deportment_value{
+  
+  border: 0px;
+  color: white;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.add_deportment_value:hover{
+
+  margin-left: 10px;
+
+}
+
+.card {
+
+  border: 0px;
+}
+
+
+i.fas.fa-chevron-down {
+  font-size: 20px;
+  padding-top: 10px;
+}
+
+.outerbutton{
+
+  margin-bottom: 20px;
+}
+
+.tr_p, .li_p{
+
+  margin: 0px;
+}
+
+.modal-header-buttons {
+  padding: 5px;
+  margin-left: 9px;
+}
+.pagination{
+
+  justify-content: end;
+}
+
+div#deportment_datatable_filter label{
+
+  float: right;
+}
+
+.table_upper_button{
+
+  border: 0px;
+  font-size: 17px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+}
+
+.modal-dialog-trans{
+
+  overflow-y: initial !important
+}
+
+
+.table-holder{
+  
+  height: 80vh;
+  overflow-y: scroll;
+
+
+}
+/* 
+.submit-grade{
+  
+  height: 70vh;
+  overflow-y: scroll;
+
+
+} */
+
+.trans-table{
+
+  position: relative;
+  
+}
+
+.deportment-table{
+
+  width: 100%;
+  position: relative;
+  border-collapse: separate;
+  border-spacing: 1px;
+}
+
+.deportment-table td{
+  padding: 1px;
+  background-color: white;
+}
+
+td.male-color{
+  background-color: #ed969e;
+}
+
+td.female-color{
+  background-color: #7abaff;
+}
+
+.deportment-table td, .deportment-table th{
+
+  border-top: 0px;
+  font-size: 13px;
+}
+
+
+.deportment-table-header1{
+
+  position: sticky;
+  top: 0;
+  
+}
+
+.deportment-table-header1 th, .deportment-table-header2 th, .deportment-table-header3 th{
+
+  color: white;
+  background-color: #383b3d;
+
+
+}
+
+
+.deportment-table-header2{
+
+  position: sticky;
+  top: 27px;
+  
+}
+
+.deportment-table-header3{
+
+
+  position: sticky;
+  top: 54.46px;
+  
+}
+
+.deportment-table th:nth-last-child(1),
+.deportment-table td:nth-last-child(1){
+
+  position: sticky;
+  right: 0;
+
+}
+
+.deportment-table th:nth-last-child(2),
+.deportment-table td:nth-last-child(2){
+
+  position: sticky;
+  right: 60px;
+
+}
+
+.deportment-table th:nth-last-child(3),
+.deportment-table td:nth-last-child(3){
+
+  position: sticky;
+  right: 100px;
+
+}
+
+
+
+.deportment-table th:nth-child(1),
+.deportment-table td:nth-child(1){
+
+  position: sticky;
+  left: 0;
+
+}
+
+.deportment-table th:nth-child(2){
+
+  z-index: 1;
+  position: sticky;
+  left: 17px;
+
+}
+
+.deportment-table td:nth-child(2){
+
+  position: sticky;
+  left: 17px;
+}
+
+
+.trans-table-th{
+
+  position: sticky;
+  right: 0;
+}
+
+
+
+.deportment_values_div{
+
+  height: 500px;
+  overflow: scroll; 
+  margin-bottom: 20px;
+
+}
+
+.deportment_values_div{
+
+  margin-top: 20px
+}
+
+.note{
+
+  padding: 10px;
+  text-align: start;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.note p{
+
+  margin: 0px;
+}
+
+.row{
+
+  flex-wrap: unset;
+
+}
+
+.deportment-table tr {
+  z-index: 100;
+}
+
+.deportment-table tr:hover {
+  background: #e3e3e3;
+}
+
+
+.modal-dialog-view-deportment{
+
+  overflow-y: initial !important
+}
+
+.hidden_student, .hidden_faculty{
+
+  display: none;
+}
+
+.hidden_student .md-3{
+
+  margin-bottom: 1rem!important;
+}
+
+.event-details{
+
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden{
+
+  display: none;
+}
+
+.tl-center{
+
+  text-align: center;
+}
+
+a.table_upper_button.text-success.submit_grade {
+  border: 2px solid #28a745!important;
+  padding: 0px 10px;
+  border-radius: 5px;
+}

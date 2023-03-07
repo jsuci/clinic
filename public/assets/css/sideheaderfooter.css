@@ -1,0 +1,444 @@
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);  */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(10, 10, 10, 0.219);
+  -webkit-box-shadow: inset 0 0 2px rgba(136, 136, 136, 0.5); 
+}
+
+
+/* For Mozilla Firefox */
+/* ::-moz-selection {
+  color: none;
+  background: none;
+}
+[class*=sidebar-dark-]  {
+  background-color:rgba(255,255,255,.1)!important;
+}
+[class*=sidebar-dark-] .sidebar a {
+  color: #ffffff;
+}
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
+  color: #ffffff;
+} */
+/* background-color: rgba(255,255,255,.1); */
+.smfont{
+  font-size:15px;
+}
+.sidehead {
+background-color: #002833!important;
+}
+.asidebar {
+  background-image: linear-gradient(to right bottom, #01181f,#05495c);
+/* background-image: linear-gradient(to right bottom, #ff9797,#ff9797) , url(../img/header2.jpg); */
+/* background-color: rgba(255,255,255,.1)!important; */
+}
+/* text-shadow: 1px 1px 4px #000; */
+/* .sideright {
+overflow: hidden;
+right: -77px;
+transition: .6s;
+} */
+.notification .notnum{
+  font-size: 18px;
+}
+/* .sideright:hover{
+transition:  .5s;
+right: 0;
+padding-left: 3.5em;
+} */
+.sideright:hover .logoutshow{
+border-bottom: 1.2px solid #ffc107;
+color: #fff;
+}
+.notification .sideright:hover{
+right: 30;
+color: aqua;
+}
+.sidebar {
+padding-top: 10px;
+}
+.navss{
+padding: .7rem;
+background-color: #042f3a;
+/* background-image: linear-gradient(to right bottom, #01181f,#05495c) , url(../img/header2.jpg); */
+color: #fff;
+}
+.essentiellogo {
+position: absolute;
+bottom: 1%;
+left: 3%;
+width: 120px;
+height: 40px;
+}
+.cklogo {
+position: absolute;
+bottom: 0%;
+right: 0%;
+width: 120px;
+height: 50px;
+}
+li {
+list-style: none;
+}
+li span {
+color: #fff;
+}
+li i {
+color:#fff; 
+}
+.navss {
+height: 57.5px!important;
+}
+.main-footer {
+background-color: rgba(0, 6, 27, 0.9);
+}
+/* .menunav {
+position: absolute;
+left: 7%;
+} */
+
+
+/* .selectprin {
+padding: .2em;
+border-radius: 2px;
+background-color: #17a2b8!important;
+} */
+
+/* menu design */
+.nicemenu {
+position: absolute;
+top: 50%;
+left: 50%;
+padding-bottom: 10px;
+transform: translate(10%, -50%);
+padding: 20px 0;
+}
+li a .icon {
+width: 40px;
+height: 25px;
+text-align: center;
+overflow: hidden;
+margin: 0 ;
+/* margin-top: 5px; */
+transition: .3s;
+/* bottom: 31%;
+left: -77%;
+position: absolute; */
+}
+li a .icon .fas {
+width: 100%;
+height: 100%;
+line-height: 25px;
+transition: .5s;
+}
+li a:hover .icon .fas:last-child {
+color: #ffc107;
+}
+li a:hover .icon .fas {
+transform: translateY(-100%);
+}
+li a .name {
+position: relative;
+height: 20px;
+width: 100%;
+display: block;
+overflow: hidden;
+}
+li a .name span {
+display: block;
+color: #fff;
+position: relative;
+font-size: 15px;
+line-height: 20px;
+transition: .5s;
+}
+li a:hover .name span:before {
+content: attr(data-text);
+position: absolute;
+top: -100%;
+left: 0;
+width: 100%;
+height: 100%;
+color: #ffc107;
+}
+li a:hover .name span {
+transform: translateY(20px);
+}
+.layout-navbar-fixed .wrapper .main-header {
+border: none!important;
+}
+.schoolyearselect {
+width: 100%;
+height: 2rem;
+background-color: #042f3a;
+right: 0%;
+margin: auto;
+padding-top: .3em;
+padding-bottom: .3em;
+}
+
+.schoolyearselect select{
+border-radius: 3px;
+outline: none;
+color: #0c5661;
+width: 120px;
+}
+
+.selectul li{
+display: inline-block;
+}
+.selectul select {
+padding: .2em;
+}
+
+
+.selectmenup {
+height: 20px!important;
+}
+.selectmenup select{
+background-color: #042f3a;
+background-repeat: no-repeat;
+background-size: 20px;
+color: #fff;
+width: 130px;
+border: none;
+outline: none;
+transition: all 3s!important;
+}
+
+
+.content-wrapper>.content {
+padding: 24px .5rem;
+}
+/* .side li a {
+position: absolute;
+}
+.side li a p{
+font-size: 15px;
+-webkit-transition: .2s!important;
+}
+.side li i {
+font-size: 14px!important;
+}
+.udernavs p .side li:hover {
+padding: none;
+font-size: 14px!important;
+border-bottom:1px #ffc107;
+}
+.side li:hover p{
+transition: .3s!important;
+font-size: 17px;
+padding-left: .1em;
+font-weight: 600;
+}
+.side li:hover .udernavs p{
+transition: none; 
+font-size: 15px;
+padding-left: none;
+}
+.side li:hover i {
+color: #ffc107;
+} */
+.side li a {
+  position: absolute;
+}
+.side li a p{
+
+font-size: 15px;
+-webkit-transition: .2s!important;
+}
+
+.side li i {
+font-size: 14px!important;
+}
+.side li:hover p{
+transition: .3s!important;
+font-size: 17px;
+padding-left: .1em;
+/* margin-bottom: -70px; */
+}
+.has-treeview ul{
+  background-color: rgba(255,255,255,.1)!important;
+}
+.side li:hover .udernavs p{
+transition: none; 
+font-size: 15px;
+padding-left: none;
+}
+.side li:hover i {
+color: #ffc107;
+}
+
+/* text-shadow: 0px 2px 3px rgb(8, 0, 0);
+-webkit-text-fill-color: rgb(226, 224, 224);
+-webkit-text-stroke-width: .1px;
+-webkit-text-stroke-color: #535353; */
+.card {
+box-shadow: 1px 1px 4px #272727c9!important;
+border: .3px solid gray;
+}
+.small-box {
+box-shadow: 1px 2px 2px #001831c9;
+}
+
+
+.card .bg-light{
+border: .5px solid #0586aa91!important;
+box-shadow: 1px 1px 2px #0a9bc496;
+}
+.principaladmin .btn .btn-info{
+color: #000!important;
+}
+
+#search {
+/* border: 3px solid black!important; */
+/* padding: 1.5em!important; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ADMIN */
+
+.adminschoolyear , .adminrooms, .adminfacultystaff , .adminstudents{
+box-shadow: 0px 1px 5px #001831c9;
+
+}
+.adminschoolyear .adminsystatus{
+padding: .5em;
+font-size: 14px;
+}
+.adminschoolyear  td {
+padding: .6em;
+}
+.adminschoolyear > tr {
+transition: .8s;
+}
+
+/* Prncipal */
+.principalhome, .principalteacher ,
+.principalsection, .principalblock, 
+.principalstudents, .principalannouncement,
+.principalform, .principalsubject,
+.principalgradesetup{
+box-shadow: 0px 1px 5px #001831c9;
+}
+.principalhome .card-header {
+background-color: #17a2b8!important;
+color: #fff;
+font-weight: bold;
+text-shadow: 0px 1px 5px #001831c9;
+}
+.dknob input{
+width: 100%;
+/* border: 1px solid #ffc107; */
+}
+.principaladdsubject {
+box-shadow: 1px 1px 3px #023038;
+}
+.principaledit {
+box-shadow: 1px 1px 2px #022f0c;    
+}
+.principaledit:hover i{
+animation: shake 0.8s;
+}
+@keyframes shake {
+10%, 90% {
+  transform: translate3d(-1px, 0, 0);
+}
+
+20%, 80% {
+  transform: translate3d(2px, 0, 0);
+}
+
+30%, 50%, 70% {
+  transform: translate3d(-2px, 0, 0);
+}
+
+40%, 60% {
+  transform: translate3d(2px, 0, 0);
+}
+}
+
+
+/* end principal */
+
+
+
+/* Registrar */
+.registrarhome {
+box-shadow: 0px 1px 5px #001831c9; 
+}
+.nav-sidebar .registrarnav {
+padding: none!important;
+}
+
+.registrarnav .udenavs {
+font-size: 14px;
+}
+.downs a:hover {
+/* color: pink!important; */
+}
+element.style {
+box-shadow: 1px 1px 4px #000;
+}
+
+@media only screen and (max-width: 600px) {
+.navss .name{
+  font-size: small;
+}
+.schoolyearselect nav {
+  right: 55%;
+}
+}
+.menuli{
+  padding-top: .5em;
+
+}
+.menuli.focus {
+  outline: none;
+}
+.menuselect {
+  color: #fff;border: none;font-size: 12px;
+  /* border-bottom: 1px solid #fff!important; */
+  outline: none;
+}
+.menuselect:focus {
+  background-color: none;
+}
+.menuselect option {
+  background:#05495c;
+  color: #fff;
+  padding: .5em;
+}
+
+@media screen and (max-width : 1366px){
+  .menuselect {
+    color: #fff;background: none;border: none;font-size: 17px;
+  }
+}
+@media screen and (max-width : 500px){
+  .menuselect {
+    color: #fff;background: none;border: none;font-size: 11px;
+  }
+}

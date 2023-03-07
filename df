@@ -1,0 +1,327 @@
+[1mdiff --git a/app/Http/Controllers/HRControllers/HREmployeesController.php b/app/Http/Controllers/HRControllers/HREmployeesController.php[m
+[1mindex 4c857a0e..61469db0 100644[m
+[1m--- a/app/Http/Controllers/HRControllers/HREmployeesController.php[m
+[1m+++ b/app/Http/Controllers/HRControllers/HREmployeesController.php[m
+[36m@@ -608,7 +608,7 @@[m [mclass HREmployeesController extends Controller[m
+                 ->join('usertype','teacher.usertypeid','=','usertype.id')[m
+                 ->where('teacher.id', $teacherid)[m
+                 ->first();[m
+[31m-                [m
+[32m+[m[41m            [m
+             $employee_info = Db::table('employee_personalinfo')[m
+                 ->select([m
+                     'employee_personalinfo.id as employee_personalinfoid',[m
+[36m@@ -708,17 +708,21 @@[m [mclass HREmployeesController extends Controller[m
+                 [m
+             }[m
+             [m
+[31m-            $employee_benefits = Db::table('employee_benefits')[m
+[31m-                ->select([m
+[31m-                    'employee_benefits.id as employee_benefitsid',[m
+[31m-                    'benefits.benefits',[m
+[31m-                    'employee_benefits.benefitnum'[m
+[31m-                    )[m
+[31m-                ->join('benefits','employee_benefits.benefitsid','=','benefits.id')[m
+[32m+[m[32m            // $employee_benefits = Db::table('employee_benefits')[m
+[32m+[m[32m            //     ->select([m
+[32m+[m[32m            //         'employee_benefits.id as employee_benefitsid',[m
+[32m+[m[32m            //         'benefits.benefits',[m
+[32m+[m[32m            //         'employee_benefits.benefitnum'[m
+[32m+[m[32m            //         )[m
+[32m+[m[32m            //     ->join('benefits','employee_benefits.benefitsid','=','benefits.id')[m
+[32m+[m[32m            //     ->where('employeeid',$teacherid)[m
+[32m+[m[32m            //     ->where('employee_benefits.deleted','0')[m
+[32m+[m[32m            //     ->get();[m
+[32m+[m[32m            $employee_accounts = Db::table('employee_accounts')[m
+                 ->where('employeeid',$teacherid)[m
+[31m-                ->where('employee_benefits.deleted','0')[m
+[32m+[m[32m                ->where('employee_accounts.deleted','0')[m
+                 ->get();[m
+[31m-[m
+[32m+[m[41m                [m
+             $employee_familyinfo = Db::table('employee_familyinfo')[m
+                 ->where('employeeid',$teacherid)[m
+                 ->where('deleted','0')[m
+[36m@@ -833,9 +837,9 @@[m [mclass HREmployeesController extends Controller[m
+                 ->where('deleted','0')[m
+                 ->get();[m
+     [m
+[31m-            $benefits = Db::table('benefits')[m
+[31m-                ->where('deleted','0')[m
+[31m-                ->get();[m
+[32m+[m[32m            // $benefits = Db::table('benefits')[m
+[32m+[m[32m            //     ->where('deleted','0')[m
+[32m+[m[32m            //     ->get();[m
+ [m
+             $deductiontypes = Db::table('deduction_standard')[m
+                 ->where('deleted','0')[m
+[36m@@ -989,29 +993,29 @@[m [mclass HREmployeesController extends Controller[m
+                 ->where('deleted','0')[m
+                 ->get();[m
+ [m
+[31m-            $benefitsnotapplied = array();[m
+[32m+[m[32m            // $benefitsnotapplied = array();[m
+     [m
+[31m-            foreach($benefits as $ben){[m
+[32m+[m[32m            // foreach($benefits as $ben){[m
+ [m
+[31m-                $applied = false;[m
+[32m+[m[32m            //     $applied = false;[m
+ [m
+[31m-                foreach($employee_benefits as $empben){[m
+[32m+[m[32m            //     foreach($employee_benefits as $empben){[m
+ [m
+[31m-                    if($ben->id == $empben->employee_benefitsid){[m
+[32m+[m[32m            //         if($ben->id == $empben->employee_benefitsid){[m
+     [m
+[31m-                        $applied = true;[m
+[32m+[m[32m            //             $applied = true;[m
+ [m
+[31m-                    }[m
+[32m+[m[32m            //         }[m
+ [m
+[31m-                }[m
+[32m+[m[32m            //     }[m
+ [m
+[31m-                if($applied == false){[m
+[32m+[m[32m            //     if($applied == false){[m
+ [m
+[31m-                    array_push($benefitsnotapplied,(object)$ben);[m
+[32m+[m[32m            //         array_push($benefitsnotapplied,(object)$ben);[m
+ [m
+[31m-                }[m
+[32m+[m[32m            //     }[m
+ [m
+[31m-            }[m
+[32m+[m[32m            // }[m
+ [m
+             $salarybasistypes = Db::table('employee_salary')[m
+                 ->where('deleted','0')[m
+[36m@@ -1099,7 +1103,7 @@[m [mclass HREmployeesController extends Controller[m
+                 ->with('religion',$religion)[m
+                 ->with('profile',$profile)[m
+                 ->with('employee_info',$employee_info)[m
+[31m-                ->with('employee_benefits',$employee_benefits)[m
+[32m+[m[32m                ->with('employee_accounts',$employee_accounts)[m
+                 ->with('employee_familyinfo',$employee_familyinfo)[m
+                 ->with('employee_educationinfo',$employee_educationinfo)[m
+                 ->with('employee_experience',$employee_experience)[m
+[36m@@ -1109,8 +1113,8 @@[m [mclass HREmployeesController extends Controller[m
+                 ->with('department',$department)[m
+                 ->with('designations',$designations)[m
+                 // ->with('getdesignations',$getdesignations)[m
+[31m-                ->with('benefits',$benefits)[m
+[31m-                ->with('benefitsnotapplied',$benefitsnotapplied)[m
+[32m+[m[32m                // ->with('benefits',$benefits)[m
+[32m+[m[32m                // ->with('benefitsnotapplied',$benefitsnotapplied)[m
+                 ->with('deductiontypes',$deductiontypes)[m
+                 ->with('deductiondetails',$deductiondetails)[m
+                 ->with('mycontributions',$mystandarddeductions)[m
+[36m@@ -1131,6 +1135,8 @@[m [mclass HREmployeesController extends Controller[m
+     public function employeeinfo($action, Request $request)[m
+     {[m
+         [m
+[32m+[m[32m        date_default_timezone_set('Asia/Manila');[m
+[32m+[m
+         if($action == 'updateheaderinfo'){[m
+             [m
+             DB::table('teacher')[m
+[36m@@ -1286,83 +1292,143 @@[m [mclass HREmployeesController extends Controller[m
+             return back();[m
+ [m
+         }[m
+[32m+[m[32m        elseif($action == 'updateaccounts'){[m
+[32m+[m[32m            // return $request->all();[m
+[32m+[m[32m            $createdby      = DB::table('teacher')[m
+[32m+[m[32m                            ->where('userid', auth()->user()->id)[m
+[32m+[m[32m                            ->first()[m
+[32m+[m[32m                            ->id;[m
+[32m+[m[32m            if($request->get('oldaccountid') == true){[m
+ [m
+[31m-    }[m
+[31m-    public function employeebenefits($action, Request $request)[m
+[31m-    {[m
+[31m-        [m
+[31m-        $employee_benefits = Db::table('employee_benefits')[m
+[31m-            ->where('employeeid',$request->get('id'))[m
+[31m-            ->where('deleted','0')[m
+[31m-            ->get();[m
+[32m+[m[41m                [m
+[32m+[m[32m                foreach($request->get('oldaccountid') as $oldaccountkey => $accountid){[m
+[32m+[m
+[32m+[m[32m                    DB::table('employee_accounts')[m
+[32m+[m[32m                        ->where('id',$accountid)[m
+[32m+[m[32m                        ->update([[m
+[32m+[m[32m                            'accountdescription'    => $request->get('oldaccountdescription')[$oldaccountkey],[m
+[32m+[m[32m                            'accountnum'            => $request->get('oldaccountnumber')[$oldaccountkey][m
+[32m+[m[32m                        ]);[m
+[32m+[m
+[32m+[m[32m                }[m
+[32m+[m
+[32m+[m[32m            }[m
+             [m
+[31m-        foreach($employee_benefits as $updateben){[m
+[32m+[m[32m            if($request->get('newaccountdescription') == true){[m
+ [m
+[31m-            if(!$request->has($updateben->id)){[m
+[31m-                [m
+[31m-                DB::table('employee_benefits')[m
+[31m-                    ->where('employeeid', $request->get('id'))[m
+[31m-                    ->where('benefitsid', $updateben->id)[m
+[31m-                    ->update([[m
+[31m-                        'deleted'       =>  1[m
+[31m-                    ]);[m
+[32m+[m[32m                foreach($request->get('newaccountdescription') as $newaccountkey => $description){[m
+ [m
+[32m+[m[32m                    $checkifexists = DB::table('employee_accounts')[m
+[32m+[m[32m                                    ->where('employeeid',$request->get('id'))[m
+[32m+[m[32m                                    ->where('accountdescription', 'like','%'.$description)[m
+[32m+[m[32m                                    ->get();[m
+[32m+[m[41m    [m
+[32m+[m[32m                    if(count($checkifexists) == 0){[m
+[32m+[m[41m    [m
+[32m+[m[32m                        DB::table('employee_accounts')[m
+[32m+[m[32m                            ->insert([[m
+[32m+[m[32m                                'employeeid'            => $request->get('id'),[m
+[32m+[m[32m                                'accountdescription'    => strtoupper($description),[m
+[32m+[m[32m                                'accountnum'            => $request->get('newaccountnumber')[$newaccountkey],[m
+[32m+[m[32m                                'createdby'             => $createdby,[m
+[32m+[m[32m                                'createddatetime'       => date('Y-m-d H:i:s')[m
+[32m+[m[32m                            ]);[m
+[32m+[m[41m    [m
+[32m+[m[32m                    }[m
+[32m+[m[41m    [m
+[32m+[m[32m                }[m
+[32m+[m[41m                    [m
+             }[m
+ [m
+[31m-        }[m
+[31m-        [m
+[31m-        foreach($request->except('id','updatebenefits') as $key => $value){[m
+[32m+[m[32m            return back()->with('linkid', $request->get('linkid'));[m[41m          [m
+ [m
+[31m-            $checkifexists = DB::table('employee_benefits')[m
+[31m-                ->where('employeeid', $request->get('id'))[m
+[31m-                ->where('benefitsid', $key)[m
+[31m-                ->where('deleted', '0')[m
+[31m-                ->get();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        elseif($action == 'deleteaccount'){[m
+[32m+[m[32m            // return $request->all();[m
+[32m+[m[32m            DB::table('employee_accounts')[m
+[32m+[m[32m                ->where('id',$request->get('accountid'))[m
+[32m+[m[32m                ->update([[m
+[32m+[m[32m                    'deleted'   => '1'[m
+[32m+[m[32m                ]);[m
+ [m
+[31m-            if(count($checkifexists)==0){[m
+[32m+[m[32m        }[m
+ [m
+[31m-                $checkifexists2 = DB::table('employee_benefits')[m
+[31m-                    ->where('employeeid', $request->get('id'))[m
+[31m-                    ->where('benefitsid', $key)[m
+[31m-                    ->where('deleted', '1')[m
+[31m-                    ->get();[m
+[32m+[m[32m    }[m
+[32m+[m[32m    // public function employeebenefits($action, Request $request)[m
+[32m+[m[32m    // {[m
+[32m+[m[41m        [m
+[32m+[m[32m    //     $employee_benefits = Db::table('employee_benefits')[m
+[32m+[m[32m    //         ->where('employeeid',$request->get('id'))[m
+[32m+[m[32m    //         ->where('deleted','0')[m
+[32m+[m[32m    //         ->get();[m
+[32m+[m[41m            [m
+[32m+[m[32m    //     foreach($employee_benefits as $updateben){[m
+ [m
+[31m-                if(count($checkifexists2)==0){[m
+[32m+[m[32m    //         if(!$request->has($updateben->id)){[m
+[32m+[m[41m                [m
+[32m+[m[32m    //             DB::table('employee_benefits')[m
+[32m+[m[32m    //                 ->where('employeeid', $request->get('id'))[m
+[32m+[m[32m    //                 ->where('benefitsid', $updateben->id)[m
+[32m+[m[32m    //                 ->update([[m
+[32m+[m[32m    //                     'deleted'       =>  1[m
+[32m+[m[32m    //                 ]);[m
+ [m
+[31m-                    DB::table('employee_benefits')[m
+[31m-                        ->insert([[m
+[31m-                            'employeeid' => $request->get('id'),[m
+[31m-                            'benefitsid' => $key,[m
+[31m-                            'benefitnum' => $value[m
+[31m-                        ]);[m
+[32m+[m[32m    //         }[m
+ [m
+[31m-                }else{[m
+[32m+[m[32m    //     }[m
+[32m+[m[41m        [m
+[32m+[m[32m    //     foreach($request->except('id','updatebenefits') as $key => $value){[m
+ [m
+[31m-                    DB::table('employee_benefits')[m
+[31m-                        ->where('employeeid', $request->get('id'))[m
+[31m-                        ->where('benefitsid', $key)[m
+[31m-                        ->update([[m
+[31m-                            'benefitnum'    =>  $value,[m
+[31m-                            'deleted'       =>  1[m
+[31m-                        ]);[m
+[31m-                    }[m
+[31m-            }else{[m
+[32m+[m[32m    //         $checkifexists = DB::table('employee_benefits')[m
+[32m+[m[32m    //             ->where('employeeid', $request->get('id'))[m
+[32m+[m[32m    //             ->where('benefitsid', $key)[m
+[32m+[m[32m    //             ->where('deleted', '0')[m
+[32m+[m[32m    //             ->get();[m
+ [m
+[31m-                DB::table('employee_benefits')[m
+[31m-                    ->where('employeeid', $request->get('id'))[m
+[31m-                    ->where('benefitsid', $key)[m
+[31m-                    ->update([[m
+[31m-                        'benefitnum'    =>  $value,[m
+[31m-                        'deleted'       =>  1[m
+[31m-                    ]);[m
+[32m+[m[32m    //         if(count($checkifexists)==0){[m
+[32m+[m
+[32m+[m[32m    //             $checkifexists2 = DB::table('employee_benefits')[m
+[32m+[m[32m    //                 ->where('employeeid', $request->get('id'))[m
+[32m+[m[32m    //                 ->where('benefitsid', $key)[m
+[32m+[m[32m    //                 ->where('deleted', '1')[m
+[32m+[m[32m    //                 ->get();[m
+[32m+[m
+[32m+[m[32m    //             if(count($checkifexists2)==0){[m
+[32m+[m
+[32m+[m[32m    //                 DB::table('employee_benefits')[m
+[32m+[m[32m    //                     ->insert([[m
+[32m+[m[32m    //                         'employeeid' => $request->get('id'),[m
+[32m+[m[32m    //                         'benefitsid' => $key,[m
+[32m+[m[32m    //                         'benefitnum' => $value[m
+[32m+[m[32m    //                     ]);[m
+[32m+[m
+[32m+[m[32m    //             }else{[m
+[32m+[m
+[32m+[m[32m    //                 DB::table('employee_benefits')[m
+[32m+[m[32m    //                     ->where('employeeid', $request->get('id'))[m
+[32m+[m[32m    //                     ->where('benefitsid', $key)[m
+[32m+[m[32m    //                     ->update([[m
+[32m+[m[32m    //                         'benefitnum'    =>  $value,[m
+[32m+[m[32m    //                         'deleted'       =>  1[m
+[32m+[m[32m    //                     ]);[m
+[32m+[m[32m    //                 }[m
+[32m+[m[32m    //         }else{[m
+[32m+[m
+[32m+[m[32m    //             DB::table('employee_benefits')[m
+[32m+[m[32m    //                 ->where('employeeid', $request->get('id'))[m
+[32m+[m[32m    //                 ->where('benefitsid', $key)[m
+[32m+[m[32m    //                 ->update([[m
+[32m+[m[32m    //                     'benefitnum'    =>  $value,[m
+[32m+[m[32m    //                     'deleted'       =>  1[m
+[32m+[m[32m    //                 ]);[m
+ [m
+[31m-                }[m
+[32m+[m[32m    //             }[m
+ [m
+[31m-        }[m
+[32m+[m[32m    //     }[m
+ [m
+[31m-        return back();[m
+[32m+[m[32m    //     return back();[m
+ [m
+

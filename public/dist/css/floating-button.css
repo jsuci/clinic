@@ -1,0 +1,125 @@
+/* floatingbutton */
+
+.floating_button{
+    position: fixed;
+    bottom: 15px;
+    right: 10px;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    background: #05495c;
+    box-shadow: 1px 2px 4px grey;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+    cursor: pointer;
+
+}
+
+.floating_button img{
+    width: 65%;
+    transition: 0.4s;
+
+}
+
+.box{
+    
+    position: fixed;
+    bottom: 85px;
+    right: 12px;
+    height: 0px;
+    width: 50px;
+    transition-delay: 0.3s;
+    transition: 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    z-index: 3;
+
+}
+
+.box2{
+    
+    position: fixed;
+    bottom: 20px;
+    right: 85px;
+    height: 40px;
+    width: 0px;
+    transition-delay: 0.3s;
+    transition: 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: white;
+    box-shadow: 1px 1px 3px grey;
+    border-radius: 5px;
+    z-index: 2;
+
+}
+
+
+.item{
+
+    overflow: hidden;
+    border-radius: 50%;
+    transition-delay: 0.4s ease-in;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.currentque{
+
+    width: 100%;
+    overflow: hidden;
+    transition-delay: 0.4s ease-in;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    z-index: 1;
+
+}
+
+.nextque{
+    transition-delay: 0.2s;
+}
+
+.annouce{
+    transition-delay: 0.3s;
+
+}
+
+.item:hover{
+
+    cursor: pointer;
+}
+
+.item:hover img{
+    transform: rotate(360deg);
+    transition: all 0.7s;
+}
+
+.box-active{
+
+    height: 220px;
+}
+
+.box2-active{
+
+    width: 400px;
+}
+
+.floating_button-active{
+
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
