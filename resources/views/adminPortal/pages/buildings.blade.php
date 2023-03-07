@@ -25,6 +25,8 @@
         }
        
       }
+
+      $sy = DB::table('sy')->select('id','sydesc as text','isactive','sydesc')->get();
 @endphp
 
 @extends($extend)
@@ -63,8 +65,6 @@
 
 @section('content')
 
-
-
 <section class="content-header">
   <div class="container-fluid">
         <div class="row mb-2">
@@ -94,6 +94,142 @@
     </div>
 </section>
 @endsection
+
+
+@section('modalSection')
+<div class="modal fade" id="view_bldginfo_modal" style="display: none; padding-right: 17px;" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header pb-2 pt-2 border-0">
+                <h4 class="modal-title" style="font-size: 1.1rem !important">Room Information : <span id="room_name"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+          </div>
+            <div class="modal-body pt-0">
+               <div class="row">
+                  <div class="col-md-2">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card shadow h-100">
+                          <div class="card-body p-2" style="font-size: .8rem! important">
+                            <div class="row mt-2">
+                              <div class="col-md-12 form-group mb-2">
+                                <label>Room Name</label>
+                                <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 form-group mb-2">
+                                <label>Room Capacity</label>
+                                <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 form-group">
+                                <label>Building</label>
+                                <select name="building" id="update_roombuilding" class="form-control form-control-sm select2">
+                                    <option selected value="">SELECT BUILDING</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 ">
+                                <button class="btn btn-success btn-sm btn-block" id="update_information" style="font-size:.8rem !important">
+                                  <i class="fa fa-save"></i> Update Information
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-10">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card shadow">
+                          <div class="card-body p-2">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <button type="button" id="print_sched" class="btn btn-sm btn-outline-primary" style="font-size:.8rem !important"  ><i class="fa fa-print mr-1" ></i>Print Schedule</button>
+                              </div>
+                              <div class="col-md-4 text-right">
+                                <label for="" style="font-size:.9rem !important">School Year: </label> 
+                              </div>
+                              <div class="col-md-2">
+                                  <select class="form-control form-control-sm teacher select2"  id="filter_acad_sy">
+                                      @foreach ($sy as $item)
+                                            @if($item->isactive == 1)
+                                                  <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
+                                            @else
+                                                  <option value="{{$item->id}}">{{$item->text}}</option>
+                                            @endif
+                                      @endforeach
+                                  </select>
+                              </div>
+                              {{-- <div class="col-md-1 text-right">
+                                <label for="" style="font-size:.9rem !important">Semester: </label> 
+                              </div>
+                              <div class="col-md-2">
+                                  <select class="form-control form-control-sm teacher select2"  id="filter_semester">
+                                      @foreach ($semester as $item)
+                                            @if($item->isactive == 1)
+                                                  <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
+                                            @else
+                                                  <option value="{{$item->id}}">{{$item->text}}</option>
+                                            @endif
+                                      @endforeach
+                                  </select>
+                              </div> --}}
+                            </div>
+                           
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card shadow">
+                          <div class="card-body p-2">
+                            {{-- <div class="row">
+                              <div class="col-md-2">
+                                <button class="btn btn-sm btn-primary add_sched" >Add Schedule</button>
+                              </div>
+                                <div class="col-md-5"></div>
+                                <div class="col-md-2">
+                                  <button class="btn btn-sm btn-primary btn-block" id="time_templatelist">Time Template List</button>
+                                </div>
+                                <div class="col-md-3  mt-1">
+                                    <select class="form-control form-control-sm teacher select2"  id="filter_timetemplate">
+                                    </select>
+                                </div>
+                              
+                            </div> --}}
+                            <div class="row mt-3">
+                              <div class="col-md-12">
+                                {{-- <p class="mb-0 text-sm"><i>Click the subject name to edit or delete schedule.</i></p> --}}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
+                                <table class="table-sm table-bordered table table-head-fixed mb-0" id="sched_holder"  style="font-size:.7rem !important">
+                                  
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+      </div>
+  </div>
+@endsection
+
+
 
 @section('footerjavascript')
       <script src="{{asset('plugins/datatables/jquery.dataTables.js') }}"></script>
@@ -577,7 +713,7 @@
 
                                     if(button_enable){
                                           var buttons = ` <div class="dropdown text-center">
-                                                                  <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                                                  <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                                                                         <i class="fa fa-ellipsis-v"></i>
                                                                   </a>
                                                                   <div class="dropdown-menu" >
@@ -587,7 +723,7 @@
                                                                         <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
                                                                               Delete
                                                                         </a>
-                                                                  </div>
+                                                                  </div> -->
                                                             </div>`
 
                                           if(rowData.id == null){
@@ -602,7 +738,11 @@
                                     $(td).addClass('align-middle')
                               }
                         },
-                        ]
+                        ],
+                        createdRow: function (row, data, dataIndex) {
+                              $(row).attr("data-id",data.id);
+                              $(row).addClass("view_info");
+                        },
                   });
                   
                   var label_text = $($("#buildings_datatable_wrapper")[0].children[0])[0].children[0]
@@ -618,15 +758,15 @@
             }
 
             $(document).on('click','#building_create',function(){
-            $('#bldngDesc').val("")
-            $('#bldngCap').val("")
+                  $('#bldngDesc').val("")
+                  $('#bldngCap').val("")
 
-            $('#building_create_button').removeAttr('hidden')
-            $('#building_update_button').attr('hidden','hidden')
+                  $('#building_create_button').removeAttr('hidden')
+                  $('#building_update_button').attr('hidden','hidden')
 
-            if($('#building_form_modal')){
-                        $('#building_form_modal').modal()
-            }
+                  if($('#building_form_modal')){
+                              $('#building_form_modal').modal()
+                  }
             })
 
             $(document).on('click','.building_edit',function(){
@@ -658,6 +798,28 @@
 
             $(document).on('click','#building_create_button',function(){
                   buildingCreate()
+            })
+
+            $(document).on('click','.view_info',function(){
+                  var temp_id = $(this).attr('data-id')
+                  var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
+                  select_id = temp_id
+
+                  if (select_id) {
+                        $('#view_bldginfo_modal').modal()
+                  }
+
+                  // // $('#print_sched').attr('data-id',select_id)
+
+                  // $('#update_roomname').val(data[0].roomname)
+                  // $('#update_roomcap').val(data[0].capacity)
+                  // $('#update_roombuilding').val(data[0].buildingid).change()
+                  // $('#room_name').text(data[0].roomname)
+                  // // $('#room_form_modal').modal()
+                  // $('#create_room').text('Update')
+                  // $('#create_room').removeClass('btn-primary')
+                  // $('#create_room').addClass('btn-success')
+                  // $('#create_room').attr('data-id',2)
             })
       </script>
 @endsection
