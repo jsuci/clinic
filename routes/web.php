@@ -11,6 +11,15 @@
 |
 */
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use BigBlueButton\Parameters\CreateMeetingParameters;
+use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
+
 
 Route::middleware(['cors'])->group(function () {
 
@@ -21,6 +30,13 @@ Route::middleware(['cors'])->group(function () {
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
+
+    //ADDED BY JAM
+    Route::get('api/building-rooms/{id}','AdministratorControllers\BuildingController@buildingUpdate');
+
+
+
+
 
     //building sync
     Route::get('api/building/syncnew','AdministratorControllers\BuildingController@syncNew');
@@ -33,10 +49,7 @@ Route::middleware(['cors'])->group(function () {
 
 });
 
-use Illuminate\Support\Facades\Route;
-use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
-use BigBlueButton\Parameters\CreateMeetingParameters;
- 
+
 Route::get('/cklmsmeet', 'ExternalApiController@cklmsmeet');
 Route::get('/sampleNavs', function () {
 
@@ -66,16 +79,13 @@ Route::middleware(['guest'])->group(function(){
 
     });
 
-   
-
-
     // Route::post('/payment/online/upload/successful', 'GeneralController@submitpaymentreciept');
     
     Route::get('/payment/paymentinformation', function () {
         return view('paymentupload.paymentinformation');
     });
 
-   
+
 
     Route::get('/payment/online/validateinfo/{quecode}/{fname}/{lname}', function ($quecode,$fname,$lname) {
 
@@ -100,7 +110,7 @@ Route::middleware(['guest'])->group(function(){
 
     });
 
-   
+
 
 });
 
@@ -269,14 +279,10 @@ Route::get('/parent/enrollment/previousbalance', 'ParentControllers\ParentsContr
 //Parents Portal
 Route::middleware(['auth', 'isParent'])->group(function () {
 
-   
     Route::get('/parentgetevent', 'ParentControllers\ParentsController@loadCalendar')->name('parentgetevent');
     Route::get('/parentgeteventtype', 'ParentControllers\ParentsController@loadCalendar')->name('parentgeteventtype');
     Route::get('/parentschoolCalendar', 'ParentControllers\ParentsController@loadCalendar')->name('parentschoolCalendar');
-   
-   
-   
-   
+
     Route::get('/insertEvent', 'ParentControllers\ParentsController@insertEvent')->name('insertEvent');
     Route::get('/parentsPortalDashboard', 'ParentControllers\ParentsController@loaddDashboard');
     Route::get('/parentsPortalSchedule', 'ParentControllers\ParentsController@loadSchedule');
@@ -296,8 +302,7 @@ Route::middleware(['auth', 'isParent'])->group(function () {
     Route::get('/parentloadAllNotification', 'ParentControllers\ParentServerEventController@loadAllNotification');
     Route::get('/parentnotifications', 'ParentControllers\ParentServerEventController@loadNotifications');
     Route::get('/parentcountUnreadNotifictions', 'ParentControllers\ParentServerEventController@countUnreadNotifictions');
-  
-   
+
     
 });
 
@@ -397,18 +402,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('principal/section/students/enrolled', 'PrincipalControllers\PrincipalController@enrolled_students');
     
     //section
-   
+
     Route::get('/principal/student/list', 'PrincipalControllers\PrincipalController@student_list');
 
     Route::get('principal/remove/section/schedule/{sectionname}/{dataid}', 'PrincipalControllers\PrincipalController@removesectionschedule');
     Route::get('principal/remove/section/shschedule/{sectionname}/{dataid}', 'PrincipalControllers\PrincipalController@removeshsectionschedule');
-   
+
     Route::get('/prinicipaladdblocktoshsection','PrincipalControllers\PrincipalController@prinicipaladdblocktoshsection');
     Route::get('/principal/updateblocksched','PrincipalControllers\PrincipalController@updateblocksched');
 });
- 
- 
- 
+
+
 //Principal
 Route::middleware(['auth', 'isPrincipal:assistantprin,princoor','isDefaultPass'])->group(function () {
 	
@@ -417,13 +421,11 @@ Route::middleware(['auth', 'isPrincipal:assistantprin,princoor','isDefaultPass']
     
     Route::get('principal/view/section/info/{sectionname}', 'PrincipalControllers\PrincipalController@viewsection');
     Route::get('principal/get/subject/section/{sectionname}', 'PrincipalControllers\PrincipalController@getsectionsubject');
-    
-   
+
     
     Route::get('/principal/get/schedule/section/{sectionname}', 'PrincipalControllers\PrincipalController@sectionschedule');
 	
 
-  
     Route::get('posting/grade/post', 'TeacherControllers\TeacherGradingV4@post_student_grade');
     Route::get('posting/grade/unpost', 'TeacherControllers\TeacherGradingV4@unpost_student_grade');
     Route::get('posting/grade/pending', 'TeacherControllers\TeacherGradingV4@pending_student_grade');
@@ -819,7 +821,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
     Route::get('/buildings/create','AdministratorControllers\AdministratorController@buildings_create');
 });
-       
+
 
 Route::middleware(['checkModule:adminit','auth','isDefaultPass','withSchoolInfo'])->group(function () {
 
@@ -5029,7 +5031,7 @@ Route::middleware(['checkModule:preregistration','guest'])->group(function () {
 
         }else{
 
-           return redirect('/');
+            return redirect('/');
 
         }
 

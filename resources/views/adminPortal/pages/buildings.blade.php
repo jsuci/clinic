@@ -15,15 +15,15 @@
             $extend = 'principalsportal.layouts.app2';
       }
       else{
-        if(isset($check_refid->refid)){
-              if($check_refid->refid == 27){
-                    $extend = 'academiccoor.layouts.app2';
-              }
-        }else{
-          header("Location: " . URL::to('/'), true, 302);
-          exit();
-        }
-       
+            if(isset($check_refid->refid)){
+                  if($check_refid->refid == 27){
+                        $extend = 'academiccoor.layouts.app2';
+                  }
+            }else{
+            header("Location: " . URL::to('/'), true, 302);
+            exit();
+            }
+            
       }
 @endphp
 
@@ -31,77 +31,213 @@
 
 @section('pagespecificscripts')
 
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
 
-  <style>
-        .shadow {
-              box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-              border: 0 !important;
-        }
+<style>
+      .shadow {
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            border: 0 !important;
+      }
 
-        .dataTables_scrollBody, .dataTables_wrapper {
+      .dataTables_scrollBody, .dataTables_wrapper {
             position: static !important;
-        }
-        .dropdown-button {
+      }
+      .dropdown-button {
             cursor: pointer;
             font-size: 1rem;
             display:block
-        }
-        .dropdown-menu i {
+      }
+      .dropdown-menu i {
             font-size: 1rem;
             line-height: 0em;
             vertical-align: -15%;
             color: #212529;
             font-weight: 400;
-        }
-       
-  </style>
+      }
+      
+</style>
 @endsection
 
 
 
 @section('content')
 
-
-
 <section class="content-header">
-  <div class="container-fluid">
-        <div class="row mb-2">
-              <div class="col-sm-6">
-                    <h1>Buildings</h1>
-              </div>
-              <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                    <li class="breadcrumb-item active">Buildings</li>
-              </ol>
-              </div>
-        </div>
-  </div>
-</section>
-<section class="content p-0">
-    <div class="container-fluid">
-        <div class="card shadow">
-          <div class="card-body" style="font-size:.8rem !important">
-            <div class="row">
-              <div class="col-md-12" id="building_datatable_holder">
-                
-              </div>
+      <div class="container-fluid">
+            <div class="row mb-2">
+                  <div class="col-sm-6">
+                        <h1>Buildings</h1>
+                  </div>
+                  <div class="col-sm-6">
+                  <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                        <li class="breadcrumb-item active">Buildings</li>
+                  </ol>
+                  </div>
             </div>
-          </div>
       </div>
-    </div>
+</section>
+
+<section class="content p-0">
+      <div class="container-fluid">
+            <div class="card shadow">
+            <div class="card-body" style="font-size:.8rem !important">
+                  <div class="row">
+                        <div class="col-md-12" id="building_datatable_holder">
+                        </div>
+                  </div>
+            </div>
+            </div>
+      </div>
 </section>
 @endsection
+
+
+@php
+      $sy = DB::table('sy')->select('id','sydesc as text','isactive','sydesc')->get();
+@endphp
+
+
+@section('modalSection')
+<div class="modal fade" id="view_building_info_modal" style="display: none; padding-right: 17px;" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+      <div class="modal-header pb-2 pt-2 border-0">
+            <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="room_name"></span></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+      </div>
+            <div class="modal-body pt-0">
+            <div class="row">
+                  <div class="col-md-2">
+                  <div class="row">
+                  <div class="col-md-12">
+                        <div class="card shadow h-100">
+                        <div class="card-body p-2" style="font-size: .8rem! important">
+                        <div class="row mt-2">
+                              <div class="col-md-12 form-group mb-2">
+                              <label>Building Name</label>
+                              <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Building Name" onkeyup="this.value = this.value.toUpperCase();">
+                              </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-md-12 form-group mb-2">
+                              <label>Building Capacity</label>
+                              <input id="update_roomcap" placeholder="Building Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                              </div>
+                        </div>
+                        {{-- <div class="row">
+                              <div class="col-md-12 form-group">
+                              <label>Building</label>
+                              <select name="building" id="update_roombuilding" class="form-control form-control-sm select2">
+                                    <option selected value="">SELECT BUILDING</option>
+                              </select>
+                              </div>
+                        </div> --}}
+                        <div class="row">
+                              <div class="col-md-12 ">
+                              <button class="btn btn-success btn-sm btn-block" id="update_bldg_info" style="font-size:.8rem !important">
+                              <i class="fa fa-save"></i> Update Information
+                              </button>
+                              </div>
+                        </div>
+                        </div>
+                        </div>
+                  </div>
+                  </div>
+                  </div>
+                  <div class="col-md-10">
+                  <div class="row">
+                  <div class="col-md-12">
+                        <div class="card shadow">
+                        <div class="card-body p-2">
+                        <div class="row">
+                              <div class="col-md-6">
+                              <button type="button" id="print_sched" class="btn btn-sm btn-outline-primary" style="font-size:.8rem !important"  ><i class="fa fa-print mr-1" ></i>Print Schedule</button>
+                              </div>
+                              <div class="col-md-4 text-right">
+                              <label for="" style="font-size:.9rem !important">School Year: </label> 
+                              </div>
+                              <div class="col-md-2">
+                              <select class="form-control form-control-sm teacher select2"  id="filter_acad_sy">
+                                    @foreach ($sy as $item)
+                                          @if($item->isactive == 1)
+                                                <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
+                                          @else
+                                                <option value="{{$item->id}}">{{$item->text}}</option>
+                                          @endif
+                                    @endforeach
+                              </select>
+                              </div>
+                              {{-- <div class="col-md-1 text-right">
+                              <label for="" style="font-size:.9rem !important">Semester: </label> 
+                              </div>
+                              <div class="col-md-2">
+                              <select class="form-control form-control-sm teacher select2"  id="filter_semester">
+                                    @foreach ($semester as $item)
+                                          @if($item->isactive == 1)
+                                                <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
+                                          @else
+                                                <option value="{{$item->id}}">{{$item->text}}</option>
+                                          @endif
+                                    @endforeach
+                              </select>
+                              </div> --}}
+                        </div>
+                        
+                        </div>
+                        </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                  <div class="col-md-12">
+                        <div class="card shadow">
+                        <div class="card-body p-2">
+                        {{-- <div class="row">
+                              <div class="col-md-2">
+                              <button class="btn btn-sm btn-primary add_sched" >Add Schedule</button>
+                              </div>
+                              <div class="col-md-5"></div>
+                              <div class="col-md-2">
+                              <button class="btn btn-sm btn-primary btn-block" id="time_templatelist">Time Template List</button>
+                              </div>
+                              <div class="col-md-3  mt-1">
+                                    <select class="form-control form-control-sm teacher select2"  id="filter_timetemplate">
+                                    </select>
+                              </div>
+                              
+                        </div> --}}
+                        <div class="row mt-3">
+                              <div class="col-md-12">
+                              <p class="mb-0 text-sm"><i>Click the subject name to edit or delete schedule.</i></p>
+                              </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
+                              <table class="table-sm table-bordered table table-head-fixed mb-0" id="sched_holder"  style="font-size:.7rem !important">
+                              
+                              </table>
+                              </div>
+                        </div>
+                        </div>
+                        </div>
+                  </div>
+                  </div>
+                  </div>
+            </div>
+            </div>
+      </div>
+      </div>
+</div>
+@endsection
+
+
 
 @section('footerjavascript')
       <script src="{{asset('plugins/datatables/jquery.dataTables.js') }}"></script>
       <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
-      <script src="{{asset('js/setupjs/buildings.js') }}"></script>
-      <script>
-     
-      </script>
+      {{-- <script src="{{asset('js/setupjs/buildings.js') }}"></script> --}}
 
       <script>
             $(document).ready(function(){
@@ -129,20 +265,27 @@
                         timer: 2000,
                   })
 
-                  buildingtable('#building_datatable_holder',true)
-                  buildingform('',true)
+                  // draw html elements
+                  buildingtable('#building_datatable_holder', true)
+                  buildingform('', true)
+                  buildingrooms('', true)
             })
       </script>
 
       <script>
             
+            // global variables
             var buildings = []
             var buildings_datatable = []
+            var rooms_databable = []
             var selected_id = null
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
             var connected_stat = false
+
+            // var bldg_desc = null
+            // var bldg_cap = null
 
             const Toast = Swal.mixin({
                   toast: true,
@@ -151,6 +294,8 @@
                   timer: 2000,
             })
 
+            
+            // helper functions
             function getProjectSetup(){
                   $.ajax({
                         type:'GET',
@@ -172,7 +317,6 @@
                         }
                   })
             }
-
 
             function check_online_connection(){
                   $.ajax({
@@ -231,7 +375,6 @@
                   })
             }
 
-            //get_updated
             function get_updated(tablename){
                   if(!connected_stat){
                   return false
@@ -267,8 +410,6 @@
                   })
             }
 
-
-            //get deleted
             function get_deleted(tablename){
                   if(!connected_stat){
                         return false
@@ -284,25 +425,24 @@
                         }
                   })
             }
-                  
 
-            function process_deleted(tablename , deleted_data){
-            if (deleted_data.length == 0){
-                        return false
-            }
-            var b = deleted_data[0]
-            $.ajax({
-                  type:'GET',
-                  url: projectsetup[0].es_cloudurl+'/api/building/syncdelete',
-                  data:{
-                        tablename: tablename,
-                        data:b
-                  },
-                  success:function(data) {
-                        deleted_data = deleted_data.filter(x=>x.id != b.id)
-                        update_local_status(tablename,deleted_data,b,'delete')
-                  },
-            })
+            function process_deleted(tablename , deleted_data) {
+                  if (deleted_data.length == 0){
+                              return false
+                  }
+                  var b = deleted_data[0]
+                  $.ajax({
+                        type:'GET',
+                        url: projectsetup[0].es_cloudurl+'/api/building/syncdelete',
+                        data:{
+                              tablename: tablename,
+                              data:b
+                        },
+                        success:function(data) {
+                              deleted_data = deleted_data.filter(x=>x.id != b.id)
+                              update_local_status(tablename,deleted_data,b,'delete')
+                        },
+                  })
             }
 
             function update_local_status(tablename,alldata,info,status,first=false){
@@ -340,37 +480,74 @@
                   })
             }
 
-            function buildingCreate(){
-                  $.ajax({
-                        type:'GET',
-                        url:'/api/building/create',
-                        data:{
-                              'description':$('#bldngDesc').val(),
-                              'capacity':$('#bldngCap').val()
-                        },
-                        success:function(data) {
-                              if(data[0].status == 1){
+            function validate_bldg_input() {
+                  var desc = $('#bldngDesc').val();
+                  var cap = $('#bldngCap').val()
 
-                                    $('#bldngDesc').val("")
-                                    $('#bldngCap').val("")
-                                    
-                                    if($('#building_form_modal')){
-                                          $('#building_form_modal').modal('hide')
-                                    }
-
-                                    buildingDatatable()
-                                    get_last_index('building')
-                              }
-                              Toast.fire({
-                                    type: data[0].icon,
-                                    title: data[0].message
-                              })
-                        }
-                  })
+                  if (!desc || !cap) {
+                        return false
+                        // console.log('Error empty field')
+                        // Toast.fire({
+                        //       type: 'error',
+                        //       title: 'Error empty field'
+                        // })
+                  } else {
+                        return true
+                  }
             }
 
-            function buildingUpdate(){
-                  $.ajax({
+
+            // buildings
+            function buildingCreate() {
+
+                  // validate input here
+                  if (!validate_bldg_input()) {
+                        Toast.fire({
+                              type: 'error',
+                              title: 'Error empty field'
+                        })
+                  } else {
+                        $.ajax({
+                              type:'GET',
+                              url:'/api/building/create',
+                              data:{
+                                    'description':$('#bldngDesc').val(),
+                                    'capacity':$('#bldngCap').val()
+                              },
+                              success:function(data) {
+
+                                    console.log(data)
+                                    if(data[0].status == 1){
+
+                                          $('#bldngDesc').val("")
+                                          $('#bldngCap').val("")
+                                          
+                                          if($('#building_form_modal')){
+                                                $('#building_form_modal').modal('hide')
+                                          }
+
+                                          buildingDatatable()
+                                          get_last_index('building')
+                                    }
+                                    Toast.fire({
+                                          type: data[0].icon,
+                                          title: data[0].message
+                                    })
+                              }
+                        })
+                  }
+            }
+
+            function buildingUpdate() {
+
+                  // validate input here
+                  if (!validate_bldg_input()) {
+                        Toast.fire({
+                              type: 'error',
+                              title: 'Error empty field'
+                        })
+                  } else {
+                        $.ajax({
                         type:'GET',
                         url:'/api/building/update',
                         data:{
@@ -391,18 +568,20 @@
                                     buildingDatatable()
                                     get_updated('building')
                               }
-                              Toast.fire({
-                                    type: data[0].icon,
-                                    title: data[0].message
-                              })
-                        }
-                  })
+                                    Toast.fire({
+                                          type: data[0].icon,
+                                          title: data[0].message
+                                    })
+                              }
+                        })
+                  }
+
             }
 
-            function buildingDelete(){
+            function buildingDelete() {
 
                   Swal.fire({
-                        text: 'Are you sure you delete building?',
+                        text: 'Are you sure you want to delete this building?',
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -433,9 +612,7 @@
             
             }
 
-            function buildingform(formholder,modal=false){
-
-
+            function buildingform(formholder, modal=false) {
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label>Description</label>            
@@ -471,15 +648,15 @@
                                     </div>
                               </div>`
 
-                  if(!modal){
+                  if(!modal) {
                         $(formholder)[0].innerHTML = buildingform
-                  }else{
+                  } else {
                         $('body').append(buildingmodal)
                   }
 
             }
 
-            function buildingtable(datatableholder){
+            function buildingtable(datatableholder) {
 
                   var table = `<table class="table table-sm" id="buildings_datatable">
                                     <thead>
@@ -498,8 +675,7 @@
                   buildingDatatable()
             }
 
-
-            function buildingDatatable(){
+            function buildingDatatable() {
 
                   if(button_enable == null){
                         getProjectSetup()
@@ -526,44 +702,47 @@
                                     { "data": "capacity" },
                                     { "data": null },
                               ],
-                        columnDefs: [
-                        {
-                        'targets': 0,
-                        'createdCell':  function (td, cellData, rowData, row, col) {
-                              $(td).addClass('align-middle')
-                        }
-                        },
-                        {
-                        'targets': 1,
-                        'orderable': false, 
-                        'createdCell':  function (td, cellData, rowData, row, col) {
-                              $(td).addClass('align-middle')
-                        }
-                        },
-                        {
+                        columnDefs: [{
+                              'targets': 0,
+                              'createdCell': function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                              }
+                        }, {
+                              'targets': 1,
+                              'orderable': false, 
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                              }
+                        }, {
                               'targets': 2,
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
 
-                                    if(button_enable){
+                                    if(button_enable) {
                                           var buttons = ` <div class="dropdown text-center">
                                                                   <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
                                                                         <i class="fa fa-ellipsis-v"></i>
                                                                   </a>
                                                                   <div class="dropdown-menu" >
-                                                                        <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
+                                                                        <!-- <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
                                                                               Edit
+                                                                        </a> -->
+                                                                        <a class="dropdown-item building_view_rooms" href="javascript:void(0)"  data-id="`+rowData.id+`">
+                                                                              View
                                                                         </a>
                                                                         <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
                                                                               Delete
                                                                         </a>
+                                                                        <!-- <a class="dropdown-item building_view_rooms" href="javascript:void(0)"  data-id="`+rowData.id+`">
+                                                                              View Rooms
+                                                                        </a> -->
                                                                   </div>
                                                             </div>`
 
                                           if(rowData.id == null){
                                                 buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
                                           }
-                                    }else{
+                                    } else {
                                           buttons = ''
                                     }
 
@@ -571,32 +750,163 @@
                                     $(td).addClass('text-center')
                                     $(td).addClass('align-middle')
                               }
-                        },
-                        ]
+                        }],
+                        createdRow: function (row, data, dataIndex) {
+                              $(row).attr("data-id",data.id);
+                              $(row).addClass("view_building_info");
+                        }
                   });
                   
                   var label_text = $($("#buildings_datatable_wrapper")[0].children[0])[0].children[0]
 
-                  if(button_enable){
+                  if(button_enable) {
                         $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="building_create" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Add New</button>'
-                  }else{
+                  } else {
                         $(label_text)[0].innerHTML = ''
                   }
-
-                  
-
             }
 
+            function roomDataTable() {
+                  $.ajax({
+                        url: "rooms/get",
+                        type: "GET",
+                        success: function(json) {
+                              // Do something with the response
+                              rooms_databable = json.data
+                              console.log(rooms_databable);
+                        },
+                        error: function(xhr) {
+                              // Handle errors
+                              console.log(xhr.statusText);
+                        }
+                  });
+                  // $("#rooms_datatable").DataTable({
+                  //       destroy: true,
+                  //       // data:all_rooms,
+                  //       lengthChange : false,
+                  //       stateSave: true,
+                  //       autoWidth: false,
+                  //       serverSide: true,
+                  //       processing: true,
+                  //       ajax: {
+                  //                   url: 'rooms/get',
+                  //                   type: 'GET',
+                  //                   dataSrc: function ( json ) {
+                  //                         rooms_databable = json.data
+                  //                         return json.data;
+                  //                   }
+                  //       },
+                  //       columns: [
+                  //             { "data": "roomname" },
+                  //             { "data": "description" },
+                  //             { "data": "capacity" },
+                  //             { "data": null },
+                  //             { "data": null },
+                  //             { "data": null },
+                  //             { "data": null },
+                  //       ],
+                  //       columnDefs: [{
+                  //             'targets': 2,
+                  //             'orderable': false, 
+                  //             'createdCell':  function (td, cellData, rowData, row, col) {
+                  //                   $(td)[0].innerHTML = rowData.capacity
+                  //                   $(td).addClass('align-middle')
+                  //                   $(td).addClass('text-center')
+                  //             }
+                  //       }, {
+                  //             'targets': 3,
+                  //             'orderable': false, 
+                  //             'createdCell':  function (td, cellData, rowData, row, col) {
+                  //                   // var buttons = '<button style="font-size:.7rem !important" class="view_sched btn btn-sm btn-primary btn-block" data-id="'+rowData.id+'">View Sched</button>';
+                  //                   // $(td)[0].innerHTML =  buttons
+                  //                   $(td).text(null)
+                  //                   $(td).addClass('text-center')
+                  //                   $(td).addClass('align-middle')
+                                    
+                  //             }
+                  //       }, {
+                  //             'targets': 4,
+                  //             'orderable': false, 
+                  //             'createdCell':  function (td, cellData, rowData, row, col) {
+                  //                   // var buttons = '<button class="btn btn-primary btn-sm" data-id="'+rowData.id+'">View Schedule</button>';
+                  //                   // $(td)[0].innerHTML =  buttons
+                  //                   // $(td).addClass('text-center')
+                  //                   // $(td).addClass('align-middle')
+                  //                   $(td).text(null)
+                                    
+                  //             }
+                  //       }, {
+                  //             'targets': 5,
+                  //             'orderable': false, 
+                  //             'createdCell':  function (td, cellData, rowData, row, col) {
+                  //                   // var buttons = '<a href="javascript:void(0)" class="edit_room" data-id="'+rowData.id+'"><i class="far fa-edit"></i></a>';
+                  //                   // $(td)[0].innerHTML =  buttons
+                  //                   // $(td).addClass('text-center')
+                  //                   // $(td).addClass('align-middle')
+                  //                   $(td).text(null)
+                        
+                  //             }
+                  //       }, {
+                  //             'targets': 6,
+                  //             'orderable': false, 
+                  //             'createdCell':  function (td, cellData, rowData, row, col) {
+                  //                   // var disabled = '';
+                  //                   // var buttons = '<a href="javascript:void(0)" '+disabled+' class="delete_room" data-id="'+rowData.id+'"><i class="far fa-trash-alt text-danger"></i></a>';
+                  //                   // $(td)[0].innerHTML =  buttons
+                  //                   // $(td).addClass('text-center')
+                  //                   // $(td).addClass('align-middle')
+                  //                   $(td).text(null)
+                  //             }
+                  //       }],
+                  //       createdRow: function (row, data, dataIndex) {
+                  //             $(row).attr("data-id",data.id);
+                  //             $(row).addClass("view_info");
+                  //       },
+                  // });
+            }
+
+            function buildingrooms(formholder, modal) {
+                  var buildingroom = `
+                        <div class="modal fade" id="building_room_modal" tabindex="-1" role="dialog" aria-labelledby="buildingModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                          <div class="modal-header">
+                                                <h2 class="modal-title" id="buildingModalLabel"></span></h2>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                </button>
+                                          </div>
+                                          <div class="modal-body">
+                                                <h5>Rooms Listed:</h5>
+                                                <ul id="roomList"></ul>
+                                          </div>
+                                          <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>`
+
+
+                  if(!modal){
+                        $(formholder)[0].innerHTML = buildingroom
+                  }else{
+                        $('body').append(buildingroom)
+                  }
+            }
+
+
+            // clicks
             $(document).on('click','#building_create',function(){
-            $('#bldngDesc').val("")
-            $('#bldngCap').val("")
+                  $('#bldngDesc').val("")
+                  $('#bldngCap').val("")
 
-            $('#building_create_button').removeAttr('hidden')
-            $('#building_update_button').attr('hidden','hidden')
+                  $('#building_create_button').removeAttr('hidden')
+                  $('#building_update_button').attr('hidden','hidden')
 
-            if($('#building_form_modal')){
-                        $('#building_form_modal').modal()
-            }
+                  if($('#building_form_modal')){
+                              $('#building_form_modal').modal()
+                  }
             })
 
             $(document).on('click','.building_edit',function(){
@@ -616,18 +926,65 @@
                   }
             })
 
+            // $(document).on('click','.building_view',function(){
+            //       var tempId = $(this).attr('data-id')
+            //       selected_id = tempId
+            //       var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
+
+            //       $('#bldngDesc').val(temp_bldnginfo[0].description)
+            //       $('#bldngCap').val(temp_bldnginfo[0].capacity)
+
+
+            //       $('#building_update_button').removeAttr('hidden')
+            //       $('#building_create_button').attr('hidden','hidden')
+            
+            //       if($('#building_form_modal')){
+            //             $('#building_form_modal').modal()
+            //       }
+            // })
+
             $(document).on('click','.building_delete',function(){
                   var tempId = $(this).attr('data-id')
                   selected_id = tempId
                   buildingDelete()
             })
 
-            $(document).on('click','#building_update_button',function(){
+            // $(document).on('click','#building_update_button',function(){
+            //       buildingUpdate()
+            // })
+
+            $(document).on('click','#update_bldg_info',function(){
                   buildingUpdate()
             })
 
             $(document).on('click','#building_create_button',function(){
                   buildingCreate()
+            })
+
+
+            // click building button
+            $(document).on('click','.building_view_rooms',function(){
+                  var tempId = $(this).attr('data-id')
+                  selected_id = tempId
+                  var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
+
+                  // var desc = temp_bldnginfo[0].description
+                  // var cap = temp_bldnginfo[0].capacity
+
+                  if($('#building_room_modal')){
+                        // $('#buildingModalLabel').html(`${desc}`)
+                        $('#view_building_info_modal').modal()
+                  }
+            
+            })
+
+            // click building row
+            $(document).on('click','.view_building_info',function(){
+                  var tempId = $(this).attr('data-id')
+                  selected_id = tempId
+                  var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
+                  
+                  $('#view_building_info_modal').modal()
             })
       </script>
 @endsection
