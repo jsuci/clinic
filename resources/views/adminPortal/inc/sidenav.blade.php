@@ -81,7 +81,7 @@
 				@endif
 				@if($schoolinfo->projectsetup == 'online' || $schoolinfo->processsetup == 'all')
 					<li class="nav-item">
-						<a class="{{Request::url() == url('/buildings') ? 'active':''}} nav-link" href="/buildings">
+						<a class="{{Request::url() == url('/admin/get/buildings') ? 'active':''}} nav-link" href="/admin/get/buildings">
 							<i class="nav-icon fa fa-door-open"></i>
 							<p>
 								Buildings

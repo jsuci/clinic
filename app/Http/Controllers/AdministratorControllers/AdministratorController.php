@@ -2,33 +2,32 @@
 
 namespace App\Http\Controllers\AdministratorControllers;
 
-use File;
-use Hash;
-// use Crypt;
-use Image;
-use Config;
-use Artisan;
-use Session;
-
-use Redirect;
-
-use App\FilePath;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-use App\Models\Principal\SPP_Rooms;
+use DB;
+use App\Models\Principal\SPP_SchoolYear;
 use App\Models\Principal\SPP_Teacher;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\Principal\SPP_Building;
+use App\Models\Principal\SPP_AcademicProg;
+use App\Models\Principal\SPP_Rooms;
 use App\Models\Principal\SPP_Calendar;
 use App\Models\Principal\SPP_Privelege;
-use App\Models\Principal\SPP_SchoolYear;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Principal\SPP_AcademicProg;
-use App\Models\Principal\SPP_Announcement;
-use App\Models\SuperAdmin\PasswordGenerator;
+
 use App\Models\Principal\SPP_EnrolledStudent;
+
 use App\Models\Principal\SPP_PermissionRequest;
+use App\Models\Principal\SPP_Announcement;
+use App\Models\Principal\SPP_Building;
+
+use Session;
+use Crypt;
+use File;
+use App\FilePath;
+use Image;
+use Redirect;
+use Artisan;
+use Config;
+use Hash;
+use Illuminate\Support\Facades\Validator;
+use App\Models\SuperAdmin\PasswordGenerator;
 
 class AdministratorController extends \App\Http\Controllers\Controller
 {
@@ -62,7 +61,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
     public function updateAccountInfo(Request $request){
 
-
+  
 
         return SPP_Teacher::updateFAS(
             $request->get('ui'),
@@ -79,7 +78,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
     public static function admininsertfaculty(Request $request){
 
-
+      
 
         return SPP_Teacher::createFAS(
             null,
@@ -499,7 +498,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 	public static function rooms(){
 
         $rooms = DB::table('rooms')
-                    ->join('building', function($join){
+                    ->join('building',function($join){
                         $join->on('rooms.buildingid','=','building.id');
                         $join->where('building.deleted',0);
                     })  
@@ -521,7 +520,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
     }
 
-    public static function buildings(){
+     public static function buildings(){
 
         $buildings = DB::table('building')
                 ->where('building.deleted',0)
@@ -536,7 +535,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
         return $buildings;
 
-    }
+     }
 
     
     public static function create_room(Request $request){
@@ -1431,7 +1430,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
         }
 
         array_push($summary, (object)['studentcount'=>$studentCount,'withNum'=>$studentWithNum,'withoutNum'=>$studentWithNoNum]);
-
+   
 
         return view('adminportal.pages.smstexter')->with('summary',$summary);
 
@@ -1439,7 +1438,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
     public static function adminuploadlogo($schoollogoimage, Request $request){
 
-
+          
 
             $urlFolder = str_replace('http://','',$request->root());
             $urlFolder = str_replace('https://','',$urlFolder);
