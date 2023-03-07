@@ -118,13 +118,13 @@
                         <div class="row mt-2">
                               <div class="col-md-12 form-group mb-2">
                               <label>Building Name</label>
-                              <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Building Name" onkeyup="this.value = this.value.toUpperCase();">
+                              <input id="bldngDesc"  name="bldgName" id="bldngDesc" class="form-control form-control-sm" placeholder="Building Name" onkeyup="this.value = this.value.toUpperCase();">
                               </div>
                         </div>
                         <div class="row">
                               <div class="col-md-12 form-group mb-2">
                               <label>Building Capacity</label>
-                              <input id="update_roomcap" placeholder="Building Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                              <input id="bldngCap" placeholder="Building Capacity" id="bldngCap" name="bldgCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
                               </div>
                         </div>
                         {{-- <div class="row">
@@ -135,11 +135,17 @@
                               </select>
                               </div>
                         </div> --}}
-                        <div class="row">
-                              <div class="col-md-12 ">
-                              <button class="btn btn-success btn-sm btn-block" id="update_bldg_info" style="font-size:.8rem !important">
-                              <i class="fa fa-save"></i> Update Information
-                              </button>
+                        <div class="row pt-3">
+                              <div class="col-md-12">
+                                    <button class="btn btn-success btn-sm btn-block" id="update_bldg_info" style="font-size:.8rem !important">
+                                          <i class="fa fa-save"></i> Update Information
+                                    </button>
+                              </div>
+
+                              <div class="col-md-12 pt-2">
+                                    <button class="btn btn-danger btn-sm btn-block" id="update_bldg_info" style="font-size:.8rem !important">
+                                          <i class="fa fa-trash"></i> Delete
+                                    </button>
                               </div>
                         </div>
                         </div>
@@ -968,6 +974,9 @@
                   selected_id = tempId
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
 
+                  $('#bldngDesc').val(temp_bldnginfo[0].description)
+                  $('#bldngCap').val(temp_bldnginfo[0].capacity)
+
                   // var desc = temp_bldnginfo[0].description
                   // var cap = temp_bldnginfo[0].capacity
 
@@ -983,6 +992,9 @@
                   var tempId = $(this).attr('data-id')
                   selected_id = tempId
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
+
+                  $('#bldngDesc').val(temp_bldnginfo[0].description)
+                  $('#bldngCap').val(temp_bldnginfo[0].capacity)
                   
                   $('#view_building_info_modal').modal()
             })
