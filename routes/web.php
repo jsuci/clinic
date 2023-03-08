@@ -28,6 +28,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
+    Route::get('api/building/rooms','AdministratorControllers\BuildingController@getBuildingRooms');
 
     //building sync
     Route::get('api/building/syncnew','AdministratorControllers\BuildingController@syncNew');

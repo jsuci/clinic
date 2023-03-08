@@ -102,18 +102,93 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     }
 
-    public static function getBuildingRooms($id) {
-        $results = DB::table('building')
-        ->join('rooms', 'building.id', '=', 'rooms.buildingid')
-        ->where('building.id', $id)
-        ->where('building.deleted', 0)
-        ->where('rooms.deleted', 0)
-        ->select('subscribers.id',
-        'subscribers.firstname',
-        'subscribers.lastname', 'subscriber_details.id',
-        'subscriber_details.phoneno', 'subscriber_details.provider')
-        
-        ->get();
+    public static function getBuildingRooms(Request $request) {
+        try {
+
+            $search = $request->get('search');
+            $search = $search['value'];
+
+            $buildingid = $request->get('buildingid');
+
+            $rooms = DB::table('rooms')
+                            ->where('deleted',0)
+                            ->where('buildingid', $buildingid)
+                            ->where(function($query) use($search){
+                                if($search != null){
+                                    $query->where('roomname','like','%'.$search.'%');
+                                }
+                            })
+                            ->take($request->get('length'))
+                            ->skip($request->get('start'))
+                            ->select(
+                                'id',
+                                'roomname',
+                                'capacity',
+                                'buildingid'
+                            )
+                            ->get();
+
+            $room_count = DB::table('rooms')
+            ->where('deleted',0)
+            ->where(function($query) use($search){
+                if($search != null){
+                    $query->where('roomname','like','%'.$search.'%');
+                }
+            })
+            ->count();
+
+            if(count($rooms) < 10){
+                $rooms = collect($rooms)->toArray();
+                $lacking = 10 - count($rooms);
+                for($x=0;$x <= $lacking; $x++){
+                    array_push( $rooms , (object)[
+                        'roomname'=>null,
+                        'capacity'=>null,
+                        'buildingid'=>null,
+                        'id'=>null
+                    ]);
+                }
+            }
+
+            return @json_encode((object)[
+                'data'=>$rooms,
+                'recordsTotal'=>$room_count,
+                'recordsFiltered'=>$room_count
+            ]);
+
+
+            // $id = $request->get('id');
+
+            // $results = DB::table('building')
+            // ->join('rooms', 'building.id', '=', 'rooms.buildingid')
+            // ->where('building.id', $id)
+            // ->where('building.deleted', 0)
+            // ->where('rooms.deleted', 0)
+            // ->select(
+            //     'building.id',
+            //     'building.description',
+            //     'building.capacity',
+            //     'rooms.id',
+            //     'rooms.roomname',
+            //     'rooms.capacity'
+            // )
+            
+            // ->get();
+
+            // return @json_encode((object)[
+            //     'data'=>$results
+            // ]);
+
+            // return @json_encode((object)[
+            //     'data'=>$results,
+            //     'recordsTotal'=>$building_count,
+            //     'recordsFiltered'=>$building_count
+            // ]);
+            
+        } catch(\Exception $e) {
+            return self::store_error($e);
+        }
+
     }
 
     public static function getBuildingsSelect(Request $request){

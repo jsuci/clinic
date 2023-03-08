@@ -209,9 +209,21 @@
                             </div>
                             <div class="row">
                               <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
-                                <table class="table-sm table-bordered table table-head-fixed mb-0" id="sched_holder"  style="font-size:.7rem !important">
+                                    <table class="table table-sm" id="bldg_rooms_table">
+                                          <thead>
+                                                <tr>
+                                                      <th width="55%">Room Name</th>
+                                                      <th width="40%">Students Enrolled</th>
+                                                      <th width="5%"></th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                          
+                                          </tbody>
+                                    </table>
+                                {{-- <table class="table-sm table-bordered table table-head-fixed mb-0" id="bldg_rooms_table"  style="font-size:.7rem !important">
                                   
-                                </table>
+                                </table> --}}
                               </div>
                             </div>
                           </div>
@@ -271,6 +283,7 @@
             
             var buildings = []
             var buildings_datatable = []
+            var rooms_datatable = []
             var selected_id = null
             var projectsetup = []
             var syncEnabled = false;
@@ -420,22 +433,22 @@
                   
 
             function process_deleted(tablename , deleted_data){
-            if (deleted_data.length == 0){
-                        return false
-            }
-            var b = deleted_data[0]
-            $.ajax({
-                  type:'GET',
-                  url: projectsetup[0].es_cloudurl+'/api/building/syncdelete',
-                  data:{
-                        tablename: tablename,
-                        data:b
-                  },
-                  success:function(data) {
-                        deleted_data = deleted_data.filter(x=>x.id != b.id)
-                        update_local_status(tablename,deleted_data,b,'delete')
-                  },
-            })
+                  if (deleted_data.length == 0){
+                              return false
+                  }
+                  var b = deleted_data[0]
+                  $.ajax({
+                        type:'GET',
+                        url: projectsetup[0].es_cloudurl+'/api/building/syncdelete',
+                        data:{
+                              tablename: tablename,
+                              data:b
+                        },
+                        success:function(data) {
+                              deleted_data = deleted_data.filter(x=>x.id != b.id)
+                              update_local_status(tablename,deleted_data,b,'delete')
+                        },
+                  })
             }
 
             function update_local_status(tablename,alldata,info,status,first=false){
@@ -458,8 +471,6 @@
                         },
                   })
             }
-
-
 
             function validate_bldg_input(id1, id2) {
                   var desc = $(id1).val();
@@ -568,7 +579,7 @@
             function buildingDelete(){
 
                   Swal.fire({
-                        text: 'Are you sure you delete building?',
+                        text: 'Are you sure you want to delete this building?',
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -669,7 +680,6 @@
                   buildingDatatable()
             }
 
-
             function buildingDatatable(){
 
                   if(button_enable == null){
@@ -705,11 +715,11 @@
                         }
                         },
                         {
-                        'targets': 1,
-                        'orderable': false, 
-                        'createdCell':  function (td, cellData, rowData, row, col) {
-                              $(td).addClass('align-middle')
-                        }
+                              'targets': 1,
+                              'orderable': false, 
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                              }
                         },
                         {
                               'targets': 2,
@@ -758,8 +768,86 @@
                         $(label_text)[0].innerHTML = ''
                   }
 
-                  
+            }
 
+            function buildingRoomDatatable() {
+                  $('#bldg_rooms_table').DataTable({
+                        destroy: true,
+                        autoWidth: false,
+                        lengthChange: false,
+                        stateSave: true,
+                        serverSide: true,
+                        processing: true,
+                        ajax:{
+                              url: '/api/building/rooms',
+                              type: 'GET',
+                              data: {
+                                    buildingid: selected_id
+                              }
+                              // dataSrc: function ( json ) {
+                              //       rooms_datatable = json.data
+                              //       return json.data;
+                              // }
+                        },
+                        columns: [
+                                    { "data": "roomname" },
+                                    { "data": null },
+                                    { "data": null }
+                        ],
+                        columnDefs: [
+                        {
+                              'targets': 0,
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                              }
+                        },
+                        {
+                              'targets': 1,
+                              'orderable': false, 
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                                    $(td).text(null)
+                              }
+                        },
+                        {
+                              'targets': 2,
+                              'orderable': false, 
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+
+                                    if(button_enable){
+                                          var buttons = ` <div class="dropdown text-center">
+                                                                  <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                                                        <i class="fa fa-ellipsis-v"></i>
+                                                                  </a>
+                                                                  <div class="dropdown-menu" >
+                                                                        <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
+                                                                              Edit
+                                                                        </a>
+                                                                        <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
+                                                                              Delete
+                                                                        </a>
+                                                                  </div> -->
+                                                            </div>`
+
+                                          if(rowData.id == null){
+                                                buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
+                                          }
+                                    }else{
+                                          buttons = ''
+                                    }
+
+                                    $(td)[0].innerHTML =  buttons
+                                    $(td).addClass('text-center')
+                                    $(td).addClass('align-middle')
+                              }
+                        },
+
+                  ],
+                        createdRow: function (row, data, dataIndex) {
+                              $(row).attr("data-id",data.id);
+                              $(row).addClass("view_room_info");
+                        },
+                  });
             }
 
             $(document).on('click','#building_create',function(){
@@ -798,7 +886,6 @@
             })
 
             $(document).on('click','#building_update_button',function(){
-
                   buildingUpdate()
             })
 
@@ -814,6 +901,10 @@
                   if (selected_id) {
                         $('#bldngDescEdit').val(temp_bldnginfo[0].description)
                         $('#bldngCapEdit').val(temp_bldnginfo[0].capacity)
+
+                        buildingRoomDatatable()
+
+                        console.log(rooms_datatable)
 
                         $('#view_bldginfo_modal').modal()
                   }
