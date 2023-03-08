@@ -101,7 +101,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header pb-2 pt-2 border-0">
-                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span></h4>
+                <h4 class="modal-title" style="font-size: 1.1rem !important">Room Information : <span id="room_name"></span></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span></button>
           </div>
@@ -114,32 +114,29 @@
                           <div class="card-body p-2" style="font-size: .8rem! important">
                             <div class="row mt-2">
                               <div class="col-md-12 form-group mb-2">
-                                <label>Building Name</label>
-                                <input id="bldngDesc" class="form-control form-control-sm" onkeyup="this.value = this.value.toUpperCase();">
+                                <label>Room Name</label>
+                                <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-12 form-group mb-2">
-                                <label>Building Capacity</label>
-                                <input id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                                <label>Room Capacity</label>
+                                <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
                               </div>
                             </div>
-                            {{-- <div class="row">
+                            <div class="row">
                               <div class="col-md-12 form-group">
                                 <label>Building</label>
                                 <select name="building" id="update_roombuilding" class="form-control form-control-sm select2">
                                     <option selected value="">SELECT BUILDING</option>
                                 </select>
                               </div>
-                            </div> --}}
-                            <div class="row mt-4">
+                            </div>
+                            <div class="row">
                               <div class="col-md-12 ">
-                                <button class="btn btn-success btn-sm btn-block" id="building_update_button" style="font-size:.8rem !important">
+                                <button class="btn btn-success btn-sm btn-block" id="update_information" style="font-size:.8rem !important">
                                   <i class="fa fa-save"></i> Update Information
                                 </button>
-                                <button class="btn btn-danger btn-sm btn-block mt-2" id="building_delete_button" style="font-size:.8rem !important">
-                                    <i class="fa fa-trash"></i> Delete Information
-                                  </button>
                               </div>
                             </div>
                           </div>
@@ -551,8 +548,8 @@
                                     $('#bldngDesc').val("")
                                     $('#bldngCap').val("")
                                     
-                                    if($('#view_bldginfo_modal')){
-                                          $('#view_bldginfo_modal').modal('hide')
+                                    if($('#building_form_modal')){
+                                          $('#building_form_modal').modal('hide')
                                     }
 
                                     buildingDatatable()
@@ -571,7 +568,7 @@
             function buildingDelete(){
 
                   Swal.fire({
-                        text: 'Are you sure you want to delete this building?',
+                        text: 'Are you sure you delete building?',
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -587,11 +584,6 @@
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
-
-                                                if($('#view_bldginfo_modal')){
-                                                      $('#view_bldginfo_modal').modal('hide')
-                                                }
-
                                                 buildingDatatable()
                                                 get_deleted('building')
                                           }
@@ -794,21 +786,13 @@
                   }
             })
 
-            // $(document).on('click','.building_delete',function(){
-            //       var tempId = $(this).attr('data-id')
-            //       selected_id = tempId
-            //       buildingDelete()
-            // })
-
-            $(document).on('click','#building_delete_button',function(){
-                  // var tempId = $(this).attr('data-id')
-                  // selected_id = tempId
-                  // console.log(selected_id)
+            $(document).on('click','.building_delete',function(){
+                  var tempId = $(this).attr('data-id')
+                  selected_id = tempId
                   buildingDelete()
             })
 
             $(document).on('click','#building_update_button',function(){
-                  console.log(selected_id)
                   buildingUpdate()
             })
 
@@ -819,14 +803,9 @@
             $(document).on('click','.view_info',function(){
                   var temp_id = $(this).attr('data-id')
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
-                  
-                  $('#bldngDesc').val(temp_bldnginfo[0].description)
-                  $('#bldngCap').val(temp_bldnginfo[0].capacity)
-                  $('#bldg_name').html(temp_bldnginfo[0].description)
+                  select_id = temp_id
 
-                  selected_id = temp_id
-
-                  if (selected_id) {
+                  if (select_id) {
                         $('#view_bldginfo_modal').modal()
                   }
 
