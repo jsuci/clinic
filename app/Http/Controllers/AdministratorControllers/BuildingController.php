@@ -102,6 +102,20 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     }
 
+    public static function getBuildingRooms($id) {
+        $results = DB::table('building')
+        ->join('rooms', 'building.id', '=', 'rooms.buildingid')
+        ->where('building.id', $id)
+        ->where('building.deleted', 0)
+        ->where('rooms.deleted', 0)
+        ->select('subscribers.id',
+        'subscribers.firstname',
+        'subscribers.lastname', 'subscriber_details.id',
+        'subscriber_details.phoneno', 'subscriber_details.provider')
+        
+        ->get();
+    }
+
     public static function getBuildingsSelect(Request $request){
 
         try{
