@@ -11,6 +11,13 @@
 |
 */
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use BigBlueButton\Parameters\CreateMeetingParameters;
+use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
+
 
 Route::middleware(['cors'])->group(function () {
 
@@ -32,10 +39,6 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/api/building/updatestat','AdministratorControllers\BuildingController@getUpdateStat');
 
 });
-
-use Illuminate\Support\Facades\Route;
-use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
-use BigBlueButton\Parameters\CreateMeetingParameters;
  
 Route::get('/cklmsmeet', 'ExternalApiController@cklmsmeet');
 Route::get('/sampleNavs', function () {

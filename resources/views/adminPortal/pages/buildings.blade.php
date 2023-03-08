@@ -101,7 +101,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header pb-2 pt-2 border-0">
-                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="room_name"></span></h4>
+                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span></button>
           </div>
@@ -134,10 +134,10 @@
                             </div> --}}
                             <div class="row mt-4">
                               <div class="col-md-12 ">
-                                <button class="btn btn-success btn-sm btn-block" id="update_information" style="font-size:.8rem !important">
+                                <button class="btn btn-success btn-sm btn-block" id="building_update_button" style="font-size:.8rem !important">
                                   <i class="fa fa-save"></i> Update Information
                                 </button>
-                                <button class="btn btn-danger btn-sm btn-block mt-2" id="update_information" style="font-size:.8rem !important">
+                                <button class="btn btn-danger btn-sm btn-block mt-2" id="building_delete_button" style="font-size:.8rem !important">
                                     <i class="fa fa-trash"></i> Delete Information
                                   </button>
                               </div>
@@ -551,8 +551,8 @@
                                     $('#bldngDesc').val("")
                                     $('#bldngCap').val("")
                                     
-                                    if($('#building_form_modal')){
-                                          $('#building_form_modal').modal('hide')
+                                    if($('#view_bldginfo_modal')){
+                                          $('#view_bldginfo_modal').modal('hide')
                                     }
 
                                     buildingDatatable()
@@ -571,7 +571,7 @@
             function buildingDelete(){
 
                   Swal.fire({
-                        text: 'Are you sure you delete building?',
+                        text: 'Are you sure you want to delete this building?',
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -587,6 +587,11 @@
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
+
+                                                if($('#view_bldginfo_modal')){
+                                                      $('#view_bldginfo_modal').modal('hide')
+                                                }
+
                                                 buildingDatatable()
                                                 get_deleted('building')
                                           }
@@ -789,13 +794,21 @@
                   }
             })
 
-            $(document).on('click','.building_delete',function(){
-                  var tempId = $(this).attr('data-id')
-                  selected_id = tempId
+            // $(document).on('click','.building_delete',function(){
+            //       var tempId = $(this).attr('data-id')
+            //       selected_id = tempId
+            //       buildingDelete()
+            // })
+
+            $(document).on('click','#building_delete_button',function(){
+                  // var tempId = $(this).attr('data-id')
+                  // selected_id = tempId
+                  // console.log(selected_id)
                   buildingDelete()
             })
 
             $(document).on('click','#building_update_button',function(){
+                  console.log(selected_id)
                   buildingUpdate()
             })
 
@@ -809,10 +822,11 @@
                   
                   $('#bldngDesc').val(temp_bldnginfo[0].description)
                   $('#bldngCap').val(temp_bldnginfo[0].capacity)
+                  $('#bldg_name').html(temp_bldnginfo[0].description)
 
-                  select_id = temp_id
+                  selected_id = temp_id
 
-                  if (select_id) {
+                  if (selected_id) {
                         $('#view_bldginfo_modal').modal()
                   }
 
