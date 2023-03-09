@@ -130,6 +130,7 @@ class BuildingController extends \App\Http\Controllers\Controller
 
             $room_count = DB::table('rooms')
             ->where('deleted',0)
+            ->where('buildingid', $buildingid)
             ->where(function($query) use($search){
                 if($search != null){
                     $query->where('roomname','like','%'.$search.'%');
@@ -137,18 +138,18 @@ class BuildingController extends \App\Http\Controllers\Controller
             })
             ->count();
 
-            if(count($rooms) < 10){
-                $rooms = collect($rooms)->toArray();
-                $lacking = 10 - count($rooms);
-                for($x=0;$x <= $lacking; $x++){
-                    array_push( $rooms , (object)[
-                        'roomname'=>null,
-                        'capacity'=>null,
-                        'buildingid'=>null,
-                        'id'=>null
-                    ]);
-                }
-            }
+            // if(count($rooms) < 10){
+            //     $rooms = collect($rooms)->toArray();
+            //     $lacking = 10 - count($rooms);
+            //     for($x=0;$x <= $lacking; $x++){
+            //         array_push( $rooms , (object)[
+            //             'roomname'=>null,
+            //             'capacity'=>null,
+            //             'buildingid'=>null,
+            //             'id'=>null
+            //         ]);
+            //     }
+            // }
 
             return @json_encode((object)[
                 'data'=>$rooms,

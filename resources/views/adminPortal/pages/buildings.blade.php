@@ -106,21 +106,21 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header pb-2 pt-2 border-0">
-                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="room_name"></span></h4>
+                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span></button>
           </div>
             <div class="modal-body pt-0">
                <div class="row">
                   <div class="col-md-2">
-                    <div class="row">
+                    <div class="row bldgInfo">
                       <div class="col-md-12">
                         <div class="card shadow h-100">
                           <div class="card-body p-2" style="font-size: .8rem! important">
                             <div class="row mt-2">
                               <div class="col-md-12 form-group mb-2">
                                 <label>Building Name</label>
-                                <input id="bldngDescEdit"onkeyup="this.value = this.value.toUpperCase();">
+                                <input class="form-control form-control-sm" id="bldngDescEdit"onkeyup="this.value = this.value.toUpperCase();">
                               </div>
                             </div>
                             <div class="row">
@@ -145,9 +145,24 @@
                         </div>
                       </div>
                     </div>
+                    <div class="row bldgTotalCap mt-4">
+                        <div class="col-md-12">
+                              <div class="card shadow">
+                                    <div class="card-body p-2" style="font-size: .8rem! important">
+                                          <div class="row">
+                                                <div class="col-md-12" id="totalCap">
+                                                      <label>Total Bldg. Capacity Left</label>
+                                                      <span>500</span>
+                                                      {{-- <input class="form-control form-control-sm" id="bldngDescEdit"onkeyup="this.value = this.value.toUpperCase();"> --}}
+                                                </div>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
                   </div>
                   <div class="col-md-10">
-                    <div class="row">
+                    {{-- <div class="row bldg-detail-info">
                       <div class="col-md-12">
                         <div class="card shadow">
                           <div class="card-body p-2">
@@ -169,7 +184,7 @@
                                       @endforeach
                                   </select>
                               </div>
-                              {{-- <div class="col-md-1 text-right">
+                              <div class="col-md-1 text-right">
                                 <label for="" style="font-size:.9rem !important">Semester: </label> 
                               </div>
                               <div class="col-md-2">
@@ -182,17 +197,17 @@
                                             @endif
                                       @endforeach
                                   </select>
-                              </div> --}}
+                              </div>
                             </div>
                            
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                       <div class="col-md-12">
                         <div class="card shadow">
-                          <div class="card-body" style="font-size:.8rem !important">
+                          <div class="card-body p-2" style="font-size:.8rem !important">
                             {{-- <div class="row">
                               <div class="col-md-2">
                                 <button class="btn btn-sm btn-primary add_sched" >Add Schedule</button>
@@ -214,11 +229,11 @@
                             </div>
                             <div class="row">
                               <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
-                                    <table class="table table-sm" id="bldg_rooms_table">
+                                    <table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="bldg_rooms_table">
                                           <thead>
                                                 <tr>
                                                       <th width="55%">Room Name</th>
-                                                      <th width="40%">Students Enrolled</th>
+                                                      <th width="40%">Capacity</th>
                                                       <th width="5%"></th>
                                                 </tr>
                                           </thead>
@@ -425,7 +440,7 @@
 
 
             //get deleted
-            function get_deleted(tablename){
+            function get_deleted(tablename) {
                   if(!connected_stat){
                         return false
                   }
@@ -442,7 +457,7 @@
             }
                   
 
-            function process_deleted(tablename , deleted_data){
+            function process_deleted(tablename , deleted_data) {
                   if (deleted_data.length == 0){
                               return false
                   }
@@ -461,7 +476,7 @@
                   })
             }
 
-            function update_local_status(tablename,alldata,info,status,first=false){
+            function update_local_status(tablename, alldata, info, status, first=false) {
                   $.ajax({
                         type:'GET',
                         url:  '/api/building/updatestat',
@@ -482,15 +497,58 @@
                   })
             }
 
-            function validate_bldg_input(id1, id2) {
-                  var desc = $(id1).val();
-                  var cap = $(id2).val()
+            function validateInput(input) {
+                  if (!input.val().trim()) {
+                        input.removeClass("is-valid").addClass("is-invalid");
+                        return false;
+                  } else {
+                        input.removeClass("is-invalid").addClass("is-valid");
+                        return true;
+                  }
+            }
 
-                  if (!desc || !cap) {
+
+            function validateIds(id1, id2) {
+                  const input1 = $("#" + id1);
+                  const input2 = $("#" + id2);
+
+                  // console.log(input1.val(), input2.val())
+
+                  function validateInput(input) {
+                        if (!input.val().trim()) {
+                              input.removeClass("is-valid").addClass("is-invalid");
+                              return false;
+                        } else {
+                              input.removeClass("is-invalid").addClass("is-valid");
+                              return true;
+                        }
+                  }
+                  
+                  const isValid1 = null;
+                  const isValid2 = null;
+
+                  input1.on("input", () => {
+                        isValid1 = validateInput(input1);
+                  });
+
+                  input2.on("input", () => {
+                        isValid2 = validateInput(input2);
+                  });
+
+                  if (!isValid1 || !isValid2) {
                         return false
                   } else {
                         return true
                   }
+            }
+
+            function resetValidateIds(id1, id2) {
+                  const input1 = $("#" + id1);
+                  const input2 = $("#" + id2);
+
+                  input1.removeClass("is-valid").removeClass("is-invalid");
+                  input2.removeClass("is-valid").removeClass("is-invalid");
+
             }
 
             function getBuildings(){
@@ -509,7 +567,7 @@
 
             function buildingCreate(){
                   // validate input here
-                  if (!validate_bldg_input('#bldngDesc', '#bldngCap')) {
+                  if (validateIds('bldngDesc', 'bldngCap')) {
                         Toast.fire({
                               type: 'error',
                               title: 'Error empty field'
@@ -527,6 +585,12 @@
 
                                     $('#bldngDesc').val("")
                                     $('#bldngCap').val("")
+
+                                    $('#bldngDesc').removeClass('is-invalid')
+                                    $('#bldngDesc').removeClass('is-valid')
+
+                                    $('#bldngCap').removeClass('is-invalid')
+                                    $('#bldngCap').removeClass('is-valid')
                                     
                                     if($('#building_form_modal')){
                                           $('#building_form_modal').modal('hide')
@@ -549,7 +613,7 @@
                   // console.log($('#bldngDescEdit').val(), $('#bldngCapEdit').val(), selected_id)
                   
                   // validate input here
-                  if (!validate_bldg_input('#bldngDescEdit', '#bldngCapEdit')) {
+                  if (validateIds('bldngDescEdit', 'bldngCapEdit')) {
                         Toast.fire({
                               type: 'error',
                               title: 'Error empty field'
@@ -631,13 +695,13 @@
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label>Description</label>            
-                                                <input class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" >
+                                                <input class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label>Capacity</label>            
-                                                <input class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                                <input class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
                                           </div>
                                     </div>
                                     <div class="row">
@@ -673,7 +737,7 @@
 
             function buildingtable(datatableholder){
 
-                  var table = `<table class="table table-sm" id="buildings_datatable">
+                  var table = `<table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="buildings_datatable">
                                     <thead>
                                           <tr>
                                                 <th width="55%">Description</th>
@@ -780,8 +844,10 @@
 
             }
 
-            function buildingRoomDatatable() {
-                  $('#bldg_rooms_table').DataTable({
+            function buildingRoomDatatable(bldgCap) {
+                        var totalCapacity = 0;
+
+                        $('#bldg_rooms_table').DataTable({
                         destroy: true,
                         autoWidth: false,
                         lengthChange: false,
@@ -792,106 +858,158 @@
                               url: '/api/building/rooms',
                               type: 'GET',
                               data: {
-                                    buildingid: selected_id
+                              buildingid: selected_id
+                              },
+                              dataSrc: function ( json ) {
+                              return json.data;
                               }
-                              // dataSrc: function ( json ) {
-                              //       rooms_datatable = json.data
-                              //       return json.data;
-                              // }
                         },
                         columns: [
-                                    { "data": "roomname" },
-                                    { "data": null },
-                                    { "data": null }
+                              { "data": "roomname" },
+                              { "data": "capacity" },
+                              { "data": null }
                         ],
                         columnDefs: [
-                        {
-                              'targets': 0,
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('align-middle')
-                              }
-                        },
-                        {
-                              'targets': 1,
-                              'orderable': false, 
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('align-middle')
-                                    $(td).text(null)
-                              }
-                        },
-                        {
-                              'targets': 2,
-                              'orderable': false, 
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-
-                                    if(button_enable){
-                                          var buttons = ` <div class="dropdown text-center">
-                                                                  <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-ellipsis-v"></i>
-                                                                  </a>
-                                                                  <div class="dropdown-menu" >
-                                                                        <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
-                                                                              Edit
-                                                                        </a>
-                                                                        <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
-                                                                              Delete
-                                                                        </a>
-                                                                  </div> -->
-                                                            </div>`
-
-                                          if(rowData.id == null){
-                                                buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
-                                          }
-                                    }else{
-                                          buttons = ''
+                              {
+                                    'targets': 0,
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle')
                                     }
-
-                                    $(td)[0].innerHTML =  buttons
-                                    $(td).addClass('text-center')
-                                    $(td).addClass('align-middle')
+                              },
+                              {
+                                    'targets': 1,
+                                    'orderable': false, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle');
+                                          totalCapacity += parseInt(cellData); // add capacity to total
+                                    }
+                              },
+                              {
+                                    'targets': 2,
+                                    'orderable': false, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).text(null)
+                                    }
                               }
-                        },
-
-                  ],
+                        ],
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_room_info");
                         },
+                        drawCallback: function( settings ) {
+                              totalCapacity = parseInt(bldgCap) - parseInt(totalCapacity)
+                              console.log("Total capacity: " + totalCapacity);
+                              
+                              $('#totalCap span').html(totalCapacity);
+                        }
                   });
+            }
+
+
+            // function buildingRoomDatatable() {
+            //       var totalCap = 0;
+
+            //       $('#bldg_rooms_table').DataTable({
+            //             destroy: true,
+            //             autoWidth: false,
+            //             lengthChange: false,
+            //             stateSave: true,
+            //             serverSide: true,
+            //             processing: true,
+            //             ajax:{
+            //                   url: '/api/building/rooms',
+            //                   type: 'GET',
+            //                   data: {
+            //                         buildingid: selected_id
+            //                   },
+            //                   dataSrc: function ( json ) {
+            //                         return json.data;
+            //                   }
+            //             },
+            //             columns: [
+            //                         { "data": "roomname" },
+            //                         { "data": "capacity" },
+            //                         { "data": null }
+            //             ],
+            //             columnDefs: [
+            //             {
+            //                   'targets': 0,
+            //                   'createdCell':  function (td, cellData, rowData, row, col) {
+            //                         $(td).addClass('align-middle')
+            //                   }
+            //             },
+            //             {
+            //                   'targets': 1,
+            //                   'orderable': false, 
+            //                   'createdCell':  function (td, cellData, rowData, row, col) {
+            //                         $(td).addClass('align-middle')
+            //                         totalCap += parseInt(cellData); // add capacity to total
+            //                         console.log(totalCap);
+            //                   }
+            //             },
+            //             {
+            //                   'targets': 2,
+            //                   'orderable': false, 
+            //                   'createdCell':  function (td, cellData, rowData, row, col) {
+
+            //                         if(button_enable){
+            //                               var buttons = ` <div class="dropdown text-center">
+            //                                                       <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+            //                                                             <i class="fa fa-ellipsis-v"></i>
+            //                                                       </a>
+            //                                                       <div class="dropdown-menu" >
+            //                                                             <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
+            //                                                                   Edit
+            //                                                             </a>
+            //                                                             <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
+            //                                                                   Delete
+            //                                                             </a>
+            //                                                       </div> -->
+            //                                                 </div>`
+
+            //                               if(rowData.id == null){
+            //                                     buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
+            //                               }
+            //                         }else{
+            //                               buttons = ''
+            //                         }
+
+            //                         $(td)[0].innerHTML =  buttons
+            //                         $(td).addClass('text-center')
+            //                         $(td).addClass('align-middle')
+            //                   }
+            //             },
+
+            //       ],
+            //             createdRow: function (row, data, dataIndex) {
+            //                   $(row).attr("data-id",data.id);
+            //                   $(row).addClass("view_room_info");
+            //             },
+            //       });
+
+            //       console.log("Total capacity: " + totalCap);
+            // }
+
+
+            function bldgRoomTotalCap(bldgCap) {
+                  var totalRoomCap = 0;
+                  console.log(selected_id, bldgCap)
+
             }
 
             $(document).on('click','#building_create',function(){
                   $('#bldngDesc').val("")
                   $('#bldngCap').val("")
 
-                  // $('#building_create_button').removeAttr('hidden')
-                  // $('#building_update_button').attr('hidden','hidden')
+                  resetValidateIds('bldngDesc', 'bldngCap')
 
                   if($('#building_form_modal')){
                               $('#building_form_modal').modal()
-                  }
-            })
-
-            $(document).on('click','.building_edit',function(){
-                  var tempId = $(this).attr('data-id')
-                  selected_id = tempId
-                  var temp_bldnginfo = buildings_datatable.filter(x=>x.id == tempId)
-
-                  $('#bldngDesc').val(temp_bldnginfo[0].description)
-                  $('#bldngCap').val(temp_bldnginfo[0].capacity)
-
-
-                  $('#building_update_button').removeAttr('hidden')
-                  $('#building_create_button').attr('hidden','hidden')
-            
-                  if($('#building_form_modal')){
-                        $('#building_form_modal').modal()
+                              // validateIds('bldngDesc', 'bldngCap')
                   }
             })
 
             $(document).on('click','#building_delete_button',function(){
-                  // var tempId = $(this).attr('data-id')
-                  // selected_id = tempId
                   buildingDelete()
             })
 
@@ -906,31 +1024,32 @@
             $(document).on('click','.view_info',function(){
                   var temp_id = $(this).attr('data-id')
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
+                  var bldgCap = temp_bldnginfo[0].capacity
+
                   selected_id = temp_id
 
                   if (selected_id) {
+                        
                         $('#bldngDescEdit').val(temp_bldnginfo[0].description)
                         $('#bldngCapEdit').val(temp_bldnginfo[0].capacity)
+                        $('#bldg_name').html(temp_bldnginfo[0].description)
 
-                        buildingRoomDatatable()
-
-                        console.log(rooms_datatable)
+                        resetValidateIds('bldngDescEdit', 'bldngCapEdit')
+                        
+                        buildingRoomDatatable(bldgCap)
+                        
+                        // validateIds('bldngDescEdit', 'bldngCapEdit')
 
                         $('#view_bldginfo_modal').modal()
                   }
-
-                  // // $('#print_sched').attr('data-id',select_id)
-
-                  // $('#update_roomname').val(data[0].roomname)
-                  // $('#update_roomcap').val(data[0].capacity)
-                  // $('#update_roombuilding').val(data[0].buildingid).change()
-                  // $('#room_name').text(data[0].roomname)
-                  // // $('#room_form_modal').modal()
-                  // $('#create_room').text('Update')
-                  // $('#create_room').removeClass('btn-primary')
-                  // $('#create_room').addClass('btn-success')
-                  // $('#create_room').attr('data-id',2)
             })
+
+            // // inputs
+            // input1.on("input", () => {
+            //       isValid1 = validateInput(input1);
+            // });
+
+
       </script>
 @endsection
 
