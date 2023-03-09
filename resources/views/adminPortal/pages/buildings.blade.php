@@ -104,156 +104,96 @@
 @section('modalSection')
 <div class="modal fade" id="view_bldginfo_modal" style="display: none; padding-right: 17px;" aria-hidden="true">
       <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header pb-2 pt-2 border-0">
-                <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span></button>
-          </div>
-            <div class="modal-body pt-0">
-               <div class="row">
-                  <div class="col-md-2">
-                    <div class="row bldgInfo">
-                      <div class="col-md-12">
-                        <div class="card shadow h-100">
-                          <div class="card-body p-2" style="font-size: .8rem! important">
-                            <div class="row mt-2">
-                              <div class="col-md-12 form-group mb-2">
-                                <label>Building Name</label>
-                                <input class="form-control form-control-sm" id="bldngDescEdit"onkeyup="this.value = this.value.toUpperCase();">
+          <div class="modal-content">
+              <div class="modal-header pb-2 pt-2 border-0">
+                  <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span>
+                  </h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+              </div>
+              <div class="modal-body pt-0">
+                      <div class="row">
+                          <div class="col-md-2">
+                              <div class="row bldgInfo">
+                                  <div class="col-md-12">
+                                      <div class="card shadow h-100">
+                                          <div class="card-body p-2" style="font-size: .8rem! important">
+                                                <form id="bldgEditForm" method="post">
+                                                      <div class="row mt-2">
+                                                            <div class="col-md-12 form-group mb-2">
+                                                                  <label>Building Name</label>
+                                                                  <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
+                                                            </div>
+                                                      </div>
+                                                      <div class="row">
+                                                            <div class="col-md-12 form-group mb-2">
+                                                                  <label>Building Capacity</label>
+                                                                  <input type="number" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                            </div>
+                                                      </div>
+                                                      <div class="row mt-3">
+                                                            <div class="col-md-12 ">
+                                                                  <button type="submit" class="btn btn-success btn-sm btn-block" id="building_update_button" style="font-size:.8rem !important">
+                                                                  <i class="fa fa-save"></i> Update Information </button>
+                                                            </div>
+                                                            <div class="col-md-12 mt-2">
+                                                                  <button class="btn btn-danger btn-sm btn-block" id="building_delete_button" style="font-size:.8rem !important">
+                                                                  <i class="fa fa-trash"></i> Delete Information </button>
+                                                            </div>
+                                                      </div>
+
+                                                      <input type="hidden" name="id" value="" id="bldgId"/>
+                                                </form>
+                                          </div>
+                                      </div>
+                                  </div>
                               </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12 form-group mb-2">
-                                <label>Building Capacity</label>
-                                <input id="bldngCapEdit" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                              </div>
-                            </div>
-                            <div class="row mt-3">
-                              <div class="col-md-12 ">
-                                <button class="btn btn-success btn-sm btn-block" id="building_update_button" style="font-size:.8rem !important">
-                                  <i class="fa fa-save"></i> Update Information
-                                </button>
-                              </div>
-                              <div class="col-md-12 mt-2">
-                                    <button class="btn btn-danger btn-sm btn-block" id="building_delete_button" style="font-size:.8rem !important">
-                                      <i class="fa fa-trash"></i> Delete Information
-                                    </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row bldgTotalCap mt-4">
-                        <div class="col-md-12">
-                              <div class="card shadow">
-                                    <div class="card-body p-2" style="font-size: .8rem! important">
-                                          <div class="row">
-                                                <div class="col-md-12" id="totalCap">
+                              <div class="row bldgTotalCap mt-4">
+                                  <div class="col-md-12">
+                                      <div class="card shadow">
+                                          <div class="card-body p-2" style="font-size: .8rem! important">
+                                              <div class="row">
+                                                  <div class="col-md-12" id="totalCap">
                                                       <label>Total Bldg. Capacity Left</label>
                                                       <span>500</span>
-                                                      {{-- <input class="form-control form-control-sm" id="bldngDescEdit"onkeyup="this.value = this.value.toUpperCase();"> --}}
-                                                </div>
+                                                  </div>
+                                              </div>
                                           </div>
-                                    </div>
+                                      </div>
+                                  </div>
                               </div>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col-md-10">
-                    {{-- <div class="row bldg-detail-info">
-                      <div class="col-md-12">
-                        <div class="card shadow">
-                          <div class="card-body p-2">
-                            <div class="row">
-                              <div class="col-md-6">
-                                <button type="button" id="print_sched" class="btn btn-sm btn-outline-primary" style="font-size:.8rem !important"  ><i class="fa fa-print mr-1" ></i>Print Schedule</button>
-                              </div>
-                              <div class="col-md-4 text-right">
-                                <label for="" style="font-size:.9rem !important">School Year: </label> 
-                              </div>
-                              <div class="col-md-2">
-                                  <select class="form-control form-control-sm teacher select2"  id="filter_acad_sy">
-                                      @foreach ($sy as $item)
-                                            @if($item->isactive == 1)
-                                                  <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
-                                            @else
-                                                  <option value="{{$item->id}}">{{$item->text}}</option>
-                                            @endif
-                                      @endforeach
-                                  </select>
-                              </div>
-                              <div class="col-md-1 text-right">
-                                <label for="" style="font-size:.9rem !important">Semester: </label> 
-                              </div>
-                              <div class="col-md-2">
-                                  <select class="form-control form-control-sm teacher select2"  id="filter_semester">
-                                      @foreach ($semester as $item)
-                                            @if($item->isactive == 1)
-                                                  <option value="{{$item->id}}" selected="selected">{{$item->text}}</option>
-                                            @else
-                                                  <option value="{{$item->id}}">{{$item->text}}</option>
-                                            @endif
-                                      @endforeach
-                                  </select>
-                              </div>
-                            </div>
-                           
                           </div>
-                        </div>
-                      </div>
-                    </div> --}}
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="card shadow">
-                          <div class="card-body p-2" style="font-size:.8rem !important">
-                            {{-- <div class="row">
-                              <div class="col-md-2">
-                                <button class="btn btn-sm btn-primary add_sched" >Add Schedule</button>
+                          <div class="col-md-10">
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="card shadow">
+                                          <div class="card-body p-2" style="font-size:.8rem !important">
+                                              <div class="row mt-3">
+                                                  <div class="col-md-12"></div>
+                                              </div>
+                                              <div class="row">
+                                                  <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
+                                                      <table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="bldg_rooms_table">
+                                                          <thead>
+                                                              <tr>
+                                                                  <th width="55%">Room Name</th>
+                                                                  <th width="40%">Capacity</th>
+                                                                  <th width="5%"></th>
+                                                              </tr>
+                                                          </thead>
+                                                          <tbody></tbody>
+                                                      </table>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
                               </div>
-                                <div class="col-md-5"></div>
-                                <div class="col-md-2">
-                                  <button class="btn btn-sm btn-primary btn-block" id="time_templatelist">Time Template List</button>
-                                </div>
-                                <div class="col-md-3  mt-1">
-                                    <select class="form-control form-control-sm teacher select2"  id="filter_timetemplate">
-                                    </select>
-                                </div>
-                              
-                            </div> --}}
-                            <div class="row mt-3">
-                              <div class="col-md-12">
-                                {{-- <p class="mb-0 text-sm"><i>Click the subject name to edit or delete schedule.</i></p> --}}
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
-                                    <table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="bldg_rooms_table">
-                                          <thead>
-                                                <tr>
-                                                      <th width="55%">Room Name</th>
-                                                      <th width="40%">Capacity</th>
-                                                      <th width="5%"></th>
-                                                </tr>
-                                          </thead>
-                                          <tbody>
-                                          
-                                          </tbody>
-                                    </table>
-                                {{-- <table class="table-sm table-bordered table table-head-fixed mb-0" id="bldg_rooms_table"  style="font-size:.7rem !important">
-                                  
-                                </table> --}}
-                              </div>
-                            </div>
                           </div>
-                        </div>
                       </div>
-                    </div>
-                  </div>
-               </div>
-            </div>
-        </div>
+              </div>
+          </div>
       </div>
   </div>
 @endsection
@@ -267,7 +207,6 @@
       <script src="{{asset('plugins/datatables/jquery.dataTables.js') }}"></script>
       <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
       <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
-
       {{-- <script src="{{asset('js/setupjs/buildings.js') }}"></script> --}}
       <script>
      
@@ -402,7 +341,6 @@
                   })
             }
 
-            //get_updated
             function get_updated(tablename){
                   if(!connected_stat){
                   return false
@@ -438,8 +376,6 @@
                   })
             }
 
-
-            //get deleted
             function get_deleted(tablename) {
                   if(!connected_stat){
                         return false
@@ -455,7 +391,6 @@
                         }
                   })
             }
-                  
 
             function process_deleted(tablename , deleted_data) {
                   if (deleted_data.length == 0){
@@ -497,6 +432,21 @@
                   })
             }
 
+            function getBuildings(){
+                  $.ajax({
+                        type:'GET',
+                        url:'/api/buildings',
+                        success:function(data) {
+                              if(data[0].status == 1){
+                                    buildings = data[0].data
+                              }else{
+
+                              }
+                        }
+                  })
+            }
+
+            // JAM: added functions
             function validateInput(input) {
                   if (!input.val().trim()) {
                         input.removeClass("is-valid").addClass("is-invalid");
@@ -506,7 +456,6 @@
                         return true;
                   }
             }
-
 
             function validateIds(id1, id2) {
                   const input1 = $("#" + id1);
@@ -550,36 +499,13 @@
                   input2.removeClass("is-valid").removeClass("is-invalid");
 
             }
+            // JAM: added functions
 
-            function getBuildings(){
+            function buildingCreate(data){
                   $.ajax({
                         type:'GET',
-                        url:'/api/buildings',
-                        success:function(data) {
-                              if(data[0].status == 1){
-                                    buildings = data[0].data
-                              }else{
-
-                              }
-                        }
-                  })
-            }
-
-            function buildingCreate(){
-                  // validate input here
-                  if (validateIds('bldngDesc', 'bldngCap')) {
-                        Toast.fire({
-                              type: 'error',
-                              title: 'Error empty field'
-                        })
-                  } else {
-                        $.ajax({
-                        type:'GET',
                         url:'/api/building/create',
-                        data:{
-                              'description':$('#bldngDesc').val(),
-                              'capacity':$('#bldngCap').val()
-                        },
+                        data: data,
                         success:function(data) {
                               if(data[0].status == 1){
 
@@ -605,29 +531,57 @@
                               })
                         }
                   })
-                  }
             }
 
-            function buildingUpdate(){
+            // function buildingCreate(){
+            //       // validate input here
+            //       if (validateIds('bldngDesc', 'bldngCap')) {
+            //             Toast.fire({
+            //                   type: 'error',
+            //                   title: 'Error empty field'
+            //             })
+            //       } else {
+            //             $.ajax({
+            //             type:'GET',
+            //             url:'/api/building/create',
+            //             data:{
+            //                   'description':$('#bldngDesc').val(),
+            //                   'capacity':$('#bldngCap').val()
+            //             },
+            //             success:function(data) {
+            //                   if(data[0].status == 1){
 
-                  // console.log($('#bldngDescEdit').val(), $('#bldngCapEdit').val(), selected_id)
-                  
-                  // validate input here
-                  if (validateIds('bldngDescEdit', 'bldngCapEdit')) {
-                        Toast.fire({
-                              type: 'error',
-                              title: 'Error empty field'
-                        })
-                  } else {
-                        $.ajax({
-                        type:'GET',
-                        url:'/api/building/update',
-                        data:{
-                              'description':$('#bldngDescEdit').val(),
-                              'capacity':$('#bldngCapEdit').val(),
-                              'id':selected_id
-                        },
-                        success:function(data) {
+            //                         $('#bldngDesc').val("")
+            //                         $('#bldngCap').val("")
+
+            //                         $('#bldngDesc').removeClass('is-invalid')
+            //                         $('#bldngDesc').removeClass('is-valid')
+
+            //                         $('#bldngCap').removeClass('is-invalid')
+            //                         $('#bldngCap').removeClass('is-valid')
+                                    
+            //                         if($('#building_form_modal')){
+            //                               $('#building_form_modal').modal('hide')
+            //                         }
+
+            //                         buildingDatatable()
+            //                         get_last_index('building')
+            //                   }
+            //                   Toast.fire({
+            //                         type: data[0].icon,
+            //                         title: data[0].message
+            //                   })
+            //             }
+            //       })
+            //       }
+            // }
+
+            function buildingUpdate(data){
+                  $.ajax({
+                        type: 'GET',
+                        url: '/api/building/update',
+                        data: data,
+                        success: function(data) {
                               if(data[0].status == 1){
 
                                     $('#bldngDesc').val("")
@@ -646,8 +600,6 @@
                               })
                         }
                   })
-                  }
-
             }
 
             function buildingDelete(){
@@ -694,19 +646,19 @@
 
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
-                                                <label>Description</label>            
-                                                <input class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
+                                                <label for="description">Description</label>            
+                                                <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12 form-group">
-                                                <label>Capacity</label>            
-                                                <input class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                <label for="capacity">Capacity</label>            
+                                                <input type="number" name="capacity" class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12">
-                                                <button class="btn btn-sm btn-primary" id="building_create_button"><i class="fa fa-save"></i> Save</button>
+                                                <button type="submit" class="btn btn-sm btn-primary" id="building_create_button"><i class="fa fa-save"></i> Save</button>
                                                 <button class="btn btn-success btn-success btn-sm" id="building_update_button" hidden><i class="fa fa-save"></i> Update</button>
                                           </div>
                               </div>`
@@ -721,7 +673,9 @@
                                                       <span aria-hidden="true">×</span></button>
                                           </div>
                                                 <div class="modal-body pt-0">
-                                                      `+buildingform+`
+                                                      <form id="bldgCreateForm" method="post">
+                                                            `+buildingform+`
+                                                      </form>
                                                 </div>
                                           </div>
                                     </div>
@@ -906,121 +860,59 @@
             }
 
 
-            // function buildingRoomDatatable() {
-            //       var totalCap = 0;
-
-            //       $('#bldg_rooms_table').DataTable({
-            //             destroy: true,
-            //             autoWidth: false,
-            //             lengthChange: false,
-            //             stateSave: true,
-            //             serverSide: true,
-            //             processing: true,
-            //             ajax:{
-            //                   url: '/api/building/rooms',
-            //                   type: 'GET',
-            //                   data: {
-            //                         buildingid: selected_id
-            //                   },
-            //                   dataSrc: function ( json ) {
-            //                         return json.data;
-            //                   }
-            //             },
-            //             columns: [
-            //                         { "data": "roomname" },
-            //                         { "data": "capacity" },
-            //                         { "data": null }
-            //             ],
-            //             columnDefs: [
-            //             {
-            //                   'targets': 0,
-            //                   'createdCell':  function (td, cellData, rowData, row, col) {
-            //                         $(td).addClass('align-middle')
-            //                   }
-            //             },
-            //             {
-            //                   'targets': 1,
-            //                   'orderable': false, 
-            //                   'createdCell':  function (td, cellData, rowData, row, col) {
-            //                         $(td).addClass('align-middle')
-            //                         totalCap += parseInt(cellData); // add capacity to total
-            //                         console.log(totalCap);
-            //                   }
-            //             },
-            //             {
-            //                   'targets': 2,
-            //                   'orderable': false, 
-            //                   'createdCell':  function (td, cellData, rowData, row, col) {
-
-            //                         if(button_enable){
-            //                               var buttons = ` <div class="dropdown text-center">
-            //                                                       <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
-            //                                                             <i class="fa fa-ellipsis-v"></i>
-            //                                                       </a>
-            //                                                       <div class="dropdown-menu" >
-            //                                                             <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
-            //                                                                   Edit
-            //                                                             </a>
-            //                                                             <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
-            //                                                                   Delete
-            //                                                             </a>
-            //                                                       </div> -->
-            //                                                 </div>`
-
-            //                               if(rowData.id == null){
-            //                                     buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
-            //                               }
-            //                         }else{
-            //                               buttons = ''
-            //                         }
-
-            //                         $(td)[0].innerHTML =  buttons
-            //                         $(td).addClass('text-center')
-            //                         $(td).addClass('align-middle')
-            //                   }
-            //             },
-
-            //       ],
-            //             createdRow: function (row, data, dataIndex) {
-            //                   $(row).attr("data-id",data.id);
-            //                   $(row).addClass("view_room_info");
-            //             },
-            //       });
-
-            //       console.log("Total capacity: " + totalCap);
-            // }
-
-
             function bldgRoomTotalCap(bldgCap) {
                   var totalRoomCap = 0;
                   console.log(selected_id, bldgCap)
 
             }
 
+            // Add New button
             $(document).on('click','#building_create',function(){
                   $('#bldngDesc').val("")
                   $('#bldngCap').val("")
 
-                  resetValidateIds('bldngDesc', 'bldngCap')
-
                   if($('#building_form_modal')){
                               $('#building_form_modal').modal()
-                              // validateIds('bldngDesc', 'bldngCap')
                   }
             })
 
-            $(document).on('click','#building_delete_button',function(){
+            // Delete Information button
+            $(document).on('click','#building_delete_button',function(event){
+                  event.preventDefault();
                   buildingDelete()
             })
 
-            $(document).on('click','#building_update_button',function(){
-                  buildingUpdate()
+            // Update Information button
+            // $(document).on('click','#building_update_button',function(){
+            //       buildingUpdate()
+            // })
+            $(document).on('submit','#bldgEditForm',function(event){
+                  event.preventDefault();
+                  var formData = $(this).serialize();
+                  console.log('edit', formData)
+                  buildingUpdate(formData)
             })
 
-            $(document).on('click','#building_create_button',function(){
-                  buildingCreate()
+            // Save button
+            // $(document).on('click','#building_create_button',function(){
+            //       buildingCreate()
+            // })
+            $(document).on('submit','#bldgCreateForm',function(event){
+                  event.preventDefault();
+                  var formData = $(this).serialize();
+                  buildingCreate(formData)
             })
 
+            // $('#bldgCreateForm').submit(function (event) {
+            //       event.preventDefault();
+
+            //       var desc = $('#bldngDesc').val();
+            //       var cap = $('#bldngCap').val();
+
+            //       console.log(desc, cap)
+            // })
+
+            // Building Row
             $(document).on('click','.view_info',function(){
                   var temp_id = $(this).attr('data-id')
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
@@ -1030,24 +922,16 @@
 
                   if (selected_id) {
                         
-                        $('#bldngDescEdit').val(temp_bldnginfo[0].description)
-                        $('#bldngCapEdit').val(temp_bldnginfo[0].capacity)
+                        $('#bldngDesc').val(temp_bldnginfo[0].description)
+                        $('#bldngCap').val(temp_bldnginfo[0].capacity)
                         $('#bldg_name').html(temp_bldnginfo[0].description)
-
-                        resetValidateIds('bldngDescEdit', 'bldngCapEdit')
+                        $('#bldgId').val(selected_id)
                         
                         buildingRoomDatatable(bldgCap)
-                        
-                        // validateIds('bldngDescEdit', 'bldngCapEdit')
 
                         $('#view_bldginfo_modal').modal()
                   }
             })
-
-            // // inputs
-            // input1.on("input", () => {
-            //       isValid1 = validateInput(input1);
-            // });
 
 
       </script>
