@@ -33,8 +33,13 @@
 
 @section('pagespecificscripts')
 
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
+<link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+  
 
   <style>
         .shadow {
@@ -187,7 +192,7 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="card shadow">
-                          <div class="card-body p-2">
+                          <div class="card-body" style="font-size:.8rem !important">
                             {{-- <div class="row">
                               <div class="col-md-2">
                                 <button class="btn btn-sm btn-primary add_sched" >Add Schedule</button>
@@ -241,8 +246,13 @@
 
 
 @section('footerjavascript')
+      <script src="{{asset('plugins/moment/moment.min.js') }}"></script>
+      <script src="{{asset('plugins/select2/js/select2.full.min.js') }}"></script>
+      <script src="{{asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
       <script src="{{asset('plugins/datatables/jquery.dataTables.js') }}"></script>
       <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
+      <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
+
       {{-- <script src="{{asset('js/setupjs/buildings.js') }}"></script> --}}
       <script>
      

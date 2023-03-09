@@ -554,7 +554,7 @@
 
 @section('footerjavascript')
 
-<script src="{{asset('plugins/moment/moment.min.js') }}"></script>
+  <script src="{{asset('plugins/moment/moment.min.js') }}"></script>
   <script src="{{asset('plugins/select2/js/select2.full.min.js') }}"></script>
   <script src="{{asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
   <script src="{{asset('plugins/datatables/jquery.dataTables.js') }}"></script>
