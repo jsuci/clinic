@@ -40,7 +40,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/api/building/updatestat','AdministratorControllers\BuildingController@getUpdateStat');
 
 });
- 
+
 Route::get('/cklmsmeet', 'ExternalApiController@cklmsmeet');
 Route::get('/sampleNavs', function () {
 

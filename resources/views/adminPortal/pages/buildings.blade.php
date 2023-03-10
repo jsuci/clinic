@@ -601,8 +601,8 @@
                         text: 'Are you sure you want to delete this building?',
                         type: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
+                        confirmButtonColor: '#d33', //'#3085d6'
+                        cancelButtonColor: '#6c757d', //'#d33'
                         confirmButtonText: 'Delete'
                   }).then((result) => {
                         if (result.value) {
@@ -615,9 +615,9 @@
                                     success:function(data) {
                                           if(data[0].status == 1){
 
-                                                if($('#view_bldginfo_modal')){
-                                                      $('#view_bldginfo_modal').modal('hide')
-                                                }
+                                                // if($('#view_bldginfo_modal')){
+                                                //       $('#view_bldginfo_modal').modal('hide')
+                                                // }
 
                                                 buildingDatatable()
                                                 get_deleted('building')
@@ -651,7 +651,7 @@
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12">
-                                                <button type="submit" class="btn btn-sm btn-primary" id="building_create_button"><i class="fa fa-save"></i> Save</button>
+                                                <button type="submit" class="btn btn-sm btn-success" id="building_create_button"><i class="fa fa-save"></i> Save</button>
                                                 <button class="btn btn-success btn-success btn-sm" id="building_update_button" hidden><i class="fa fa-save"></i> Update</button>
                                           </div>
                               </div>`
