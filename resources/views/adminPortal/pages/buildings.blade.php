@@ -266,6 +266,7 @@
 
                   buildingtable('#building_datatable_holder',true)
                   buildingform('',true)
+
             })
       </script>
 
