@@ -720,12 +720,24 @@
                               'targets': 2,
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('text-center')
-                                    $(td).addClass('align-middle')
-                                    $(td).text(null)
-                              }
-                        },
-                        ],
+
+                                    if (button_enable) {
+                                          var buttons = ` <div class="dropdown text-center">
+                                                <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i></a><div class="dropdown-menu" ><a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">Edit</a><a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">Delete</a></div> --></div>`
+
+                                          if (rowData.id == null) {
+                                                buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
+                                          } else{
+                                                buttons = ''
+                                          }
+
+                                          $(td)[0].innerHTML =  buttons
+                                          $(td).addClass('text-center')
+                                          $(td).addClass('align-middle')
+                                    }
+                              },
+                        }],
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_info");
