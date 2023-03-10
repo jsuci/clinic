@@ -266,6 +266,7 @@
 
                   buildingtable('#building_datatable_holder',true)
                   buildingform('',true)
+                  // upperCaseSearchDT()
             })
       </script>
 
@@ -505,6 +506,13 @@
                   $(selector).removeClass('is-valid').removeClass('is-invalid');
             }
 
+            // function upperCaseSearchDT() {
+            //       $('#buildings_datatable_filter input[type="search"]').on('input', function() {
+            //             var input = $(this);
+            //             input.val(input.val().toUpperCase());
+            //             $('#building_datatable_holder').DataTable().search(input.val()).draw();
+            //        });
+            // }
             // JAM: added functions
 
             function buildingCreate(data){
@@ -532,7 +540,6 @@
                         }
                   })
             }
-
 
             function buildingUpdate(data){
                   $.ajax({
@@ -696,10 +703,11 @@
                               ],
                         columnDefs: [
                         {
-                        'targets': 0,
-                        'createdCell':  function (td, cellData, rowData, row, col) {
-                              $(td).addClass('align-middle')
-                        }
+                              'orderable': true,
+                              'targets': 0,
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                              }
                         },
                         {
                               'targets': 1,
@@ -712,32 +720,9 @@
                               'targets': 2,
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
-
-                                    if(button_enable){
-                                          var buttons = ` <div class="dropdown text-center">
-                                                                  <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
-                                                                        <i class="fa fa-ellipsis-v"></i>
-                                                                  </a>
-                                                                  <div class="dropdown-menu" >
-                                                                        <a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">
-                                                                              Edit
-                                                                        </a>
-                                                                        <a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">
-                                                                              Delete
-                                                                        </a>
-                                                                  </div> -->
-                                                            </div>`
-
-                                          if(rowData.id == null){
-                                                buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
-                                          }
-                                    }else{
-                                          buttons = ''
-                                    }
-
-                                    $(td)[0].innerHTML =  buttons
                                     $(td).addClass('text-center')
                                     $(td).addClass('align-middle')
+                                    $(td).text(null)
                               }
                         },
                         ],
@@ -871,9 +856,18 @@
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         buildingUpdate(formData)
                   } else {
+                        if (subData['description'] === '') {
+                              $('#bldgDesc').addClass('is-invalid')
+                        } else if (subData['capacity'] === '') {
+                              $('#bldgCap').addClass('is-invalid')
+                        } else {
+                              $('#bldgDesc').addClass('is-invalid')
+                              $('#bldgCap').addClass('is-invalid')
+                        }
+
                         Toast.fire({
                                     type: 'error',
-                                    title: 'Error missing field'
+                                    title: 'Error missing field(s)'
                         })
                   }
             })
@@ -888,9 +882,22 @@
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         buildingCreate(formData)
                   } else {
+                        if (subData['description'] === '') {
+                              $('#bldgCreateDesc').addClass('is-invalid')
+                        }
+                        
+                        if (subData['capacity'] === '') {
+                              $('#bldgCreateCap').addClass('is-invalid')
+                        }
+                        
+                        if (!subData['description'] && !subData['capacity']) {
+                              $('#bldgCreateDesc').addClass('is-invalid')
+                              $('#bldgCreateCap').addClass('is-invalid')
+                        }
+
                         Toast.fire({
                                     type: 'error',
-                                    title: 'Error missing field'
+                                    title: 'Error missing field(s)'
                         })
                   }
             })
