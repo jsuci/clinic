@@ -14,16 +14,15 @@
       }else if(Session::get('currentPortal') == 2){
             $extend = 'principalsportal.layouts.app2';
       }
-      else{
-        if(isset($check_refid->refid)){
-              if($check_refid->refid == 27){
-                    $extend = 'academiccoor.layouts.app2';
-              }
-        }else{
-          header("Location: " . URL::to('/'), true, 302);
-          exit();
-        }
-       
+      else {
+            if(isset($check_refid->refid)){
+                  if($check_refid->refid == 27) {
+                        $extend = 'academiccoor.layouts.app2';
+                  }
+            } else {
+                  header("Location: " . URL::to('/'), true, 302);
+                  exit();
+            }
       }
 
       $sy = DB::table('sy')->select('id','sydesc as text','isactive','sydesc')->get();
@@ -39,31 +38,31 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
 <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
-  
 
-  <style>
-        .shadow {
-              box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-              border: 0 !important;
-        }
 
-        .dataTables_scrollBody, .dataTables_wrapper {
+<style>
+      .shadow {
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            border: 0 !important;
+      }
+
+      .dataTables_scrollBody, .dataTables_wrapper {
             position: static !important;
-        }
-        .dropdown-button {
+      }
+      .dropdown-button {
             cursor: pointer;
             font-size: 1rem;
             display:block
-        }
-        .dropdown-menu i {
+      }
+      .dropdown-menu i {
             font-size: 1rem;
             line-height: 0em;
             vertical-align: -15%;
             color: #212529;
             font-weight: 400;
-        }
-       
-  </style>
+      }
+      
+</style>
 @endsection
 
 
@@ -104,20 +103,20 @@
 @section('modalSection')
 <div class="modal fade" id="view_bldginfo_modal" style="display: none; padding-right: 17px;" aria-hidden="true">
       <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-              <div class="modal-header pb-2 pt-2 border-0">
+      <div class="modal-content">
+            <div class="modal-header pb-2 pt-2 border-0">
                   <h4 class="modal-title" style="font-size: 1.1rem !important">Building Information : <span id="bldg_name"></span>
                   </h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
+                  <span aria-hidden="true">×</span>
                   </button>
-              </div>
-              <div class="modal-body pt-0">
-                      <div class="row">
-                          <div class="col-md-2">
+            </div>
+            <div class="modal-body pt-0">
+                  <div class="row">
+                        <div class="col-md-2">
                               <div class="row bldgInfo">
-                                  <div class="col-md-12">
-                                      <div class="card shadow h-100">
+                              <div class="col-md-12">
+                                    <div class="card shadow h-100">
                                           <div class="card-body p-2" style="font-size: .8rem! important">
                                                 <form id="bldgEditForm" method="post">
                                                       <div class="row mt-2">
@@ -129,7 +128,7 @@
                                                       <div class="row">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Capacity</label>
-                                                                  <input type="number" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                                  <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
                                                             </div>
                                                       </div>
                                                       <div class="row mt-3">
@@ -146,56 +145,83 @@
                                                       <input type="hidden" name="id" value="" id="bldgId"/>
                                                 </form>
                                           </div>
-                                      </div>
-                                  </div>
+                                    </div>
                               </div>
-                              <div class="row bldgTotalCap mt-4">
-                                  <div class="col-md-12">
-                                      <div class="card shadow">
-                                          <div class="card-body p-2" style="font-size: .8rem! important">
-                                              <div class="row">
-                                                  <div class="col-md-12" id="totalCap">
-                                                      <label>Total Bldg. Capacity Left</label>
-                                                      <span>500</span>
-                                                  </div>
-                                              </div>
+                              </div>
+                              <div class="row bldgTotalCap mt-2">
+                                    <div class="col-md-12">
+                                          <div class="card shadow mb-2">
+                                                <div class="card-body p-2" style="font-size: .8rem! important">
+                                                <div class="row">
+                                                      <div class="col-md-12" id="totalCap">
+                                                            <label>Total Bldg. Capacity Left</label>
+                                                            <div></div>
+                                                      </div>
+                                                </div>
+                                                </div>
                                           </div>
-                                      </div>
-                                  </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                          <div class="card shadow">
+                                                <div class="card-body p-2" style="font-size: .8rem! important">
+                                                <div class="row">
+                                                      <div class="col-md-12" id="totalRoomCap">
+                                                            <label>Total Room Capacity</label>
+                                                            <div></div>
+                                                      </div>
+                                                </div>
+                                                </div>
+                                          </div>
+                                    </div>
                               </div>
-                          </div>
-                          <div class="col-md-10">
+                              {{-- <div class="row roomTotalCap mt-2">
+                                    <div class="col-md-12">
+                                          <div class="card shadow">
+                                                <div class="card-body p-2" style="font-size: .8rem! important">
+                                                <div class="row">
+                                                      <div class="col-md-12" id="totalCap">
+                                                            <label>Total Room Capacity</label>
+                                                            <div></div>
+                                                      </div>
+                                                </div>
+                                                </div>
+                                          </div>
+                                    </div>
+                              </div> --}}
+                        </div>
+                        <div class="col-md-10">
                               <div class="row">
-                                  <div class="col-md-12">
-                                      <div class="card shadow">
+                              <div class="col-md-12">
+                                    <div class="card shadow">
                                           <div class="card-body p-2" style="font-size:.8rem !important">
-                                              <div class="row mt-3">
-                                                  <div class="col-md-12"></div>
-                                              </div>
-                                              <div class="row">
-                                                  <div class="col-md-12 table-responsive tableFixHead" style="height: 400px;">
+                                          <div class="row mt-3">
+                                                <div class="col-md-12"></div>
+                                          </div>
+                                          <div class="row">
+                                                <div class="col-md-12 table-responsive tableFixHead">
                                                       <table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="bldg_rooms_table">
-                                                          <thead>
-                                                              <tr>
+                                                      <thead>
+                                                            <tr>
                                                                   <th width="55%">Room Name</th>
                                                                   <th width="40%">Capacity</th>
                                                                   <th width="5%"></th>
-                                                              </tr>
-                                                          </thead>
-                                                          <tbody></tbody>
+                                                            </tr>
+                                                      </thead>
+                                                      <tbody></tbody>
                                                       </table>
-                                                  </div>
-                                              </div>
+                                                </div>
                                           </div>
-                                      </div>
-                                  </div>
+                                          </div>
+                                    </div>
                               </div>
-                          </div>
-                      </div>
-              </div>
-          </div>
+                              </div>
+                        </div>
+                  </div>
+            </div>
       </div>
-  </div>
+      </div>
+</div>
 @endsection
 
 
@@ -499,6 +525,20 @@
                   input2.removeClass("is-valid").removeClass("is-invalid");
 
             }
+
+            function deserializeString(inputString) {
+                  var searchParams = new URLSearchParams(inputString);
+                  var outputObject = {};
+                  searchParams.forEach(function(value, key) {
+                        outputObject[key] = value;
+                  });
+
+                  return outputObject;
+            }
+
+            function reCalcBldgCap(bldgCap, roomCap) {
+
+            }
             // JAM: added functions
 
             function buildingCreate(data){
@@ -533,63 +573,31 @@
                   })
             }
 
-            // function buildingCreate(){
-            //       // validate input here
-            //       if (validateIds('bldngDesc', 'bldngCap')) {
-            //             Toast.fire({
-            //                   type: 'error',
-            //                   title: 'Error empty field'
-            //             })
-            //       } else {
-            //             $.ajax({
-            //             type:'GET',
-            //             url:'/api/building/create',
-            //             data:{
-            //                   'description':$('#bldngDesc').val(),
-            //                   'capacity':$('#bldngCap').val()
-            //             },
-            //             success:function(data) {
-            //                   if(data[0].status == 1){
-
-            //                         $('#bldngDesc').val("")
-            //                         $('#bldngCap').val("")
-
-            //                         $('#bldngDesc').removeClass('is-invalid')
-            //                         $('#bldngDesc').removeClass('is-valid')
-
-            //                         $('#bldngCap').removeClass('is-invalid')
-            //                         $('#bldngCap').removeClass('is-valid')
-                                    
-            //                         if($('#building_form_modal')){
-            //                               $('#building_form_modal').modal('hide')
-            //                         }
-
-            //                         buildingDatatable()
-            //                         get_last_index('building')
-            //                   }
-            //                   Toast.fire({
-            //                         type: data[0].icon,
-            //                         title: data[0].message
-            //                   })
-            //             }
-            //       })
-            //       }
-            // }
 
             function buildingUpdate(data){
                   $.ajax({
                         type: 'GET',
                         url: '/api/building/update',
                         data: data,
-                        success: function(data) {
-                              if(data[0].status == 1){
+                        success: function(resp) {
+                              if(resp[0].status == 1){
 
-                                    $('#bldngDesc').val("")
-                                    $('#bldngCap').val("")
+                                    // $('#bldngDesc').val("")
+                                    // $('#bldngCap').val("")
                                     
-                                    if($('#view_bldginfo_modal')){
-                                          $('#view_bldginfo_modal').modal('hide')
-                                    }
+                                    // if($('#view_bldginfo_modal')){
+                                    //       $('#view_bldginfo_modal').modal('hide')
+                                    // }
+
+                                    var respData = deserializeString(data)
+                                    var totalRoomCap = $('#totalRoomCap div').text();
+                                    var newTotalBldgCap = parseInt(respData['capacity']) - parseInt(totalRoomCap)
+
+                                    // console.log(newTotalBldgCap)
+
+                                    $('#totalCap div').html(newTotalBldgCap);
+                                    
+
 
                                     buildingDatatable()
                                     get_updated('building')
@@ -653,7 +661,7 @@
                                     <div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="capacity">Capacity</label>            
-                                                <input type="number" name="capacity" class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                <input type="text" name="capacity" class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
                                           </div>
                                     </div>
                                     <div class="row">
@@ -799,7 +807,7 @@
             }
 
             function buildingRoomDatatable(bldgCap) {
-                        var totalCapacity = 0;
+                        var totalRoomCapacity = 0;
 
                         $('#bldg_rooms_table').DataTable({
                         destroy: true,
@@ -835,7 +843,7 @@
                                     'orderable': false, 
                                     'createdCell':  function (td, cellData, rowData, row, col) {
                                           $(td).addClass('align-middle');
-                                          totalCapacity += parseInt(cellData); // add capacity to total
+                                          totalRoomCapacity += parseInt(cellData); // add capacity to total
                                     }
                               },
                               {
@@ -851,19 +859,13 @@
                               $(row).addClass("view_room_info");
                         },
                         drawCallback: function( settings ) {
-                              totalCapacity = parseInt(bldgCap) - parseInt(totalCapacity)
-                              console.log("Total capacity: " + totalCapacity);
+                              totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
+                              // console.log("Total capacity: " + totalBldgCapacity);
                               
-                              $('#totalCap span').html(totalCapacity);
+                              $('#totalCap div').html(totalBldgCapacity);
+                              $('#totalRoomCap div').html(totalRoomCapacity);
                         }
                   });
-            }
-
-
-            function bldgRoomTotalCap(bldgCap) {
-                  var totalRoomCap = 0;
-                  console.log(selected_id, bldgCap)
-
             }
 
             // Add New button
@@ -889,7 +891,7 @@
             $(document).on('submit','#bldgEditForm',function(event){
                   event.preventDefault();
                   var formData = $(this).serialize();
-                  console.log('edit', formData)
+                  // console.log('edit', formData)
                   buildingUpdate(formData)
             })
 

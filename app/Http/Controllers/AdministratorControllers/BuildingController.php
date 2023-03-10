@@ -342,7 +342,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if($check > 0){
                 return array((object)[
                     'status'=>0,
-                    'message'=>'Already Used',
+                    'message'=>'Building in used',
                     'icon'=>'error'
                 ]);
             }
