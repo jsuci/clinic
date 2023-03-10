@@ -70,32 +70,32 @@
 @section('content')
 
 <section class="content-header">
-  <div class="container-fluid">
-        <div class="row mb-2">
-              <div class="col-sm-6">
-                    <h1>Buildings</h1>
-              </div>
-              <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                    <li class="breadcrumb-item active">Buildings</li>
-              </ol>
-              </div>
-        </div>
-  </div>
+<div class="container-fluid">
+      <div class="row mb-2">
+            <div class="col-sm-6">
+                  <h1>Buildings</h1>
+            </div>
+            <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                  <li class="breadcrumb-item active">Buildings</li>
+            </ol>
+            </div>
+      </div>
+</div>
 </section>
 <section class="content p-0">
-    <div class="container-fluid">
-        <div class="card shadow">
-          <div class="card-body" style="font-size:.8rem !important">
+<div class="container-fluid">
+      <div class="card shadow">
+      <div class="card-body" style="font-size:.8rem !important">
             <div class="row">
-              <div class="col-md-12" id="building_datatable_holder">
-                
-              </div>
+            <div class="col-md-12" id="building_datatable_holder">
+            
             </div>
-          </div>
+            </div>
       </div>
-    </div>
+      </div>
+</div>
 </section>
 @endsection
 
@@ -122,13 +122,13 @@
                                                       <div class="row mt-2">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Name</label>
-                                                                  <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
+                                                                  <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();">
                                                             </div>
                                                       </div>
                                                       <div class="row">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Capacity</label>
-                                                                  <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                                  <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                                                             </div>
                                                       </div>
                                                       <div class="row mt-3">
@@ -235,7 +235,7 @@
       <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
       {{-- <script src="{{asset('js/setupjs/buildings.js') }}"></script> --}}
       <script>
-     
+
       </script>
 
       <script>
@@ -266,7 +266,6 @@
 
                   buildingtable('#building_datatable_holder',true)
                   buildingform('',true)
-
             })
       </script>
 
@@ -280,6 +279,7 @@
             var syncEnabled = false;
             var button_enable = null;
             var connected_stat = false
+            var is_form_valid = false;
 
             const Toast = Swal.mixin({
                   toast: true,
@@ -309,7 +309,6 @@
                         }
                   })
             }
-
 
             function check_online_connection(){
                   $.ajax({
@@ -474,59 +473,6 @@
             }
 
             // JAM: added functions
-            function validateInput(input) {
-                  if (!input.val().trim()) {
-                        input.removeClass("is-valid").addClass("is-invalid");
-                        return false;
-                  } else {
-                        input.removeClass("is-invalid").addClass("is-valid");
-                        return true;
-                  }
-            }
-
-            function validateIds(id1, id2) {
-                  const input1 = $("#" + id1);
-                  const input2 = $("#" + id2);
-
-                  // console.log(input1.val(), input2.val())
-
-                  function validateInput(input) {
-                        if (!input.val().trim()) {
-                              input.removeClass("is-valid").addClass("is-invalid");
-                              return false;
-                        } else {
-                              input.removeClass("is-invalid").addClass("is-valid");
-                              return true;
-                        }
-                  }
-                  
-                  const isValid1 = null;
-                  const isValid2 = null;
-
-                  input1.on("input", () => {
-                        isValid1 = validateInput(input1);
-                  });
-
-                  input2.on("input", () => {
-                        isValid2 = validateInput(input2);
-                  });
-
-                  if (!isValid1 || !isValid2) {
-                        return false
-                  } else {
-                        return true
-                  }
-            }
-
-            function resetValidateIds(id1, id2) {
-                  const input1 = $("#" + id1);
-                  const input2 = $("#" + id2);
-
-                  input1.removeClass("is-valid").removeClass("is-invalid");
-                  input2.removeClass("is-valid").removeClass("is-invalid");
-
-            }
-
             function deserializeString(inputString) {
                   var searchParams = new URLSearchParams(inputString);
                   var outputObject = {};
@@ -537,9 +483,28 @@
                   return outputObject;
             }
 
-            function reCalcBldgCap(bldgCap, roomCap) {
+            function validateSelector(selector, callback) {
 
+                  function validateInput(input) {
+                        if (!input.val().trim()) {
+                              input.removeClass("is-valid").addClass("is-invalid");
+                              return false;
+                        } else {
+                              input.removeClass("is-invalid").addClass("is-valid");
+                              return true;
+                        }
+                  }
+
+                  $(selector).on("input", () => {
+                        var isValid = validateInput($(selector));
+                        callback(isValid);
+                  });
             }
+
+            function resetValidation(selector) {
+                  $(selector).removeClass('is-valid').removeClass('is-invalid');
+            }
+
             // JAM: added functions
 
             function buildingCreate(data){
@@ -641,13 +606,13 @@
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="description">Description</label>            
-                                                <input type="text" name="description" class="form-control form-control-sm" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();" required>
+                                                <input type="text" name="description" class="bldgCreateInput form-control form-control-sm" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();">
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="capacity">Capacity</label>            
-                                                <input type="text" name="capacity" class="form-control form-control-sm" id="bldgCreateCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                <input type="text" name="capacity" class="bldgCreateInput form-control form-control-sm" id="bldgCreateCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                                           </div>
                                     </div>
                                     <div class="row">
@@ -855,12 +820,38 @@
             }
 
             // Add New button
-            $(document).on('click','#building_create',function(){
+            $(document).on('click','#building_create',function() {
                   $('#bldgCreateDesc').val("")
                   $('#bldgCreateCap').val("")
 
-                  if($('#building_form_modal')){
+                  resetValidation('#bldgCreateDesc')
+                  resetValidation('#bldgCreateCap')
+
+                  if($('#building_form_modal')) {
                               $('#building_form_modal').modal()
+
+                              var descInput = null
+                              var capInput = null
+
+                              var descInput = validateSelector('#bldgCreateDesc', (isValid) => {
+                                    descInput = isValid;
+                                    
+                                    if(descInput && capInput) {
+                                          is_form_valid = true
+                                    } else {
+                                          is_form_valid = false
+                                    }
+                              });
+                              
+                              var capInput = validateSelector('#bldgCreateCap', (isValid) => {
+                                    capInput = isValid;
+                                    
+                                    if(descInput && capInput) {
+                                          is_form_valid = true
+                                    } else {
+                                          is_form_valid = false
+                                    }
+                              });
                   }
             })
 
@@ -871,24 +862,37 @@
             })
 
             // Update Information button
-            // $(document).on('click','#building_update_button',function(){
-            //       buildingUpdate()
-            // })
             $(document).on('submit','#bldgEditForm',function(event){
                   event.preventDefault();
                   var formData = $(this).serialize();
-                  // console.log('edit', formData)
-                  buildingUpdate(formData)
+
+                  subData = deserializeString(formData)
+
+                  if (is_form_valid || (subData['description'] && subData['capacity'])) {
+                        buildingUpdate(formData)
+                  } else {
+                        Toast.fire({
+                                    type: 'error',
+                                    title: 'Error missing field'
+                        })
+                  }
             })
 
             // Save button
-            // $(document).on('click','#building_create_button',function(){
-            //       buildingCreate()
-            // })
             $(document).on('submit','#bldgCreateForm',function(event){
                   event.preventDefault();
                   var formData = $(this).serialize();
-                  buildingCreate(formData)
+
+                  subData = deserializeString(formData)
+                  
+                  if (is_form_valid || (subData['description'] && subData['capacity'])) {
+                        buildingCreate(formData)
+                  } else {
+                        Toast.fire({
+                                    type: 'error',
+                                    title: 'Error missing field'
+                        })
+                  }
             })
 
             // Building Row
@@ -908,7 +912,36 @@
                         
                         buildingRoomDatatable(bldgCap)
 
+                        resetValidation('#bldngDesc')
+                        resetValidation('#bldngCap')
+
+                        var descInput = null
+                        var capInput = null
+
+
+                        var descInput = validateSelector('#bldngDesc', (isValid) => {
+                              descInput = isValid;
+                              
+                              if(descInput == true && capInput == true) {
+                                    is_form_valid = true
+                              } else {
+                                    is_form_valid = false
+                              }
+                        });
+                        
+                        var capInput = validateSelector('#bldngCap', (isValid) => {
+                              capInput = isValid;
+                              
+                              if(descInput == true && capInput == true) {
+                                    is_form_valid = true
+                              } else {
+                                    is_form_valid = false
+                              }
+                        });
+
                         $('#view_bldginfo_modal').modal()
+
+
                   }
             })
 
