@@ -549,14 +549,8 @@
                         success:function(data) {
                               if(data[0].status == 1){
 
-                                    $('#bldngDesc').val("")
-                                    $('#bldngCap').val("")
-
-                                    $('#bldngDesc').removeClass('is-invalid')
-                                    $('#bldngDesc').removeClass('is-valid')
-
-                                    $('#bldngCap').removeClass('is-invalid')
-                                    $('#bldngCap').removeClass('is-valid')
+                                    $('#bldgCreateDesc').val("")
+                                    $('#bldgCreateCap').val("")
                                     
                                     if($('#building_form_modal')){
                                           $('#building_form_modal').modal('hide')
@@ -582,18 +576,9 @@
                         success: function(resp) {
                               if(resp[0].status == 1){
 
-                                    // $('#bldngDesc').val("")
-                                    // $('#bldngCap').val("")
-                                    
-                                    // if($('#view_bldginfo_modal')){
-                                    //       $('#view_bldginfo_modal').modal('hide')
-                                    // }
-
                                     var respData = deserializeString(data)
                                     var totalRoomCap = $('#totalRoomCap div').text();
                                     var newTotalBldgCap = parseInt(respData['capacity']) - parseInt(totalRoomCap)
-
-                                    // console.log(newTotalBldgCap)
 
                                     $('#totalCap div').html(newTotalBldgCap);
                                     
@@ -603,8 +588,8 @@
                                     get_updated('building')
                               }
                               Toast.fire({
-                                    type: data[0].icon,
-                                    title: data[0].message
+                                    type: resp[0].icon,
+                                    title: resp[0].message
                               })
                         }
                   })
@@ -655,13 +640,13 @@
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="description">Description</label>            
-                                                <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();" required>
+                                                <input type="text" name="description" class="form-control form-control-sm" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();" required>
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="capacity">Capacity</label>            
-                                                <input type="text" name="capacity" class="form-control form-control-sm" id="bldngCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
+                                                <input type="text" name="capacity" class="form-control form-control-sm" id="bldgCreateCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');" required>
                                           </div>
                                     </div>
                                     <div class="row">
@@ -870,8 +855,8 @@
 
             // Add New button
             $(document).on('click','#building_create',function(){
-                  $('#bldngDesc').val("")
-                  $('#bldngCap').val("")
+                  $('#bldgCreateDesc').val("")
+                  $('#bldgCreateCap').val("")
 
                   if($('#building_form_modal')){
                               $('#building_form_modal').modal()
@@ -904,15 +889,6 @@
                   var formData = $(this).serialize();
                   buildingCreate(formData)
             })
-
-            // $('#bldgCreateForm').submit(function (event) {
-            //       event.preventDefault();
-
-            //       var desc = $('#bldngDesc').val();
-            //       var cap = $('#bldngCap').val();
-
-            //       console.log(desc, cap)
-            // })
 
             // Building Row
             $(document).on('click','.view_info',function(){
