@@ -437,7 +437,6 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     }
 
-
     public static function getBuildingsRoomsDatatable(Request $request) {
 
         try {
@@ -513,6 +512,117 @@ class BuildingController extends \App\Http\Controllers\Controller
         }
 
     }
+
+    public static function getAllRoomsExcept(Request $request) {
+        $buildingid = $request->get('buildingid');
+
+        $rooms = DB::table('rooms')
+        ->where('deleted', 0)
+        ->whereNotIn('buildingid', [$buildingid])
+        ->select(
+            'roomname as text',
+            'capacity',
+            'buildingid',
+            'id as id'
+        )
+        ->get();
+
+
+        return $rooms;
+
+    }
+
+    public static function assignRoomsToBuilding(Request $request) {
+        // $roomid = $request->get('roomid');
+        // $buildingid = $request->get('buildingid');
+
+        // $rooms = DB::table('rooms')
+        // ->where('deleted', 0)
+        // ->whereNotIn('buildingid', [$buildingid])
+        // ->select(
+        //     'roomname as text',
+        //     'capacity',
+        //     'buildingid',
+        //     'id as id'
+        // )
+        // ->get();
+
+        $roomid = $request->get('roomid');
+        $buildingid = $request->get('buildingid');
+
+        // $roomname = $request->get('roomname');
+        // $capacity = $request->get('capacity');
+        // $building = $request->get('building');
+        // $id = $request->get('id');
+
+        // dd($buildingid, $roomid);
+
+        try {
+            DB::table('rooms')
+            ->where('id', $roomid)
+            ->update([
+                // 'roomname'=>$roomname,
+                'id'=> $roomid,
+                'buildingid'=> $buildingid,
+                'updatedby'=> auth()->user()->id,
+                'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+            ]);
+
+            return array((object)[
+                'status'=> 1,
+                'message'=> 'Room Assigned'
+            ]);
+
+        } catch(\Exception $e) {
+            return  array((object)[
+                'status'=> 0,
+                'message'=> 'Something went wrong!'
+            ]);
+
+        }
+
+        // try{
+
+        //     $check = DB::table('rooms')
+        //                 ->where('id','!=',$roomid)
+        //                 ->where('deleted',0)
+        //                 ->count();
+
+        //     if($check == 0){
+
+        //         DB::table('rooms')
+        //             ->where('id',$roomid)
+        //             // ->take(1)
+        //             ->update([
+        //                 // 'roomname'=>$roomname,
+        //                 'buildingid'=>$buildingid,
+        //                 // 'capacity'=>$capacity,
+        //                 'updatedby'=>auth()->user()->id,
+        //                 'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+        //             ]);
+
+        //         return  array((object)[
+        //             'status'=>1,
+        //             'message'=>'Room Updated'
+        //         ]);
+        //     }else{
+        //         return  array((object)[
+        //             'status'=>0,
+        //             'message'=>'Already Exist'
+        //         ]);
+        //     }
+
+        // }catch(\Exception $e){
+        //     return  array((object)[
+        //         'status'=>0,
+        //         'message'=>'Something went wrong!'
+        //     ]);
+
+        // }
+
+
+    }
+
     // JAM: custom controller
 
 

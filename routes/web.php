@@ -31,7 +31,9 @@ Route::middleware(['cors'])->group(function () {
 
     // JAM: custom routes
     Route::get('api/building/rooms','AdministratorControllers\BuildingController@getBuildingRooms');
+    Route::get('api/building/all-rooms-except','AdministratorControllers\BuildingController@getAllRoomsExcept');
     Route::get('api/buildings-rooms/datatable','AdministratorControllers\BuildingController@getBuildingsRoomsDatatable');
+    Route::get('api/rooms/assign','AdministratorControllers\BuildingController@assignRoomsToBuilding');
     // JAM: custom routes
 
     //building sync

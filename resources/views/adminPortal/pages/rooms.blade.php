@@ -1707,6 +1707,8 @@
         var data = all_rooms.filter(x=>x.id == temp_id)
         select_id = temp_id
 
+        // console.log(data)
+
         $('#print_sched').attr('data-id',select_id)
 
         $('#update_roomname').val(data[0].roomname)
@@ -1790,7 +1792,8 @@
 					type:'GET',
 					url: '/buildings/get',
 					success:function(data) {
-            building = data;     
+            building = data;
+            // console.log(building)
             $("#building").select2({
                   data: building,
                   allowClear: true,

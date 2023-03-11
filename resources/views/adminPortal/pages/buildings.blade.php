@@ -36,7 +36,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.css') }}">
-<link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
 
 
@@ -61,9 +61,9 @@
             color: #212529;
             font-weight: 400;
       }
-      /* table.dataTable td {
-            height: 9px;
-      } */
+      .select2-selection__rendered {
+            margin: -9px !important;
+      }
       
 </style>
 @endsection
@@ -227,24 +227,30 @@
 </div>
 
 
-<div class="modal fade" id="room_form_modal" style="display: none;" aria-hidden="true">
+<div class="modal fade" id="assign_room_form_modal" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-sm">
       <div class="modal-content">
             <div class="modal-header pb-2 pt-2 border-0">
-                  <h4 class="modal-title">Room Form</h4>
+                  <h4 class="modal-title">Assign New Room</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
                   <div class="message"></div>
                   <div class="form-group">
+                        <label>Rooms</label>
+                        <select name="roomname" id="assignRoom" class="form-select form-control select2">
+                              <option selected value="">Select Room</option>
+                        </select>
+                  </div>
+                  {{-- <div class="form-group">
                         <label>Room Name</label>
                         <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                  </div>
-                  <div class="form-group">
+                  </div> --}}
+                  {{-- <div class="form-group">
                         <label>Room Capacity</label>
                         <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                  </div>
+                  </div> --}}
                   {{-- <div class="form-group">
                         <label>Building</label>
                         <select name="building" id="building" class="form-control select2">
@@ -252,8 +258,8 @@
                         </select>
                   </div> --}}
                   <div class="row">
-                        <div class="col-md-12">
-                              <button  type="button" class="btn btn-primary btn-sm" id="create_room">Create</button>
+                        <div class="col-md-12 text-right">
+                              <button type="button" class="btn btn-success btn-sm" id="assign_room">Save</button>
                         </div>
                   </div>
             </div>
@@ -544,13 +550,72 @@
                   $(selector).removeClass('is-valid').removeClass('is-invalid');
             }
 
-            // function upperCaseSearchDT() {
-            //       $('#buildings_datatable_filter input[type="search"]').on('input', function() {
-            //             var input = $(this);
-            //             input.val(input.val().toUpperCase());
-            //             $('#building_datatable_holder').DataTable().search(input.val()).draw();
-            //        });
-            // }
+            function get_rooms(selected_id){
+
+                  // console.log(selected_id)
+
+                  $.ajax({
+                        type:'GET',
+                        url: 'api/building/all-rooms-except',
+                        data: {
+                              buildingid: selected_id
+                        },
+                        success:function(data) {
+                              rooms = data;
+                              $("#assignRoom").select2({
+                                    data: rooms,
+                                    allowClear: true,
+                                    placeholder: "Select Room",
+                              })
+
+                              // $("#update_roombuilding").select2({
+                              //       data: building,
+                              //       allowClear: true,
+                              //       placeholder: "Select Building",
+                              // })
+                        }
+                  })
+            }
+
+            function assignNewRoom() {
+                  // console.log($('#assignRoom').val())
+                  console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
+                  $.ajax({
+                        type:'GET',
+                        url: 'api/rooms/assign',
+                        data:{
+                              roomid: $('#assignRoom').val(),
+                              building: selected_id,
+                        },
+                        success:function(data) {
+                              console.log(data)
+                              // $('#create_room').removeAttr('disabled')
+                              if (data[0].status == 1) {
+                                    Toast.fire({
+                                          type: 'success',
+                                          title: 'Room Updated!'
+                                    })
+
+                                    // console.log(data)
+
+                                    // $('#room_name').text($('#update_roomname').val())
+                                    // rooms_datatable()
+                              } else {
+                                    Toast.fire({
+                                          type: 'error',
+                                          title: 'Something went wrong!'
+                                    })
+                              }
+                        },
+                        error:function(){
+                              $('#create_room').removeAttr('disabled')
+                              Toast.fire({
+                                    type: 'error',
+                                    title: 'Something went wrong!'
+                              })
+                        }
+                  })
+            }
             // JAM: added functions
 
             function buildingCreate(data){
@@ -733,7 +798,7 @@
                               url: 'api/buildings-rooms/datatable',
                               type: 'GET',
                               dataSrc: function ( json ) {
-                                    console.log(json.data)
+                                    // console.log(json.data)
                                     buildings_datatable = json.data
                                     return json.data;
                               }
@@ -806,7 +871,7 @@
                               url: '/api/building/rooms',
                               type: 'GET',
                               data: {
-                              buildingid: selected_id
+                                    buildingid: selected_id
                               },
                               dataSrc: function ( json ) {
                               return json.data;
@@ -854,7 +919,7 @@
                   });
 
                   var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
-                  $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="create_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Create Room</button>'
+                  $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="assign_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Assign Room</button>'
             }
 
             // Add New button
@@ -999,17 +1064,23 @@
                               }
                         });
 
+                        get_rooms(selected_id)
                         $('#view_bldginfo_modal').modal()
 
 
                   }
             })
 
+            // Save Assign New Room
+            $(document).on('click','#assign_room',function(){
+                  assignNewRoom()
+            })
+
             // Show Room Form Modal
-            $(document).on('click','#create_room_button',function(){
-                  $('#roomName').val("")
-                  $('#roomCapacity').val("")
-                  $('#room_form_modal').modal()
+            $(document).on('click','#assign_room_button',function(){
+                  // $('#roomName').val("")
+                  // $('#roomCapacity').val("")
+                  $('#assign_room_form_modal').modal()
             })
 
       </script>
