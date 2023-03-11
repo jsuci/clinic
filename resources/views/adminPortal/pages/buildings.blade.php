@@ -222,6 +222,42 @@
       </div>
       </div>
 </div>
+
+
+<div class="modal fade" id="room_form_modal" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+            <div class="modal-header pb-2 pt-2 border-0">
+                  <h4 class="modal-title">Room Form</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                  <div class="message"></div>
+                  <div class="form-group">
+                        <label>Room Name</label>
+                        <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
+                  </div>
+                  <div class="form-group">
+                        <label>Room Capacity</label>
+                        <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                  </div>
+                  {{-- <div class="form-group">
+                        <label>Building</label>
+                        <select name="building" id="building" class="form-control select2">
+                              <option selected value="">SELECT BUILDING</option>
+                        </select>
+                  </div> --}}
+                  <div class="row">
+                        <div class="col-md-12">
+                              <button  type="button" class="btn btn-primary btn-sm" id="create_room">Create</button>
+                        </div>
+                  </div>
+            </div>
+            
+      </div>
+      </div>
+</div>
 @endsection
 
 
@@ -266,7 +302,6 @@
 
                   buildingtable('#building_datatable_holder',true)
                   buildingform('',true)
-                  // upperCaseSearchDT()
             })
       </script>
 
@@ -660,9 +695,11 @@
                   var table = `<table class="table table-sm table-striped table-bordered table-hovered table-hover no-footer dataTable" id="buildings_datatable">
                                     <thead>
                                           <tr>
-                                                <th width="55%">Description</th>
-                                                <th width="40%">Capacity</th>
-                                                <th width="5%"></th>
+                                                <th width="40%">Description</th>
+                                                <th width="20%">Capacity</th>
+                                                <th width="20%">Total Bldg. Capacity Left</th>
+                                                <th width="20%">Total Room Capacity</th>
+
                                           </tr>
                                     </thead>
                                     <tbody>
@@ -674,7 +711,7 @@
                   buildingDatatable()
             }
 
-            function buildingDatatable(){
+            function buildingDatatable() {
 
                   if(button_enable == null){
                         getProjectSetup()
@@ -689,9 +726,11 @@
                         serverSide: true,
                         processing: true,
                         ajax:{
-                              url: '/api/buildings/datatable',
+                              // url: '/api/buildings/datatable',
+                              url: 'api/buildings-rooms/datatable',
                               type: 'GET',
                               dataSrc: function ( json ) {
+                                    console.log(json.data)
                                     buildings_datatable = json.data
                                     return json.data;
                               }
@@ -700,6 +739,9 @@
                                     { "data": "description" },
                                     { "data": "capacity" },
                                     { "data": null },
+                                    { "data": null }
+                                    // { "data": "totalBldgCapLeft" },
+                                    // { "data": "totalRoomCap" },
                               ],
                         columnDefs: [
                         {
@@ -720,24 +762,19 @@
                               'targets': 2,
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
-
-                                    if (button_enable) {
-                                          var buttons = ` <div class="dropdown text-center">
-                                                <!-- <a class="dropdown-button"  data-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v"></i></a><div class="dropdown-menu" ><a class="dropdown-item building_edit" href="javascript:void(0)" data-id="`+rowData.id+`">Edit</a><a class="dropdown-item building_delete" href="javascript:void(0)"  data-id="`+rowData.id+`">Delete</a></div> --></div>`
-
-                                          if (rowData.id == null) {
-                                                buttons = '<spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span>'
-                                          } else{
-                                                buttons = ''
-                                          }
-
-                                          $(td)[0].innerHTML =  buttons
-                                          $(td).addClass('text-center')
                                           $(td).addClass('align-middle')
-                                    }
-                              },
-                        }],
+                                          $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
+                              }
+                        },
+                        {
+                              'targets': 3,
+                              'orderable': false, 
+                              'createdCell':  function (td, cellData, rowData, row, col) {
+                                    $(td).addClass('align-middle')
+                                    $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
+                              }
+                        }
+                        ],
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_info");
@@ -814,6 +851,9 @@
                               $('#totalRoomCap div').html(totalRoomCapacity);
                         }
                   });
+
+                  var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
+                  $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="create_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Create Room</button>'
             }
 
             // Add New button
@@ -964,6 +1004,12 @@
                   }
             })
 
+            // Show Room Form Modal
+            $(document).on('click','#create_room_button',function(){
+                  $('#roomName').val("")
+                  $('#roomCapacity').val("")
+                  $('#room_form_modal').modal()
+            })
 
       </script>
 @endsection

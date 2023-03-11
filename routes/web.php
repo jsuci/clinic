@@ -28,7 +28,11 @@ Route::middleware(['cors'])->group(function () {
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
+
+    // JAM: custom routes
     Route::get('api/building/rooms','AdministratorControllers\BuildingController@getBuildingRooms');
+    Route::get('api/buildings-rooms/datatable','AdministratorControllers\BuildingController@getBuildingsRoomsDatatable');
+    // JAM: custom routes
 
     //building sync
     Route::get('api/building/syncnew','AdministratorControllers\BuildingController@syncNew');

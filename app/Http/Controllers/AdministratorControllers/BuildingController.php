@@ -238,7 +238,6 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     }
 
-
     public static function buildingUpdate(Request $request){
 
         $description = $request->get('description');
@@ -422,8 +421,7 @@ class BuildingController extends \App\Http\Controllers\Controller
                             'bldgsyncstatdate'=>\Carbon\Carbon::now('Asia/Manila')
                         ]);
     }
-    
-    
+
     public static function store_error($e){
         DB::table('zerrorlogs')
         ->insert([
@@ -437,6 +435,73 @@ class BuildingController extends \App\Http\Controllers\Controller
               'message'=>'Something went wrong!'
         ]);
     }
+
+    // JAM: custom controller
+    public static function getBuildingsRoomsDatatable(Request $request) {
+
+        try {
+
+            $all_buildings = DB::table('building')
+            ->where('deleted', 0)
+            ->select('description', 'capacity', 'id')
+            ->get();
+
+            $all_rooms = DB::table('rooms')
+            ->where('deleted', 0)
+            ->select('capacity', 'buildingid')
+            ->get();
+
+            // Combine the data and calculate totalBldgCapacityLeft
+            $buildings = collect($all_buildings)->map(function ($building) use ($all_rooms) {
+                $totalRoomCapacity = $all_rooms->where('buildingid', $building->id)->sum('capacity');
+                $totalBldgCapacityLeft = $building->capacity - $totalRoomCapacity;
+                return [
+                    'id' => $building->id,
+                    'description' => $building->description,
+                    'capacity' => $building->capacity,
+                    'totalBldgCapacityLeft' => $totalBldgCapacityLeft,
+                    'totalRoomCapacity' => $totalRoomCapacity,
+                ];
+            });
+
+            dd($buildings);
+
+
+
+        //     // $building_count = DB::table('building')
+        //     //                 ->where('deleted',0)
+        //     //                 ->where(function($query) use($search){
+        //     //                     if($search != null){
+        //     //                         $query->where('description','like','%'.$search.'%');
+        //     //                     }
+        //     //                 })
+        //     //                 ->count();
+
+        //     // if(count($buildings) < 10){
+        //     //     $buildings = collect($buildings)->toArray();
+        //     //     $lacking = 10 - count( $buildings);
+        //     //     for($x=0;$x <= $lacking; $x++){
+        //     //         array_push( $buildings , (object)[
+        //     //             'description'=>null,
+        //     //             'capacity'=>null,
+        //     //             'id'=>null,
+        //     //         ]);
+        //     //     }
+        //     // }
+
+
+        //     return @json_encode((object)[
+        //         'data'=>$buildings,
+        //         // 'recordsTotal'=>$building_count,
+        //         // 'recordsFiltered'=>$building_count
+        //     ]);
+        
+        }catch(\Exception $e){
+            return self::store_error($e);
+        }
+
+    }
+    // JAM: custom controller
 
 
 }

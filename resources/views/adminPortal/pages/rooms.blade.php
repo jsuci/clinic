@@ -2002,8 +2002,6 @@
 
         var label_text = $($('#rooms_datatable_wrapper')[0].children[0])[0].children[0]
         $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" title="Room" id="create_room_button">Create Room</button>'
-                        
-                  
 
         // return temp_room;
 
@@ -2016,8 +2014,6 @@
       })
 
 
-     
-        
     })
 
     var selected_roomid = null
