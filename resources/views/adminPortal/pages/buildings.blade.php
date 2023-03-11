@@ -61,6 +61,9 @@
             color: #212529;
             font-weight: 400;
       }
+      /* table.dataTable td {
+            height: 9px;
+      } */
       
 </style>
 @endsection
@@ -738,10 +741,8 @@
                         columns: [
                                     { "data": "description" },
                                     { "data": "capacity" },
-                                    { "data": null },
-                                    { "data": null }
-                                    // { "data": "totalBldgCapLeft" },
-                                    // { "data": "totalRoomCap" },
+                                    { "data": "totalBldgCapacityLeft" },
+                                    { "data": "totalRoomCapacity" }
                               ],
                         columnDefs: [
                         {
@@ -763,7 +764,7 @@
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
                                           $(td).addClass('align-middle')
-                                          $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
+                                          // $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
                               }
                         },
                         {
@@ -771,7 +772,7 @@
                               'orderable': false, 
                               'createdCell':  function (td, cellData, rowData, row, col) {
                                     $(td).addClass('align-middle')
-                                    $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
+                                    // $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
                               }
                         }
                         ],

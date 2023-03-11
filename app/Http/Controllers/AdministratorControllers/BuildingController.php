@@ -102,55 +102,6 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     }
 
-    public static function getBuildingRooms(Request $request) {
-        try {
-
-            $search = $request->get('search');
-            $search = $search['value'];
-
-            $buildingid = $request->get('buildingid');
-
-            $rooms = DB::table('rooms')
-                            ->where('deleted',0)
-                            ->where('buildingid', $buildingid)
-                            ->where(function($query) use($search){
-                                if($search != null){
-                                    $query->where('roomname','like','%'.$search.'%');
-                                }
-                            })
-                            ->take($request->get('length'))
-                            ->skip($request->get('start'))
-                            ->select(
-                                'id',
-                                'roomname',
-                                'capacity',
-                                'buildingid'
-                            )
-                            ->get();
-
-            $room_count = DB::table('rooms')
-            ->where('deleted',0)
-            ->where('buildingid', $buildingid)
-            ->where(function($query) use($search){
-                if($search != null){
-                    $query->where('roomname','like','%'.$search.'%');
-                }
-            })
-            ->count();
-
-            return @json_encode((object)[
-                'data'=>$rooms,
-                'recordsTotal'=>$room_count,
-                'recordsFiltered'=>$room_count
-            ]);
-
-            
-        } catch(\Exception $e) {
-            return self::store_error($e);
-        }
-
-    }
-
     public static function getBuildingsSelect(Request $request){
 
         try{
@@ -437,12 +388,73 @@ class BuildingController extends \App\Http\Controllers\Controller
     }
 
     // JAM: custom controller
+    public static function getBuildingRooms(Request $request) {
+        try {
+
+            $search = $request->get('search');
+            $search = $search['value'];
+
+            $buildingid = $request->get('buildingid');
+
+            $rooms = DB::table('rooms')
+                            ->where('deleted',0)
+                            ->where('buildingid', $buildingid)
+                            ->where(function($query) use($search){
+                                if($search != null){
+                                    $query->where('roomname','like','%'.$search.'%');
+                                }
+                            })
+                            ->take($request->get('length'))
+                            ->skip($request->get('start'))
+                            ->select(
+                                'id',
+                                'roomname',
+                                'capacity',
+                                'buildingid'
+                            )
+                            ->get();
+
+            $room_count = DB::table('rooms')
+            ->where('deleted',0)
+            ->where('buildingid', $buildingid)
+            ->where(function($query) use($search){
+                if($search != null){
+                    $query->where('roomname','like','%'.$search.'%');
+                }
+            })
+            ->count();
+
+            return @json_encode((object)[
+                'data'=>$rooms,
+                'recordsTotal'=>$room_count,
+                'recordsFiltered'=>$room_count
+            ]);
+
+            
+        } catch(\Exception $e) {
+            return self::store_error($e);
+        }
+
+    }
+
+
     public static function getBuildingsRoomsDatatable(Request $request) {
 
         try {
 
+
+            $search = $request->get('search');
+            $search = $search['value'];
+
             $all_buildings = DB::table('building')
             ->where('deleted', 0)
+            ->where(function($query) use($search){
+                if($search != null){
+                    $query->where('description','like','%'.$search.'%');
+                }
+            })
+            ->take($request->get('length'))
+            ->skip($request->get('start'))
             ->select('description', 'capacity', 'id')
             ->get();
 
@@ -464,37 +476,37 @@ class BuildingController extends \App\Http\Controllers\Controller
                 ];
             });
 
-            dd($buildings);
+            // dd($buildings);
+
+            $building_count = DB::table('building')
+                            ->where('deleted',0)
+                            ->where(function($query) use($search){
+                                if($search != null){
+                                    $query->where('description','like','%'.$search.'%');
+                                }
+                            })
+                            ->count();
+
+            // if(count($buildings) < 10){
+            //     $buildings = collect($buildings)->toArray();
+            //     $lacking = 10 - count( $buildings);
+            //     for($x=0;$x <= $lacking; $x++){
+            //         array_push( $buildings , (object)[
+            //             'description'=>null,
+            //             'capacity'=>null,
+            //             'id'=>null,
+            //             'totalBldgCapacityLeft'=>null,
+            //             'totalRoomCapacity'=>null
+            //         ]);
+            //     }
+            // }
 
 
-
-        //     // $building_count = DB::table('building')
-        //     //                 ->where('deleted',0)
-        //     //                 ->where(function($query) use($search){
-        //     //                     if($search != null){
-        //     //                         $query->where('description','like','%'.$search.'%');
-        //     //                     }
-        //     //                 })
-        //     //                 ->count();
-
-        //     // if(count($buildings) < 10){
-        //     //     $buildings = collect($buildings)->toArray();
-        //     //     $lacking = 10 - count( $buildings);
-        //     //     for($x=0;$x <= $lacking; $x++){
-        //     //         array_push( $buildings , (object)[
-        //     //             'description'=>null,
-        //     //             'capacity'=>null,
-        //     //             'id'=>null,
-        //     //         ]);
-        //     //     }
-        //     // }
-
-
-        //     return @json_encode((object)[
-        //         'data'=>$buildings,
-        //         // 'recordsTotal'=>$building_count,
-        //         // 'recordsFiltered'=>$building_count
-        //     ]);
+            return @json_encode((object)[
+                'data'=>$buildings,
+                'recordsTotal'=>$building_count,
+                'recordsFiltered'=>$building_count
+            ]);
         
         }catch(\Exception $e){
             return self::store_error($e);
