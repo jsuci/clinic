@@ -613,8 +613,6 @@ class BuildingController extends \App\Http\Controllers\Controller
     }
 
     public static function roomDelete(Request $request) {
-        
-        
         try{
 
 

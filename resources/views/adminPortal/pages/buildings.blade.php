@@ -819,7 +819,7 @@
                         return false
                   }
 
-                  var bldg_table = $('#buildings_datatable').DataTable({
+                  $('#buildings_datatable').DataTable({
                         destroy: true,
                         autoWidth: false,
                         lengthChange: false,
@@ -888,88 +888,98 @@
                         $(label_text)[0].innerHTML = ''
                   }
 
-                  // Reset pagination to first page if table has only one page
-                  console.log(bldg_table)
-                  // bldg_table.on( 'draw.dt', function () {
-                  //       var pageInfo = table.page.info();
-                  //       if (pageInfo.pages === 1) {
-                  //             table.page(0).draw(false);
-                  //       }
-                  // });
+
+
 
             }
 
             function buildingRoomDatatable() {
 
-                        $('#bldg_rooms_table').DataTable({
-                              destroy: true,
-                              autoWidth: false,
-                              lengthChange: false,
-                              stateSave: true,
-                              serverSide: true,
-                              processing: true,
-                              ajax: {
-                                    url: '/api/building/rooms',
-                                    type: 'GET',
-                                    data: {
-                                          buildingid: selected_id,
-                                          datatable: true
-                                    },
-                                    dataSrc: function ( json ) {
-                                          // console.log(json.data)
-                                          return json.data;
+                  // var rooms_table = $('#bldg_rooms_table').DataTable();
+
+
+                  var rooms_table = $('#bldg_rooms_table').DataTable({
+                        destroy: true,
+                        autoWidth: false,
+                        lengthChange: false,
+                        stateSave: true,
+                        serverSide: true,
+                        processing: true,
+                        ajax: {
+                              url: '/api/building/rooms',
+                              type: 'GET',
+                              data: {
+                                    buildingid: selected_id,
+                                    datatable: true
+                              },
+                              dataSrc: function ( json ) {
+                                    // console.log(json.data)
+                                    return json.data;
+                              }
+                        },
+                        columns: [
+                              { "data": "roomname" },
+                              { "data": "capacity" },
+                              { "data": null }
+                        ],
+                        columnDefs: [
+                              {
+                                    'targets': 0,
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle')
                                     }
                               },
-                              columns: [
-                                    { "data": "roomname" },
-                                    { "data": "capacity" },
-                                    { "data": null }
-                              ],
-                              columnDefs: [
-                                    {
-                                          'targets': 0,
-                                          'createdCell':  function (td, cellData, rowData, row, col) {
-                                                $(td).addClass('align-middle')
-                                          }
-                                    },
-                                    {
-                                          'targets': 1,
-                                          'orderable': false, 
-                                          'createdCell':  function (td, cellData, rowData, row, col) {
-                                                $(td).addClass('align-middle');
-                                          }
-                                    },
-                                    {
-                                          'targets': 2,
-                                          'orderable': false, 
-                                          'createdCell':  function (td, cellData, rowData, row, col) {
-                                                // $(td).text(null)
-                                                $(td).addClass('text-center');
-                                                $(td).html(
-                                                      // `<button type="button" class="btn btn-danger">
-                                                      //       <i class="fa fa-trash"></i>
-                                                      // </button>`
-                                                      `<a href="#" id="delete_room"><i class="fa fa-trash text-danger"></i></a>`
-                                                )
-                                          }
+                              {
+                                    'targets': 1,
+                                    'orderable': false, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle');
                                     }
-                              ],
-                              createdRow: function (row, data, dataIndex) {
-                                    $(row).attr("data-id",data.id);
-                                    $(row).addClass("view_room_info");
                               },
-                              // drawCallback: function( settings ) {
-                                    
-                                    // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
-                                    // // console.log("Total capacity: " + totalBldgCapacity);
-                                    
-                                    // $('#totalCap div').html(totalBldgCapacity);
-                                    // $('#totalRoomCap div').html(totalRoomCapacity);
-                              // }
-                        });
+                              {
+                                    'targets': 2,
+                                    'orderable': false, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          // $(td).text(null)
+                                          $(td).addClass('text-center');
+                                          $(td).html(
+                                                // `<button type="button" class="btn btn-danger">
+                                                //       <i class="fa fa-trash"></i>
+                                                // </button>`
+                                                `<a href="#" id="delete_room"><i class="fa fa-trash text-danger"></i></a>`
+                                          )
+                                    }
+                              }
+                        ],
+                        createdRow: function (row, data, dataIndex) {
+                              $(row).attr("data-id",data.id);
+                              $(row).addClass("view_room_info");
+                        },
+                        // drawCallback: function( settings ) {
+                              
+                              // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
+                              // // console.log("Total capacity: " + totalBldgCapacity);
+                              
+                              // $('#totalCap div').html(totalBldgCapacity);
+                              // $('#totalRoomCap div').html(totalRoomCapacity);
+                        // }
+                  });
 
                   var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
                   $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="assign_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Assign Room</button>'
+
+
+                  // rooms_table.state.clear();
+                  // rooms_table.destroy();
+
+                  console.log(rooms_table.page.info())
+
+                  // console.log(rooms_table.page.len())
+
+                  // rooms_table.on( 'init.dt', function (e, settings) {
+                  //       var api = new $.fn.dataTable.Api( settings );
+                  //       console.log( 'New DataTable created:', api.table().node() );
+                  // });
             }
 
             // Add New button
