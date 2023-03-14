@@ -178,20 +178,6 @@
                                           </div>
                                     </div>
                               </div>
-                              {{-- <div class="row roomTotalCap mt-2">
-                                    <div class="col-md-12">
-                                          <div class="card shadow">
-                                                <div class="card-body p-2" style="font-size: .8rem! important">
-                                                <div class="row">
-                                                      <div class="col-md-12" id="totalCap">
-                                                            <label>Total Room Capacity</label>
-                                                            <div></div>
-                                                      </div>
-                                                </div>
-                                                </div>
-                                          </div>
-                                    </div>
-                              </div> --}}
                         </div>
                         <div class="col-md-10">
                               <div class="row">
@@ -228,7 +214,7 @@
 
 
 <div class="modal fade" id="assign_room_form_modal" style="display: none;" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-dialog modal-sm">
       <div class="modal-content">
             <div class="modal-header pb-2 pt-2 border-0">
                   <h4 class="modal-title">Assign New Room</h4>
@@ -306,6 +292,7 @@
             var buildings_datatable = []
             var rooms_datatable = []
             var selected_id = null
+            var selected_room_id = null
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -625,6 +612,44 @@
                         }
                   })
             }
+
+            function roomDelete() {
+
+                  console.log(selected_room_id)
+
+                  Swal.fire({
+                        text: 'Are you sure you want to delete this room?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33', //'#3085d6'
+                        cancelButtonColor: '#6c757d', //'#d33'
+                        confirmButtonText: 'Delete'
+                  }).then((result) => {
+                        if (result.value) {
+                              $.ajax({
+                                    type:'GET',
+                                    url:'/api/room/delete',
+                                    data:{
+                                          'id':selected_room_id
+                                    },
+                                    success:function(data) {
+                                          if(data[0].status == 1){
+                                                // update rooms datatable
+                                                buildingRoomDatatable()
+
+                                                // update totals
+                                                updateTotalBldgLeftRoomCap()
+                                          }
+
+                                          Toast.fire({
+                                                type: data[0].icon,
+                                                title: data[0].message
+                                          })
+                                    }
+                              })
+                        }
+                  })
+            }
             // JAM: added functions
 
             function buildingCreate(data){
@@ -784,7 +809,7 @@
                         return false
                   }
 
-                  $('#buildings_datatable').DataTable({
+                  var bldg_table = $('#buildings_datatable').DataTable({
                         destroy: true,
                         autoWidth: false,
                         lengthChange: false,
@@ -853,69 +878,85 @@
                         $(label_text)[0].innerHTML = ''
                   }
 
+                  // Reset pagination to first page if table has only one page
+                  console.log(bldg_table)
+                  // bldg_table.on( 'draw.dt', function () {
+                  //       var pageInfo = table.page.info();
+                  //       if (pageInfo.pages === 1) {
+                  //             table.page(0).draw(false);
+                  //       }
+                  // });
+
             }
 
             function buildingRoomDatatable() {
 
                         $('#bldg_rooms_table').DataTable({
-                        destroy: true,
-                        autoWidth: false,
-                        lengthChange: false,
-                        stateSave: true,
-                        serverSide: true,
-                        processing: true,
-                        ajax:{
-                              url: '/api/building/rooms',
-                              type: 'GET',
-                              data: {
-                                    buildingid: selected_id,
-                                    datatable: true
-                              },
-                              dataSrc: function ( json ) {
-                                    // console.log(json.data)
-                                    return json.data;
-                              }
-                        },
-                        columns: [
-                              { "data": "roomname" },
-                              { "data": "capacity" },
-                              { "data": null }
-                        ],
-                        columnDefs: [
-                              {
-                                    'targets': 0,
-                                    'createdCell':  function (td, cellData, rowData, row, col) {
-                                          $(td).addClass('align-middle')
+                              destroy: true,
+                              autoWidth: false,
+                              lengthChange: false,
+                              stateSave: true,
+                              serverSide: true,
+                              processing: true,
+                              ajax: {
+                                    url: '/api/building/rooms',
+                                    type: 'GET',
+                                    data: {
+                                          buildingid: selected_id,
+                                          datatable: true
+                                    },
+                                    dataSrc: function ( json ) {
+                                          // console.log(json.data)
+                                          return json.data;
                                     }
                               },
-                              {
-                                    'targets': 1,
-                                    'orderable': false, 
-                                    'createdCell':  function (td, cellData, rowData, row, col) {
-                                          $(td).addClass('align-middle');
+                              columns: [
+                                    { "data": "roomname" },
+                                    { "data": "capacity" },
+                                    { "data": null }
+                              ],
+                              columnDefs: [
+                                    {
+                                          'targets': 0,
+                                          'createdCell':  function (td, cellData, rowData, row, col) {
+                                                $(td).addClass('align-middle')
+                                          }
+                                    },
+                                    {
+                                          'targets': 1,
+                                          'orderable': false, 
+                                          'createdCell':  function (td, cellData, rowData, row, col) {
+                                                $(td).addClass('align-middle');
+                                          }
+                                    },
+                                    {
+                                          'targets': 2,
+                                          'orderable': false, 
+                                          'createdCell':  function (td, cellData, rowData, row, col) {
+                                                // $(td).text(null)
+                                                $(td).addClass('text-center');
+                                                $(td).html(
+                                                      // `<button type="button" class="btn btn-danger">
+                                                      //       <i class="fa fa-trash"></i>
+                                                      // </button>`
+                                                      `<a href="#" id="delete_room"><i class="fa fa-trash text-danger"></i></a>`
+                                                )
+                                          }
                                     }
+                              ],
+                              createdRow: function (row, data, dataIndex) {
+                                    $(row).attr("data-id",data.id);
+                                    $(row).addClass("view_room_info");
                               },
-                              {
-                                    'targets': 2,
-                                    'orderable': false, 
-                                    'createdCell':  function (td, cellData, rowData, row, col) {
-                                          $(td).text(null)
-                                    }
-                              }
-                        ],
-                        createdRow: function (row, data, dataIndex) {
-                              $(row).attr("data-id",data.id);
-                              $(row).addClass("view_room_info");
-                        },
-                        // drawCallback: function( settings ) {
-                              
-                              // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
-                              // // console.log("Total capacity: " + totalBldgCapacity);
-                              
-                              // $('#totalCap div').html(totalBldgCapacity);
-                              // $('#totalRoomCap div').html(totalRoomCapacity);
-                        // }
-                  });
+                              // drawCallback: function( settings ) {
+                                    
+                                    // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
+                                    // // console.log("Total capacity: " + totalBldgCapacity);
+                                    
+                                    // $('#totalCap div').html(totalBldgCapacity);
+                                    // $('#totalRoomCap div').html(totalRoomCapacity);
+                              // }
+                        });
 
                   var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
                   $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="assign_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Assign Room</button>'
@@ -1079,6 +1120,16 @@
             $(document).on('click','#assign_room_button',function(){
                   getRoomsExcept(selected_id)
                   $('#assign_room_form_modal').modal('toggle')
+            })
+
+            // delete a room
+            $(document).on('click','.view_room_info',function(){
+                  selected_room_id = $(this).attr('data-id')
+                  console.log(selected_room_id)
+            })
+
+            $(document).on('click','#delete_room',function(){
+                  roomDelete()
             })
 
       </script>

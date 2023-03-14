@@ -609,6 +609,47 @@ class BuildingController extends \App\Http\Controllers\Controller
         }
     }
 
+    public static function roomDelete(Request $request) {
+        
+        
+        try{
+
+
+            $id = $request->get('id');
+            // $check = DB::table('rooms')
+            //             ->where('id',$id)
+            //             ->where('deleted',0)
+            //             ->count();
+
+            // if($check > 0){
+            //     return array((object)[
+            //         'status'=>0,
+            //         'message'=>'Building in used',
+            //         'icon'=>'error'
+            //     ]);
+            // }
+
+            DB::table('rooms')
+                ->where('id', $id)
+                ->take(1)
+                ->update([
+                    'deleted'=>null,
+                    'deletedby'=>auth()->user()->id,
+                    'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                ]);
+
+            return array((object)[
+                'status'=>1,
+                'message'=>'Room Deleted',
+                'icon'=>'success',
+            ]);
+
+        } catch(\Exception $e){
+            return self::store_error($e);
+        }
+
+    } 
+
     // JAM: custom controller
 
 
