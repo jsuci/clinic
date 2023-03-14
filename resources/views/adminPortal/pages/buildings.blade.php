@@ -724,6 +724,7 @@
 
                                                 buildingDatatable()
                                                 get_deleted('building')
+                                                $('#view_bldginfo_modal').modal('toggle')
                                           }
                                           Toast.fire({
                                                 type: data[0].icon,
@@ -1109,7 +1110,7 @@
                         });
 
                         updateTotalBldgLeftRoomCap()
-                        $('#view_bldginfo_modal').modal()
+                        $('#view_bldginfo_modal').modal('toggle')
 
 
                   }
