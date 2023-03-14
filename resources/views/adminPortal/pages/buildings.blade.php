@@ -639,6 +639,10 @@
 
                                                 // update totals
                                                 updateTotalBldgLeftRoomCap()
+
+                                                // update selection
+                                                getRoomsExcept(selected_id)
+
                                           }
 
                                           Toast.fire({
@@ -1122,7 +1126,7 @@
                   $('#assign_room_form_modal').modal('toggle')
             })
 
-            // delete a room
+            // Delete a room
             $(document).on('click','.view_room_info',function(){
                   selected_room_id = $(this).attr('data-id')
                   console.log(selected_room_id)

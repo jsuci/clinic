@@ -562,7 +562,10 @@ class BuildingController extends \App\Http\Controllers\Controller
 
         $rooms = DB::table('rooms')
         ->where('deleted', 0)
-        ->whereNotIn('buildingid', [$buildingid])
+        ->where(function($query) use ($buildingid) {
+            $query->whereNotIn('buildingid', [$buildingid])
+                ->orWhereNull('buildingid');
+        })
         ->select(
             'roomname as text',
             'capacity',
@@ -633,9 +636,9 @@ class BuildingController extends \App\Http\Controllers\Controller
                 ->where('id', $id)
                 ->take(1)
                 ->update([
-                    'deleted'=>null,
-                    'deletedby'=>auth()->user()->id,
-                    'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                    'buildingid'=>null,
+                    // 'deletedby'=>auth()->user()->id,
+                    // 'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                 ]);
 
             return array((object)[
