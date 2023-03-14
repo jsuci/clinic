@@ -505,9 +505,11 @@
 
                   function validateInput(input) {
                         if (!input.val().trim()) {
+                              $("#building_create_button").prop("disabled", true);
                               input.removeClass("is-valid").addClass("is-invalid");
                               return false;
                         } else {
+                              $("#building_create_button").prop("disabled", false);
                               input.removeClass("is-invalid").addClass("is-valid");
                               return true;
                         }
@@ -515,6 +517,7 @@
 
                   $(selector).on("input", () => {
                         var isValid = validateInput($(selector));
+                        
                         callback(isValid);
                   });
             }
@@ -678,6 +681,8 @@
                                     type: data[0].icon,
                                     title: data[0].message
                               })
+
+                              
                         }
                   })
             }
@@ -975,6 +980,8 @@
                   resetValidation('#bldgCreateDesc')
                   resetValidation('#bldgCreateCap')
 
+                  $("#building_create_button").prop("disabled", false);
+
                   if($('#building_form_modal')) {
                               $('#building_form_modal').modal()
 
@@ -1044,6 +1051,7 @@
                   
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         buildingCreate(formData)
+                        $("#building_create_button").prop("disabled", true);
                   } else {
                         if (subData['description'] === '') {
                               $('#bldgCreateDesc').addClass('is-invalid')
