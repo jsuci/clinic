@@ -619,24 +619,14 @@ class BuildingController extends \App\Http\Controllers\Controller
 
 
             $id = $request->get('id');
-            // $check = DB::table('rooms')
-            //             ->where('id',$id)
-            //             ->where('deleted',0)
-            //             ->count();
-
-            // if($check > 0){
-            //     return array((object)[
-            //         'status'=>0,
-            //         'message'=>'Building in used',
-            //         'icon'=>'error'
-            //     ]);
-            // }
 
             DB::table('rooms')
                 ->where('id', $id)
                 ->take(1)
                 ->update([
                     'buildingid'=>null,
+                    'updatedby'=>auth()->user()->id,
+                    'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                     // 'deletedby'=>auth()->user()->id,
                     // 'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                 ]);
