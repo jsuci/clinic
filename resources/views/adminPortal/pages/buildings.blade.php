@@ -243,20 +243,6 @@
                               <option selected value="">Select Room</option>
                         </select>
                   </div>
-                  {{-- <div class="form-group">
-                        <label>Room Name</label>
-                        <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                  </div> --}}
-                  {{-- <div class="form-group">
-                        <label>Room Capacity</label>
-                        <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                  </div> --}}
-                  {{-- <div class="form-group">
-                        <label>Building</label>
-                        <select name="building" id="building" class="form-control select2">
-                              <option selected value="">SELECT BUILDING</option>
-                        </select>
-                  </div> --}}
                   <div class="row">
                         <div class="col-md-12 text-right">
                               <button type="button" class="btn btn-success btn-sm" id="assign_room">Save</button>
@@ -551,8 +537,11 @@
             }
 
             function getRoomsExcept(selected_id){
-
-                  // console.log(selected_id)
+                  $("#assignRoom").html(
+                        `<select name="roomname" id="assignRoom" class="form-select form-control select2">
+                              <option selected value="">Select Room</option>
+                        </select>`
+                  )
 
                   $.ajax({
                         type:'GET',
@@ -561,9 +550,9 @@
                               buildingid: selected_id
                         },
                         success:function(data) {
-                              rooms = data;
+                              console.log(data)
                               $("#assignRoom").select2({
-                                    data: rooms,
+                                    data: data,
                                     allowClear: true,
                                     placeholder: "Select Room",
                               })
@@ -578,7 +567,6 @@
             }
 
             function assignNewRoom() {
-                  // console.log($('#assignRoom').val())
                   console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
                   $.ajax({
                         type:'GET',
@@ -589,11 +577,10 @@
                         },
                         success:function(data) {
                               console.log(data)
-                              // $('#create_room').removeAttr('disabled')
                               if (data[0].status == 1) {
                                     Toast.fire({
                                           type: 'success',
-                                          title: 'Room Updated!'
+                                          title: 'Room Assigned!'
                                     })
 
                                     // console.log(data)
@@ -1050,7 +1037,8 @@
                         $('#bldngCap').val(temp_bldnginfo[0].capacity)
                         $('#bldg_name').html(temp_bldnginfo[0].description)
                         $('#bldgId').val(selected_id)
-                        
+
+
                         buildingRoomDatatable(bldgCap)
 
                         resetValidation('#bldngDesc')
@@ -1080,7 +1068,6 @@
                               }
                         });
 
-                        getRoomsExcept(selected_id)
                         updateTotalBldgLeftRoomCap()
                         $('#view_bldginfo_modal').modal()
 
@@ -1095,8 +1082,7 @@
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
-                  // $('#roomName').val("")
-                  // $('#roomCapacity').val("")
+                  getRoomsExcept(selected_id)
                   $('#assign_room_form_modal').modal()
             })
 

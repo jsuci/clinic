@@ -544,20 +544,6 @@ class BuildingController extends \App\Http\Controllers\Controller
                             })
                             ->count();
 
-            // if(count($buildings) < 10){
-            //     $buildings = collect($buildings)->toArray();
-            //     $lacking = 10 - count( $buildings);
-            //     for($x=0;$x <= $lacking; $x++){
-            //         array_push( $buildings , (object)[
-            //             'description'=>null,
-            //             'capacity'=>null,
-            //             'id'=>null,
-            //             'totalBldgCapacityLeft'=>null,
-            //             'totalRoomCapacity'=>null
-            //         ]);
-            //     }
-            // }
-
 
             return @json_encode((object)[
                 'data'=>$buildings,
@@ -585,45 +571,28 @@ class BuildingController extends \App\Http\Controllers\Controller
         )
         ->get();
 
+        // dd($rooms);
+
 
         return $rooms;
 
     }
 
     public static function assignRoomsToBuilding(Request $request) {
-        // $roomid = $request->get('roomid');
-        // $buildingid = $request->get('buildingid');
-
-        // $rooms = DB::table('rooms')
-        // ->where('deleted', 0)
-        // ->whereNotIn('buildingid', [$buildingid])
-        // ->select(
-        //     'roomname as text',
-        //     'capacity',
-        //     'buildingid',
-        //     'id as id'
-        // )
-        // ->get();
 
         $roomid = $request->get('roomid');
         $buildingid = $request->get('buildingid');
 
-        // $roomname = $request->get('roomname');
-        // $capacity = $request->get('capacity');
-        // $building = $request->get('building');
-        // $id = $request->get('id');
-
-        // dd($buildingid, $roomid);
+        dd($buildingid, $roomid);
 
         try {
             DB::table('rooms')
             ->where('id', $roomid)
             ->update([
-                // 'roomname'=>$roomname,
                 'id'=> $roomid,
                 'buildingid'=> $buildingid,
-                'updatedby'=> auth()->user()->id,
-                'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                // 'updatedby'=> auth()->user()->id,
+                // 'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
             ]);
 
             return array((object)[
@@ -638,47 +607,6 @@ class BuildingController extends \App\Http\Controllers\Controller
             ]);
 
         }
-
-        // try{
-
-        //     $check = DB::table('rooms')
-        //                 ->where('id','!=',$roomid)
-        //                 ->where('deleted',0)
-        //                 ->count();
-
-        //     if($check == 0){
-
-        //         DB::table('rooms')
-        //             ->where('id',$roomid)
-        //             // ->take(1)
-        //             ->update([
-        //                 // 'roomname'=>$roomname,
-        //                 'buildingid'=>$buildingid,
-        //                 // 'capacity'=>$capacity,
-        //                 'updatedby'=>auth()->user()->id,
-        //                 'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
-        //             ]);
-
-        //         return  array((object)[
-        //             'status'=>1,
-        //             'message'=>'Room Updated'
-        //         ]);
-        //     }else{
-        //         return  array((object)[
-        //             'status'=>0,
-        //             'message'=>'Already Exist'
-        //         ]);
-        //     }
-
-        // }catch(\Exception $e){
-        //     return  array((object)[
-        //         'status'=>0,
-        //         'message'=>'Something went wrong!'
-        //     ]);
-
-        // }
-
-
     }
 
     // JAM: custom controller
