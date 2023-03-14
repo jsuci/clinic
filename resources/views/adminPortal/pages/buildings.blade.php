@@ -228,7 +228,7 @@
 
 
 <div class="modal fade" id="assign_room_form_modal" style="display: none;" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
             <div class="modal-header pb-2 pt-2 border-0">
                   <h4 class="modal-title">Assign New Room</h4>
@@ -245,7 +245,7 @@
                   </div>
                   <div class="row">
                         <div class="col-md-12 text-right">
-                              <button type="button" class="btn btn-success btn-sm" id="assign_room">Save</button>
+                              <button type="button" class="btn btn-success btn-sm" id="assign_room_save">Save</button>
                         </div>
                   </div>
             </div>
@@ -557,36 +557,38 @@
                                     placeholder: "Select Room",
                               })
 
-                              // $("#update_roombuilding").select2({
-                              //       data: building,
-                              //       allowClear: true,
-                              //       placeholder: "Select Building",
-                              // })
                         }
                   })
             }
 
             function assignNewRoom() {
-                  console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
+                  // console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
+
                   $.ajax({
                         type:'GET',
                         url: 'api/rooms/assign',
                         data:{
                               roomid: $('#assignRoom').val(),
-                              building: selected_id,
+                              buildingid: selected_id,
                         },
                         success:function(data) {
                               console.log(data)
+                              
                               if (data[0].status == 1) {
                                     Toast.fire({
                                           type: 'success',
                                           title: 'Room Assigned!'
                                     })
 
-                                    // console.log(data)
+                                    // update rooms datatable
+                                    buildingRoomDatatable()
 
-                                    // $('#room_name').text($('#update_roomname').val())
-                                    // rooms_datatable()
+                                    // update totals
+                                    updateTotalBldgLeftRoomCap()
+
+                                    // close assign new room modal
+                                    $('#assign_room_form_modal').modal('toggle')
+
                               } else {
                                     Toast.fire({
                                           type: 'error',
@@ -690,10 +692,6 @@
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
-
-                                                // if($('#view_bldginfo_modal')){
-                                                //       $('#view_bldginfo_modal').modal('hide')
-                                                // }
 
                                                 buildingDatatable()
                                                 get_deleted('building')
@@ -857,8 +855,7 @@
 
             }
 
-            function buildingRoomDatatable(bldgCap) {
-                        var totalRoomCapacity = 0;
+            function buildingRoomDatatable() {
 
                         $('#bldg_rooms_table').DataTable({
                         destroy: true,
@@ -896,7 +893,6 @@
                                     'orderable': false, 
                                     'createdCell':  function (td, cellData, rowData, row, col) {
                                           $(td).addClass('align-middle');
-                                          totalRoomCapacity += parseInt(cellData); // add capacity to total
                                     }
                               },
                               {
@@ -1027,7 +1023,6 @@
             $(document).on('click','.view_info',function(){
                   var temp_id = $(this).attr('data-id')
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
-                  var bldgCap = temp_bldnginfo[0].capacity
 
                   selected_id = temp_id
 
@@ -1039,7 +1034,7 @@
                         $('#bldgId').val(selected_id)
 
 
-                        buildingRoomDatatable(bldgCap)
+                        buildingRoomDatatable()
 
                         resetValidation('#bldngDesc')
                         resetValidation('#bldngCap')
@@ -1076,14 +1071,14 @@
             })
 
             // Save Assign New Room
-            $(document).on('click','#assign_room',function(){
+            $(document).on('click','#assign_room_save',function(){
                   assignNewRoom()
             })
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
                   getRoomsExcept(selected_id)
-                  $('#assign_room_form_modal').modal()
+                  $('#assign_room_form_modal').modal('toggle')
             })
 
       </script>

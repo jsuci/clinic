@@ -583,7 +583,7 @@ class BuildingController extends \App\Http\Controllers\Controller
         $roomid = $request->get('roomid');
         $buildingid = $request->get('buildingid');
 
-        dd($buildingid, $roomid);
+        // dd(intval($buildingid), $roomid);
 
         try {
             DB::table('rooms')
@@ -591,8 +591,8 @@ class BuildingController extends \App\Http\Controllers\Controller
             ->update([
                 'id'=> $roomid,
                 'buildingid'=> $buildingid,
-                // 'updatedby'=> auth()->user()->id,
-                // 'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                'updatedby'=> auth()->user()->id,
+                'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
             ]);
 
             return array((object)[
