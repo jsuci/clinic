@@ -395,40 +395,91 @@ class BuildingController extends \App\Http\Controllers\Controller
             $search = $search['value'];
 
             $buildingid = $request->get('buildingid');
+            $datatable = $request->get('datatable');
 
-            $rooms = DB::table('rooms')
-                            ->where('deleted',0)
-                            ->where('buildingid', $buildingid)
-                            ->where(function($query) use($search){
-                                if($search != null){
-                                    $query->where('roomname','like','%'.$search.'%');
-                                }
-                            })
-                            ->take($request->get('length'))
-                            ->skip($request->get('start'))
-                            ->select(
-                                'id',
-                                'roomname',
-                                'capacity',
-                                'buildingid'
-                            )
-                            ->get();
+            // dd($datatable, $datatable === 'true');
 
-            $room_count = DB::table('rooms')
-            ->where('deleted',0)
-            ->where('buildingid', $buildingid)
-            ->where(function($query) use($search){
-                if($search != null){
-                    $query->where('roomname','like','%'.$search.'%');
-                }
-            })
-            ->count();
+            if ($datatable === 'true') {
 
-            return @json_encode((object)[
-                'data'=>$rooms,
-                'recordsTotal'=>$room_count,
-                'recordsFiltered'=>$room_count
-            ]);
+                $rooms = DB::table('rooms')
+                ->where('deleted',0)
+                ->where('buildingid', $buildingid)
+                ->where(function($query) use($search){
+                    if($search != null){
+                        $query->where('roomname','like','%'.$search.'%');
+                    }
+                })
+                ->take($request->get('length'))
+                ->skip($request->get('start'))
+                ->select(
+                    'id',
+                    'roomname',
+                    'capacity',
+                    'buildingid'
+                )
+                ->get();
+
+                $room_count = DB::table('rooms')
+                ->where('deleted',0)
+                ->where('buildingid', $buildingid)
+                ->where(function($query) use($search){
+                    if($search != null){
+                        $query->where('roomname','like','%'.$search.'%');
+                    }
+                })
+                ->count();
+
+                return @json_encode((object)[
+                    'data'=>$rooms,
+                    'recordsTotal'=>$room_count,
+                    'recordsFiltered'=>$room_count
+                ]);
+
+            } else {
+
+                $specific_building = DB::table('building')
+                ->where('deleted',0)
+                ->where('id', $buildingid)
+                ->select(
+                    'description',
+                    'capacity',
+                    'id'
+                )
+                ->get();
+
+                $all_rooms = DB::table('rooms')
+                ->where('deleted',0)
+                ->where('buildingid', $buildingid)
+                ->select(
+                    'id',
+                    'roomname',
+                    'capacity',
+                    'buildingid'
+                )
+                ->get();
+
+
+                // Combine the data and calculate totalBldgCapacityLeft
+                $building_data = collect($specific_building)->map(function ($building) use ($all_rooms) {
+                    $totalRoomCapacity = $all_rooms->where('buildingid', $building->id)->sum('capacity');
+                    $totalBldgCapacityLeft = $building->capacity - $totalRoomCapacity;
+                    return [
+                        'id' => $building->id,
+                        'description' => $building->description,
+                        'capacity' => $building->capacity,
+                        'totalBldgCapacityLeft' => $totalBldgCapacityLeft,
+                        'totalRoomCapacity' => $totalRoomCapacity,
+                    ];
+                });
+
+                // dd($building_data);
+
+                return @json_encode((object)[
+                    'data'=>$building_data
+                ]);
+
+            }
+
 
             
         } catch(\Exception $e) {
@@ -454,12 +505,19 @@ class BuildingController extends \App\Http\Controllers\Controller
             })
             ->take($request->get('length'))
             ->skip($request->get('start'))
-            ->select('description', 'capacity', 'id')
+            ->select(
+                'description',
+                'capacity',
+                'id'
+            )
             ->get();
 
             $all_rooms = DB::table('rooms')
             ->where('deleted', 0)
-            ->select('capacity', 'buildingid')
+            ->select(
+                'capacity',
+                'buildingid'
+            )
             ->get();
 
             // Combine the data and calculate totalBldgCapacityLeft

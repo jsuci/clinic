@@ -550,7 +550,7 @@
                   $(selector).removeClass('is-valid').removeClass('is-invalid');
             }
 
-            function get_rooms(selected_id){
+            function getRoomsExcept(selected_id){
 
                   // console.log(selected_id)
 
@@ -616,6 +616,26 @@
                         }
                   })
             }
+
+            function updateTotalBldgLeftRoomCap() {
+                  $.ajax({
+                        type:'GET',
+                        url:'/api/building/rooms',
+                        data: {
+                              buildingid: selected_id,
+                              datatable: false
+                        },
+                        success: function(data) {
+                              jsonData = JSON.parse(data)
+                              var totalBldgCapacityLeft = jsonData['data'][0]['totalBldgCapacityLeft']
+                              var totalRoomCapacity = jsonData['data'][0]['totalRoomCapacity']
+
+                              $('#totalCap div').html(totalBldgCapacityLeft);
+                              $('#totalRoomCap div').html(totalRoomCapacity);
+
+                        }
+                  })
+            }
             // JAM: added functions
 
             function buildingCreate(data){
@@ -652,14 +672,7 @@
                         success: function(resp) {
                               if(resp[0].status == 1){
 
-                                    var respData = deserializeString(data)
-                                    var totalRoomCap = $('#totalRoomCap div').text();
-                                    var newTotalBldgCap = parseInt(respData['capacity']) - parseInt(totalRoomCap)
-
-                                    $('#totalCap div').html(newTotalBldgCap);
-                                    
-
-
+                                    updateTotalBldgLeftRoomCap()
                                     buildingDatatable()
                                     get_updated('building')
                               }
@@ -871,10 +884,12 @@
                               url: '/api/building/rooms',
                               type: 'GET',
                               data: {
-                                    buildingid: selected_id
+                                    buildingid: selected_id,
+                                    datatable: true
                               },
                               dataSrc: function ( json ) {
-                              return json.data;
+                                    // console.log(json.data)
+                                    return json.data;
                               }
                         },
                         columns: [
@@ -909,13 +924,14 @@
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_room_info");
                         },
-                        drawCallback: function( settings ) {
-                              totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
-                              // console.log("Total capacity: " + totalBldgCapacity);
+                        // drawCallback: function( settings ) {
                               
-                              $('#totalCap div').html(totalBldgCapacity);
-                              $('#totalRoomCap div').html(totalRoomCapacity);
-                        }
+                              // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
+                              // // console.log("Total capacity: " + totalBldgCapacity);
+                              
+                              // $('#totalCap div').html(totalBldgCapacity);
+                              // $('#totalRoomCap div').html(totalRoomCapacity);
+                        // }
                   });
 
                   var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
@@ -1064,7 +1080,8 @@
                               }
                         });
 
-                        get_rooms(selected_id)
+                        getRoomsExcept(selected_id)
+                        updateTotalBldgLeftRoomCap()
                         $('#view_bldginfo_modal').modal()
 
 
