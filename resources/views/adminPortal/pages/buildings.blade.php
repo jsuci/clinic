@@ -294,6 +294,7 @@
             var selected_id = null
             var selected_room_id = null
             var selected_room_name = ''
+            var selected_bldg_name = ''
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -624,12 +625,12 @@
 
 
                   Swal.fire({
-                        text: `Are you sure you want to delete ${selected_room_name}?`,
+                        text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name}?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
                         cancelButtonColor: '#6c757d', //'#d33'
-                        confirmButtonText: 'Delete'
+                        confirmButtonText: 'Unassign'
                   }).then((result) => {
                         if (result.value) {
                               $.ajax({
@@ -677,7 +678,7 @@
                         const entries = parseInt(match[2]);
                         const maxItemsPerPage = 10
 
-                        console.log(entries)
+                        // console.log(entries)
 
                         // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
 
@@ -1121,14 +1122,15 @@
             $(document).on('click','.view_info',function(){
                   var temp_id = $(this).attr('data-id')
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
+                  selected_bldg_name = temp_bldnginfo[0].description
 
                   selected_id = temp_id
 
                   if (selected_id) {
                         
-                        $('#bldngDesc').val(temp_bldnginfo[0].description)
+                        $('#bldngDesc').val(selected_bldg_name)
                         $('#bldngCap').val(temp_bldnginfo[0].capacity)
-                        $('#bldg_name').html(temp_bldnginfo[0].description)
+                        $('#bldg_name').html(selected_bldg_name)
                         $('#bldgId').val(selected_id)
 
 
