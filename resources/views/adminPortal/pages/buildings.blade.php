@@ -293,6 +293,7 @@
             var rooms_datatable = []
             var selected_id = null
             var selected_room_id = null
+            var selected_room_name = ''
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -621,7 +622,7 @@
                   console.log(selected_room_id)
 
                   Swal.fire({
-                        text: 'Are you sure you want to delete this room?',
+                        text: `Are you sure you want to delete ${selected_room_name}?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
@@ -895,14 +896,26 @@
 
             function buildingRoomDatatable() {
 
-                  // var rooms_table = $('#bldg_rooms_table').DataTable();
+                  var rooms_table;
 
-
-                  var rooms_table = $('#bldg_rooms_table').DataTable({
+                  rooms_table = $('#bldg_rooms_table').DataTable({
                         destroy: true,
                         autoWidth: false,
                         lengthChange: false,
                         stateSave: true,
+                        // stateSaveParams: function(settings, data) {
+
+                        //       console.log(rooms_table.page.info().page)
+                        //       console.log(rooms_table.page.info().recordsTotal)
+                        //       console.log(data)
+                        //       rooms_table.page('first').draw(false);
+
+                        //       // check if the current page is 0 and the number of records is less than 10
+                        //       if (rooms_table.page.info().page === 0 && rooms_table.page.info().recordsTotal < 10) {
+                        //             // set the start state to 0
+                        //             data.start = 0;
+                        //       }
+                        // },
                         serverSide: true,
                         processing: true,
                         ajax: {
@@ -955,13 +968,33 @@
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_room_info");
                         },
-                        // drawCallback: function( settings ) {
+                        // drawCallback: function() {
+                        //       // calculate number of pages
+                        //       var pages = Math.ceil(rooms_table.page.info().recordsTotal / rooms_table.page.info().length);
                               
-                              // totalBldgCapacity = parseInt(bldgCap) - parseInt(totalRoomCapacity)
-                              // // console.log("Total capacity: " + totalBldgCapacity);
-                              
-                              // $('#totalCap div').html(totalBldgCapacity);
-                              // $('#totalRoomCap div').html(totalRoomCapacity);
+                        //       // if the number of rows is less than 10 and the current page is greater than 0
+                        //       // if (rooms_table.page.info().recordsTotal < 10 && rooms_table.page.info().page > 0) {
+                        //       //       // set the start variable to 0
+                        //       //       var start = 0;
+                        //       //       // go to the first page
+                        //       //       rooms_table.page('first').draw(false);
+                        //       // } else {
+                        //       //       // get the current start position
+                        //       //       var start = rooms_table.page.info().start;
+                        //       // }
+
+                        //       if (rooms_table.page.info().recordsTotal < 10 && rooms_table.page.info().page > 0) {
+                        //             // set the start variable to 0
+                        //             var start = 0;
+                        //             // go to the first page
+                        //             rooms_table.page(0).draw(true);
+                        //       } else {
+                        //             // get the current start position
+                        //             var start = rooms_table.page.info().start;
+                        //       }
+
+                        //       // save the state of the table with the updated start position
+                        //       rooms_table.state.save();
                         // }
                   });
 
@@ -1146,9 +1179,9 @@
             })
 
             // Delete a room
-            $(document).on('click','.view_room_info',function(){
+            $(document).on('mouseover','.view_room_info',function(){
                   selected_room_id = $(this).attr('data-id')
-                  console.log(selected_room_id)
+                  selected_room_name = $(this).find('td:nth-child(1)').text()
             })
 
             $(document).on('click','#delete_room',function(){
