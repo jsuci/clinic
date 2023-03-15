@@ -541,7 +541,7 @@
                               buildingid: selected_id
                         },
                         success:function(data) {
-                              console.log(data)
+                              // console.log(data)
                               $("#assignRoom").select2({
                                     data: data,
                                     allowClear: true,
@@ -563,7 +563,7 @@
                               buildingid: selected_id,
                         },
                         success:function(data) {
-                              console.log(data)
+                              // console.log(data)
                               
                               if (data[0].status == 1) {
                                     Toast.fire({
