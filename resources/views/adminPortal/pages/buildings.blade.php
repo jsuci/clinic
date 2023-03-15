@@ -652,7 +652,6 @@
 
                                                 // update selection
                                                 getRoomsExcept(selected_id)
-
                                           }
 
                                           Toast.fire({
@@ -662,22 +661,49 @@
                                     }
                               })
                         }
+                  }).then(() => {
+                        setTimeout(function() {
+                              updatePagination('#view_bldginfo_modal', {initialState: false})
+                        }, 1500);
                   })
+                  
             }
 
-            function updatePagination() {
-                  var text = $('#view_bldginfo_modal .dataTables_info').text()
+            function updatePagination(selector, options) {
+                  var text = $(`${selector} .dataTables_info`).text()
                   const match = text.match(/\d+/g);
 
                   if (match) {
-                        const entries = parseInt(match[1]);
-                        
-                        if (entries < 10 ) {
-                              if ($(`#view_bldginfo_modal [data-dt-idx='1']`)) {
-                                    $(`#view_bldginfo_modal [data-dt-idx='1']`).click()
+                        const entries = parseInt(match[2]);
+                        const maxItemsPerPage = 10
+
+                        console.log(entries)
+
+                        // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
+
+                        if (options.initialState) {
+                              if ($(`${selector} [data-dt-idx='1']`)) {
+                                    $(`${selector} [data-dt-idx='1']`).click()
                               }
                               
+                        } else {
+                              var page = Math.ceil(entries / maxItemsPerPage)
+                              if ($(`${selector} [data-dt-idx='${page}']`)) {
+                                    $(`${selector} [data-dt-idx='${page}']`).click()
+                              }
                         }
+                        
+                        // if (entries < maxItemsPerPage ) {
+                        //       if ($(`#view_bldginfo_modal [data-dt-idx='1']`)) {
+                        //             $(`#view_bldginfo_modal [data-dt-idx='1']`).click()
+                        //       }
+                              
+                        // } else {
+                        //       var page = Math.ceil(entries / maxItemsPerPage)
+                        //       if ($(`#view_bldginfo_modal [data-dt-idx='${page}']`)) {
+                        //             $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
+                        //       }
+                        // }
                   }
             }
             // JAM: added functions
@@ -761,6 +787,10 @@
                                     }
                               })
                         }
+                  }).then(() => {
+                        setTimeout(function() {
+                              updatePagination('#building_datatable_holder', {initialState: false})
+                        }, 1500);
                   })
 
             
@@ -919,63 +949,13 @@
             function buildingRoomDatatable() {
 
                   var rooms_table;
+                  // var dtDeferred = $.Deferred();
 
                   rooms_table = $('#bldg_rooms_table').DataTable({
                         destroy: true,
                         autoWidth: false,
                         lengthChange: false,
                         stateSave: true,
-                        // initComplete: function(settings, json) {
-                        //       recordsTotal = rooms_table.page.info().recordsTotal
-                        //       // if (recordsTotal < 10) {
-                        //       //       // set the start position to 0 and go to the first page
-                        //       //       // rooms_table.state.save();
-                        //       //       // rooms_table.state.clear();
-                        //       //       rooms_table.page(0).draw(false);
-                        //       // }
-                        // },
-                        // initComplete: function(settings, json) {
-                        //       // console.log(rooms_table.state())
-                        //       // console.log(rooms_table.state.start)
-                        //       // var page = rooms_table.page.info().page;
-                        //       // console.log(rooms_table.page.info())
-                        //       recordsTotal = rooms_table.page.info().recordsTotal;
-
-                        //       // // check if there are less than 10 records and the current page is not 0
-                        //       if (recordsTotal < 10) {
-                        //             // set the start position to 0 and go to the first page
-                        //             // rooms_table.state.save();
-                        //             // rooms_table.state.clear();
-                        //             rooms_table.page(0).draw(false);
-                        //       }
-                        // },
-                        // stateLoadParams: function(settings, data) {
-                        //       console.log(recordsTotal)
-                        //       console.log(data)
-                        // },
-                        // stateSaveParams: function(settings, data) {
-                              // if (rooms_table.page.info().page === 0 && rooms_table.page.info().recordsTotal < 10) {
-                              //       data.start = 0;
-                              // }
-                        // },
-                        // stateSaveParams: function(settings, data) {
-
-                        //       // console.log(rooms_table.page.info().page)
-                        //       // console.log(rooms_table.page.info().recordsTotal)
-                        //       console.log(data)
-                        //       console.log(settings)
-                        //       console.log(rooms_table)
-
-                        //       // data.start = 0;
-                        //       // data.page = 0
-                        //       // rooms_table.page('first').draw(false);
-
-                        //       // check if the current page is 0 and the number of records is less than 10
-                        //       // if (rooms_table.page.info().page === 0 && rooms_table.page.info().recordsTotal < 10) {
-                        //       //       // set the start state to 0
-                        //       //       data.start = 0;
-                        //       // }
-                        // },
                         serverSide: true,
                         processing: true,
                         ajax: {
@@ -1022,99 +1002,17 @@
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_room_info");
-                        },
-                        // initComplete: function(data) {
-                        //       var totalRecords = data.json['recordsTotal'];
-
-                        //       console.log(totalRecords)
-
-                        //       if (totalRecords < 10) {
-                        //             rooms_table.state.clear();
-                        //             // rooms_table.page('previous').draw('page');
-                        //       }
-                              
-                        // }
-                        // drawCallback: function() {
-                              // calculate number of pages
-                              // var pages = Math.ceil(rooms_table.page.info().recordsTotal / rooms_table.page.info().length);
-                              
-                              // if the number of rows is less than 10 and the current page is greater than 0
-                              // if (rooms_table.page.info().recordsTotal < 10 && rooms_table.page.info().page > 0) {
-                              //       // set the start variable to 0
-                              //       var start = 0;
-                              //       // go to the first page
-                              //       rooms_table.page('first').draw(false);
-                              // } else {
-                              //       // get the current start position
-                              //       var start = rooms_table.page.info().start;
-                              // }
-
-                              // recordsTotal = rooms_table.page.info().recordsTotal
-
-                              // if (rooms_table.page.info().recordsTotal < 10) {
-                              //       rooms_table.page(0).draw(false);
-                              // }
-
-                              // if (rooms_table.page.info().recordsTotal < 10) {
-                              //       // set the start variable to 0
-                              //       var start = 0;
-                              //       // go to the first page
-                              //       rooms_table.page(0).draw(false);
-                              // } else {
-                              //       // get the current start position
-                              //       var start = rooms_table.page.info().start;
-                              // }
-
-                              // save the state of the table with the updated start position
-                              // rooms_table.state.save();
-                        // }
+                        }
                   });
 
                   var label_text = $($("#bldg_rooms_table_wrapper")[0].children[0])[0].children[0]
                   $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="assign_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Assign Room</button>'
 
-                  // rooms_datatable_instance = rooms_table
-                  // console.log(rooms_table)
 
-                  // console.log(rooms_table.page.info())
-                  // rooms_table.page(0).draw(false);
-
-
-                  // rooms_table.on('init.dt', function (e, settings, json) {
-
-                  //       var recordsTotal = json['recordsTotal']
-
-                  //       // if (json['recordsTotal'] < 10) {
-                  //       //       rooms_table.clear()
-                  //       //       rooms_table.state.clear();
-                  //       //       // rooms_table.destroy()
-                  //       // }
-                  //       console.log(recordsTotal)
-                  // })
-
-                  // console.log(rooms_table.ajax.json);
-                  // console.log(rooms_table.data())
-
-
-                  // console.log(recordsTotal)
-
-                  // rooms_table.state.clear();
-                  // rooms_table.destroy();
-
-                  // console.log(rooms_table.page.info())
-
-                  // console.log(rooms_table.page.len())
-
-                  // rooms_table.on( 'init.dt', function (e, settings) {
-                  //       var api = new $.fn.dataTable.Api( settings );
-                  //       console.log( 'New DataTable created:', api.table().node() );
-                  // });
-
-                  // console.log(rooms_table.page.info().recordsTotal)
-
-                  // $('#example tbody').on('click', 'tr', function () {
-                  //       var data = table.row(this).data();
-                  //       alert('You clicked on ' + data[0] + "'s row");
+                  // dtDeferred.promise().then(function() {
+                  //       // code to execute after the DataTable has finished initializing
+                  //       console.log('finished loading table')
+                  //       setTimeout(updatePagination, 100)
                   // });
             }
 
@@ -1294,7 +1192,7 @@
 
             // Trigger Pagination Update
             $('#view_bldginfo_modal').on('shown.bs.modal', function () {
-                  updatePagination();
+                  updatePagination('#view_bldginfo_modal', {initialState: true});
             });
 
 
