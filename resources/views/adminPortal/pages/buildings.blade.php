@@ -295,6 +295,7 @@
             var selected_room_id = null
             var selected_room_name = ''
             var selected_bldg_name = ''
+            var currRoomCapacity = 0
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -529,6 +530,7 @@
             }
 
             function getRoomsExcept(selected_id){
+                  // redraw selection to get new selection
                   $("#assignRoom").html(
                         `<select name="roomname" id="assignRoom" class="form-select form-control select2">
                               <option selected value="">Select Room</option>
@@ -547,8 +549,12 @@
                                     data: data,
                                     allowClear: true,
                                     placeholder: "Select Room",
+                                    templateResult: function(data) {
+                                          // Create a new jQuery object for the option
+                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+                                          return $option;
+                                    }
                               })
-
                         }
                   })
             }
@@ -572,6 +578,10 @@
                                           title: 'Room Assigned!'
                                     })
 
+                                    // update selection
+                                    getRoomsExcept(selected_id)
+
+
                                     // update rooms datatable
                                     buildingRoomDatatable({
                                           // selector: '#view_bldginfo_modal',
@@ -583,6 +593,7 @@
 
                                     // update totals
                                     updateTotalBldgLeftRoomCap()
+
 
                                     // close assign new room modal
                                     $('#assign_room_form_modal').modal('toggle')
@@ -617,7 +628,7 @@
                               var totalBldgCapacityLeft = jsonData['data'][0]['totalBldgCapacityLeft']
                               var totalRoomCapacity = jsonData['data'][0]['totalRoomCapacity']
 
-                              console.log(totalBldgCapacityLeft)
+                              // console.log(totalBldgCapacityLeft)
 
                               $('#totalCap div').html(totalBldgCapacityLeft);
                               $('#totalRoomCap div').html(totalRoomCapacity);
@@ -1264,11 +1275,12 @@
             })
 
             // Save Assign New Room
-            $(document).on('click','#assign_room_save',function(){
+            $('#assign_room_save').on('click',function(){
                   // calculate first before sending
                   const totalBldgCap = $('#totalCap div').text().trim()
-                  const totalRoomCap = $('#totalRoomCap div').text().trim()
-                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
+                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
+
+                  // console.log(computedBldgCap)
 
                   if (computedBldgCap >= 0) {
                         roomAssign()
@@ -1284,7 +1296,13 @@
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
                   getRoomsExcept(selected_id)
+
                   $('#assign_room_form_modal').modal('toggle')
+
+                  $('#assignRoom').on('select2:select', function(e) {
+                        // Get the capacity value for the selected option
+                        currRoomCapacity = e.params.data.capacity;
+                  });
             })
 
             // Delete a room
