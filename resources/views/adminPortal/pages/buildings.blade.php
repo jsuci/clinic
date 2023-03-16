@@ -326,7 +326,7 @@
                               }
                               buildingDatatable()
                               
-                        }
+                        },
                   })
             }
 
@@ -553,7 +553,7 @@
                   })
             }
 
-            function assignNewRoom() {
+            function roomAssign() {
                   // console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
 
                   $.ajax({
@@ -573,7 +573,10 @@
                                     })
 
                                     // update rooms datatable
-                                    buildingRoomDatatable()
+                                    buildingRoomDatatable({
+                                          // selector: '#view_bldginfo_modal',
+                                          // initialState: false
+                                    })
 
                                     // update building datatable
                                     buildingDatatable()
@@ -642,7 +645,10 @@
                                     success:function(data) {
                                           if(data[0].status == 1){
                                                 // update rooms datatable
-                                                buildingRoomDatatable()
+                                                buildingRoomDatatable({
+                                                      selector: '#view_bldginfo_modal',
+                                                      initialState: false
+                                                })
 
                                                 // update buildings datable
                                                 buildingDatatable()
@@ -663,15 +669,18 @@
                               })
                         }
                   }).then(() => {
-                        setTimeout(function() {
-                              updatePagination('#view_bldginfo_modal', {initialState: false})
-                        }, 1500);
+                        // setTimeout(function() {
+                        //       updatePagination({
+                        //             selector: '#view_bldginfo_modal',
+                        //             initialState: true
+                        //       });
+                        // }, 1500);
                   })
                   
             }
 
-            function updatePagination(selector, options) {
-                  var text = $(`${selector} .dataTables_info`).text()
+            function updatePagination(options) {
+                  var text = $(`${options.selector} .dataTables_info`).text()
                   const match = text.match(/\d+/g);
 
                   if (match) {
@@ -682,17 +691,21 @@
 
                         // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
 
-                        if (options.initialState) {
-                              if ($(`${selector} [data-dt-idx='1']`)) {
-                                    $(`${selector} [data-dt-idx='1']`).click()
-                              }
-                              
-                        } else {
-                              var page = Math.ceil(entries / maxItemsPerPage)
-                              if ($(`${selector} [data-dt-idx='${page}']`)) {
-                                    $(`${selector} [data-dt-idx='${page}']`).click()
+                        if (options) {
+                              if (options.initialState) {
+                                    if ($(`${options.selector} [data-dt-idx='1']`)) {
+                                          $(`${options.selector} [data-dt-idx='1']`).click()
+                                    }
+                                    
+                              } else {
+                                    var page = Math.ceil(entries / maxItemsPerPage)
+                                    if ($(`${options.selector} [data-dt-idx='${page}']`)) {
+                                          $(`${options.selector} [data-dt-idx='${page}']`).click()
+                                    }
                               }
                         }
+
+
                         
                         // if (entries < maxItemsPerPage ) {
                         //       if ($(`#view_bldginfo_modal [data-dt-idx='1']`)) {
@@ -777,7 +790,10 @@
                                     success:function(data) {
                                           if(data[0].status == 1){
 
-                                                buildingDatatable()
+                                                buildingDatatable({
+                                                      selector: '#building_datatable_holder',
+                                                      initialState: false
+                                                })
                                                 get_deleted('building')
                                                 $('#view_bldginfo_modal').modal('toggle')
                                           }
@@ -788,11 +804,16 @@
                                     }
                               })
                         }
-                  }).then(() => {
-                        setTimeout(function() {
-                              updatePagination('#building_datatable_holder', {initialState: false})
-                        }, 1500);
                   })
+                  // .then(() => {
+
+                  //       setTimeout(function() {
+                  //             updatePagination({
+                  //                   selector: '#building_datatable_holder',
+                  //                   initialState: true
+                  //             });
+                  //       }, 1500);
+                  // })
 
             
             }
@@ -866,7 +887,9 @@
                   buildingDatatable()
             }
 
-            function buildingDatatable() {
+            function buildingDatatable(options) {
+
+                  var dtDeferred = $.Deferred();
 
                   if(button_enable == null){
                         getProjectSetup()
@@ -889,6 +912,10 @@
                                     buildings_datatable = json.data
                                     return json.data;
                               }
+                        },
+                        initComplete: function(settings, json) {
+                              // Resolve the Deferred object
+                              dtDeferred.resolve();
                         },
                         columns: [
                                     { "data": "description" },
@@ -942,15 +969,36 @@
                         $(label_text)[0].innerHTML = ''
                   }
 
+                  dtDeferred.promise().then(function() {
+                        // code to execute after the DataTable has finished initializing
+                        // console.log('finished loading table')
+                        // console.log('update pagination')
 
+                        if (options) {
+                              updatePagination({
+                                    selector: options.selector,
+                                    initialState: options.initialState
+                              });
+                        }
+
+                        // setTimeout(function() {
+                        //       console.log('update pagination')
+                        //       updatePagination({
+                        //             selector: options.selector,
+                        //             initialState: options.initialState
+                        //       });
+                        // }, 1000);
+                  });
 
 
             }
 
-            function buildingRoomDatatable() {
+            function buildingRoomDatatable(options) {
+
+                  // console.log(options)
 
                   var rooms_table;
-                  // var dtDeferred = $.Deferred();
+                  var dtDeferred = $.Deferred();
 
                   rooms_table = $('#bldg_rooms_table').DataTable({
                         destroy: true,
@@ -975,6 +1023,10 @@
                               { "data": "capacity" },
                               { "data": null }
                         ],
+                        initComplete: function(settings, json) {
+                              // Resolve the Deferred object
+                              dtDeferred.resolve();
+                        },
                         columnDefs: [
                               {
                                     'targets': 0,
@@ -1010,11 +1062,18 @@
                   $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" id="assign_room_button" style="font-size:.8rem !important"> <i class="fa fa-plus"></i> Assign Room</button>'
 
 
-                  // dtDeferred.promise().then(function() {
-                  //       // code to execute after the DataTable has finished initializing
-                  //       console.log('finished loading table')
-                  //       setTimeout(updatePagination, 100)
-                  // });
+                  dtDeferred.promise().then(function() {
+                        // code to execute after the DataTable has finished initializing
+                        // console.log('finished loading table')
+                        // console.log('update pagination')
+
+                        if (options) {
+                              updatePagination({
+                                    selector: options.selector,
+                                    initialState: options.initialState
+                              });
+                        }
+                  });
             }
 
             // Add New button
@@ -1134,7 +1193,10 @@
                         $('#bldgId').val(selected_id)
 
 
-                        buildingRoomDatatable()
+                        buildingRoomDatatable({
+                              selector: '#view_bldginfo_modal',
+                              initialState: true
+                        })
 
                         resetValidation('#bldngDesc')
                         resetValidation('#bldngCap')
@@ -1164,7 +1226,11 @@
                         });
 
                         updateTotalBldgLeftRoomCap();
-                        $('#view_bldginfo_modal').modal('toggle');
+                        $('#view_bldginfo_modal').modal({
+                              backdrop: 'static',
+                              keyboard: false,
+                              toggle: true
+                        });
 
 
                   }
@@ -1172,7 +1238,7 @@
 
             // Save Assign New Room
             $(document).on('click','#assign_room_save',function(){
-                  assignNewRoom()
+                  roomAssign()
             })
 
             // Show Room Form Modal
@@ -1193,9 +1259,12 @@
             })
 
             // Trigger Pagination Update
-            $('#view_bldginfo_modal').on('shown.bs.modal', function () {
-                  updatePagination('#view_bldginfo_modal', {initialState: true});
-            });
+            // $('#view_bldginfo_modal').on('shown.bs.modal', function () {
+            //       updatePagination({
+            //             selector: '#view_bldginfo_modal',
+            //             initialState: true
+            //       });
+            // });
 
 
       </script>
