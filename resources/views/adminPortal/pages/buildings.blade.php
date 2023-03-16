@@ -551,7 +551,7 @@
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
                                           // Create a new jQuery object for the option
-                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} - (${data.capacity})</option>`);
                                           return $option;
                                     }
                               })
@@ -1264,6 +1264,9 @@
                         });
 
                         updateTotalBldgLeftRoomCap();
+
+                        getRoomsExcept(selected_id)
+
                         $('#view_bldginfo_modal').modal({
                               backdrop: 'static',
                               keyboard: false,
@@ -1295,7 +1298,7 @@
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
-                  getRoomsExcept(selected_id)
+                  // getRoomsExcept(selected_id)
 
                   $('#assign_room_form_modal').modal('toggle')
 
@@ -1316,13 +1319,6 @@
                   roomDelete()
             })
 
-            // Trigger Pagination Update
-            // $('#view_bldginfo_modal').on('shown.bs.modal', function () {
-            //       updatePagination({
-            //             selector: '#view_bldginfo_modal',
-            //             initialState: true
-            //       });
-            // });
 
 
       </script>
