@@ -617,15 +617,22 @@
                               var totalBldgCapacityLeft = jsonData['data'][0]['totalBldgCapacityLeft']
                               var totalRoomCapacity = jsonData['data'][0]['totalRoomCapacity']
 
+                              console.log(totalBldgCapacityLeft)
+
                               $('#totalCap div').html(totalBldgCapacityLeft);
                               $('#totalRoomCap div').html(totalRoomCapacity);
 
+                        },
+                        error: function(data) {
+                              Toast.fire({
+                                    type: 'error',
+                                    title: 'Something went wrong!'
+                              })
                         }
                   })
             }
 
             function roomDelete() {
-
 
                   Swal.fire({
                         text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name}?`,
@@ -642,8 +649,8 @@
                                     data:{
                                           'id':selected_room_id
                                     },
-                                    success:function(data) {
-                                          if(data[0].status == 1){
+                                    success: function(data) {
+                                          if (data[0].status == 1) {
                                                 // update rooms datatable
                                                 buildingRoomDatatable({
                                                       selector: '#view_bldginfo_modal',
@@ -1114,22 +1121,41 @@
                   }
             })
 
-            // Delete Information button
+            // Button: Delete Information
             $(document).on('click','#building_delete_button',function(event){
                   event.preventDefault();
                   buildingDelete()
             })
 
-            // Update Information button
+            // Button: Update Information
             $(document).on('submit','#bldgEditForm',function(event){
                   event.preventDefault();
                   var formData = $(this).serialize();
 
                   subData = deserializeString(formData)
 
+                  // calculate first before sending
+                  const totalBldgCap = subData['capacity']
+                  const totalRoomCap = $('#totalRoomCap div').text().trim()
+
+                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
+
+                  // console.log('bldgCap', totalBldgCap)
+                  // console.log('roomCap', totalRoomCap)
+                  // console.log('roomCap', totalRoomCap)
+
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
-                        buildingUpdate(formData)
+                        if (computedBldgCap >= 0) {
+                              buildingUpdate(formData)
+                        } else {
+                              Toast.fire({
+                                    type: 'error',
+                                    title: 'Building Update Error:\nInvalid Bldg. Capacity entered'
+                              })
+                        }
+                        
                   } else {
+
                         if (subData['description'] === '') {
                               $('#bldgDesc').addClass('is-invalid')
                         } else if (subData['capacity'] === '') {
@@ -1138,11 +1164,12 @@
                               $('#bldgDesc').addClass('is-invalid')
                               $('#bldgCap').addClass('is-invalid')
                         }
-
                         Toast.fire({
                                     type: 'error',
                                     title: 'Error missing field(s)'
                         })
+
+
                   }
             })
 
@@ -1238,7 +1265,20 @@
 
             // Save Assign New Room
             $(document).on('click','#assign_room_save',function(){
-                  roomAssign()
+                  // calculate first before sending
+                  const totalBldgCap = $('#totalCap div').text().trim()
+                  const totalRoomCap = $('#totalRoomCap div').text().trim()
+                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
+
+                  if (computedBldgCap >= 0) {
+                        roomAssign()
+                  } else {
+                        Toast.fire({
+                              type: 'error',
+                              title: 'Room Assignment Error:\nBuilding capacity limit reached.'
+                        })
+                  }
+                  
             })
 
             // Show Room Form Modal

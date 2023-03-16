@@ -237,8 +237,8 @@ class BuildingController extends \App\Http\Controllers\Controller
 
     public static function buildingDelete(Request $request){
 
-        $description = $request->get('description');
-        $capacity = $request->get('capacity');
+        // $description = $request->get('description');
+        // $capacity = $request->get('capacity');
         $id = $request->get('id');
         
         try{
@@ -265,7 +265,7 @@ class BuildingController extends \App\Http\Controllers\Controller
                     'deletedby'=>auth()->user()->id,
                     'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                 ]);
-           
+
             return array((object)[
                 'status'=>1,
                 'message'=>'Building Deleted',
