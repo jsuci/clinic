@@ -56,6 +56,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                   return self::update_sh($id,$subjdesc,$subjcode,$type,$isInSF9,$isVisible);
             }
       }
+
       public static function delete_ajax(Request $request){
             $stage = $request->get('stage');
             $id = $request->get('id');
@@ -363,8 +364,6 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                   return self::store_error($e);
             }
       }
-
-
       
       public static function delete_sh(
             $id = null
@@ -554,6 +553,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $subjects = $subjects->select(
                                     'id',
                                     'subjcode',
+                                    // JAM START: include subjunit to output data
+                                    'subjunit',
+                                    // JAM END
                                     'subjtitle as subjdesc',
                                     'subjtitle as text',
                                     'type',
@@ -582,6 +584,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                                     'id',
                                     'subjcode',
                                     'subjdesc',
+                                    // JAM START: include subjunit to output data
+                                    'subjunit',
+                                    // JAM END
                                     'subjdesc as text',
                                     'isSP',
                                     'subjCom',

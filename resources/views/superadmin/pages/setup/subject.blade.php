@@ -594,6 +594,9 @@
 
                         $('#input_subjdesc').val(temp_subj[0].subjdesc)
                         $('#input_subjcode').val(temp_subj[0].subjcode)
+                        // JAM START: add subjunit value in displaying when edit modal is dislpayed
+                        $('#input_subjunit').val(temp_subj[0].subjunit)
+                        // JAM END
 
                         if(temp_subj[0].isCon == 1){
                               $('#isCon').prop('checked',true)
