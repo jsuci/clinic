@@ -202,6 +202,7 @@ class AdministratorController extends \App\Http\Controllers\Controller
         }
 
     }
+    
     public static function setsemaractive($id){
 
         DB::table('semester')->update(['isactive'=>'0']);

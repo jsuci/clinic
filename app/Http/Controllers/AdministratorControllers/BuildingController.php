@@ -640,7 +640,6 @@ class BuildingController extends \App\Http\Controllers\Controller
         }
 
     } 
-
     // JAM: custom controller
 
 

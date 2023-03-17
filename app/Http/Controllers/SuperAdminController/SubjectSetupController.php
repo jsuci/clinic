@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\SuperAdminController;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+// use DB;
 
 class SubjectSetupController extends \App\Http\Controllers\Controller
 {
@@ -21,6 +22,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $stage = $request->get('stage');
             $subjdesc = $request->get('subjdesc');
             $subjcode = $request->get('subjcode');
+            // JAM START: get the subjunit parameter
+            $subjunit = $request->get('subjunit');
+            // JAM END:
             $isCon = $request->get('isCon');
             $isSP = $request->get('isSP');
             $comp = $request->get('comp');
@@ -29,9 +33,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $isVisible = $request->get('isVisible');
             $isInSF9 = $request->get('isInSF9');
             if($stage == 1){
-                  return self::create($subjdesc,$subjcode,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
+                  return self::create($subjdesc,$subjcode,$subjunit,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
             }else{
-                  return self::create_sh($subjdesc,$subjcode,$type,$isInSF9,$isVisible);
+                  return self::create_sh($subjdesc,$subjcode,$subjunit,$type,$isInSF9,$isVisible);
             }
       }
 
@@ -40,6 +44,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $stage = $request->get('stage');
             $subjdesc = $request->get('subjdesc');
             $subjcode = $request->get('subjcode');
+            // JAM START: get the subjunit parameter
+            $subjunit = $request->get('subjunit');
+            // JAM END
             $isCon = $request->get('isCon');
             $isSP = $request->get('isSP');
             $comp = $request->get('comp');
@@ -48,11 +55,12 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $isVisible = $request->get('isVisible');
             $isInSF9 = $request->get('isInSF9');
             if($stage == 1){
-                  return self::update($id,$subjdesc,$subjcode,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
+                  return self::update($id,$subjdesc,$subjcode,$subjunit,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
             }else{
-                  return self::update_sh($id,$subjdesc,$subjcode,$type,$isInSF9,$isVisible);
+                  return self::update_sh($id,$subjdesc,$subjcode,$subjunit,$type,$isInSF9,$isVisible);
             }
       }
+      
       public static function delete_ajax(Request $request){
             $stage = $request->get('stage');
             $id = $request->get('id');
@@ -68,6 +76,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
       public static function create(
            $subjdesc = null,
            $subjcode = null,
+           // JAM START: add subjunit entry
+           $subjunit = null,
+           // JAM END:
            $isCon = null,
            $isSP = null,
            $comp = array(),
@@ -80,6 +91,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                         ->insertGetId([
                               'subjdesc'=>$subjdesc,
                               'subjcode'=>$subjcode,
+                              'subjunit'=>$subjunit,
                               'isCon'=>$isCon,
                               'isSP'=>$isSP,
                               'deleted'=>0,
@@ -126,46 +138,53 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
       public static function create_sh(
             $subjdesc = null,
             $subjcode = null,
+           // JAM START: add subjunit entry
+           $subjunit = null,
+           // JAM END:
             $type = null,
             $isInSF9 = 1,
             $isVisible = 1
-       ){
-             try{
-                   $subject_id = DB::table('sh_subjects')
-                         ->insertGetId([
-                               'subjtitle'=>$subjdesc,
-                               'subjcode'=>$subjcode,
-                               'type'=>$type,
-                               'inSF9'=>$isInSF9,
-                               'deleted'=>0,
-                               'isactive'=>1,
-                               'sh_isVisible'=>$isVisible,
-                               'createdby'=>auth()->user()->id,
-                               'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
-                         ]);
- 
-                   $message = auth()->user()->name.' added '.$subjdesc;
-                   
-                   self::create_logs($message,$subject_id);
- 
-                   $info = self::list_sh();
- 
-                   return array((object)[
-                         'status'=>1,
-                         'data'=>'Created Successfully!',
-                         'id'=> $subject_id,
-                         'info'=>$info
-                   ]);
- 
-             }catch(\Exception $e){
-                   return self::store_error($e);
-             }
-       }
+      ){
+            try{
+                  $subject_id = DB::table('sh_subjects')
+                        ->insertGetId([
+                              'subjtitle'=>$subjdesc,
+                              'subjcode'=>$subjcode,
+                              'subjunit'=>$subjunit,
+                              'type'=>$type,
+                              'inSF9'=>$isInSF9,
+                              'deleted'=>0,
+                              'isactive'=>1,
+                              'sh_isVisible'=>$isVisible,
+                              'createdby'=>auth()->user()->id,
+                              'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                        ]);
+
+                  $message = auth()->user()->name.' added '.$subjdesc;
+                  
+                  self::create_logs($message,$subject_id);
+
+                  $info = self::list_sh();
+
+                  return array((object)[
+                        'status'=>1,
+                        'data'=>'Created Successfully!',
+                        'id'=> $subject_id,
+                        'info'=>$info
+                  ]);
+
+            }catch(\Exception $e){
+                  return self::store_error($e);
+            }
+      }
 
       public static function update(
             $id = null,
             $subjdesc = null,
             $subjcode = null,
+            // JAM START: add subjunit entry
+            $subjunit = null,
+            // JAM END:
             $isCon = null,
             $isSP = null,
             $comp = array(),
@@ -227,6 +246,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                         ->update([
                               'subjdesc'=>$subjdesc,
                               'subjcode'=>$subjcode,
+                              'subjunit'=>$subjunit,
                               'isCon'=>$isCon,
                               'isSP'=>$isSP,
                               'inSF9'=>$isInSF9,
@@ -291,6 +311,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $id = null,
             $subjdesc = null,
             $subjcode = null,
+            // JAM START: add subjunit entry
+            $subjunit = null,
+            // JAM END:
             $type = null,
             $isInSF9 = 1,
             $isVisible = 1
@@ -328,6 +351,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                               'inSF9'=>$isInSF9,
                               'subjtitle'=>$subjdesc,
                               'subjcode'=>$subjcode,
+                              // JAM START: add subjunit entry
+                              'subjunit'=>$subjunit,
+                              // JAM END:
                               'type'=>$type,
                               'sh_isVisible'=>$isVisible,
                               'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila'),
@@ -337,7 +363,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                   $message = auth()->user()->name.' updated subject '.$temp_info[0]->subjdesc;
                   self::create_logs($message,$id);
                   $info = self::list_sh();
-                
+
                   return array((object)[
                         'status'=>1,
                         'data'=>'Updated Successfully!',
