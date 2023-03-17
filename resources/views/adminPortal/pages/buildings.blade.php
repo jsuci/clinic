@@ -596,7 +596,7 @@
 
 
                                     // close assign new room modal
-                                    $('#assign_room_form_modal').modal('toggle')
+                                    $('#assign_room_form_modal').modal('hide')
 
                               } else {
                                     Toast.fire({
@@ -711,14 +711,24 @@
 
                         if (options) {
                               if (options.initialState) {
-                                    if ($(`${options.selector} [data-dt-idx='1']`)) {
-                                          $(`${options.selector} [data-dt-idx='1']`).click()
+                                    const prevSelector = $(`${options.selector} .page-link:contains("Previous")`)
+                                    const pageOneSelector = $(`${options.selector} .page-link:contains("1")`)
+
+                                    if (pageOneSelector.text() === '1') {
+                                          pageOneSelector.click()
+                                    } else {
+                                          prevSelector.click()
                                     }
                                     
                               } else {
-                                    var page = Math.ceil(entries / maxItemsPerPage)
-                                    if ($(`${options.selector} [data-dt-idx='${page}']`)) {
-                                          $(`${options.selector} [data-dt-idx='${page}']`).click()
+                                    var page = String(Math.ceil(entries / maxItemsPerPage))
+                                    otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
+
+                                    console.log(otherPageSelector.text())
+
+                                    
+                                    if (otherPageSelector.text() === page) {
+                                          otherPageSelector.click()
                                     }
                               }
                         }
@@ -812,8 +822,10 @@
                                                       selector: '#building_datatable_holder',
                                                       initialState: false
                                                 })
-                                                get_deleted('building')
-                                                $('#view_bldginfo_modal').modal('toggle')
+
+                                                // get_deleted('building')
+
+                                                $('#view_bldginfo_modal').modal('hide')
                                           }
                                           Toast.fire({
                                                 type: data[0].icon,
@@ -1105,7 +1117,9 @@
                   $("#building_create_button").prop("disabled", false);
 
                   if($('#building_form_modal')) {
-                              $('#building_form_modal').modal()
+                              $('#building_form_modal').modal({
+                                    show: true
+                              })
 
                               var descInput = null
                               var capInput = null
@@ -1161,7 +1175,8 @@
                         } else {
                               Toast.fire({
                                     type: 'error',
-                                    title: 'Building Update Error:\nInvalid Bldg. Capacity entered'
+                                    title: 'Building Update Error: Total Room Capacity is greater than Total Bldg Capacity Left',
+                                    timer: 8000
                               })
                         }
                         
@@ -1270,7 +1285,7 @@
                         $('#view_bldginfo_modal').modal({
                               backdrop: 'static',
                               keyboard: false,
-                              toggle: true
+                              show: true,
                         });
 
 
@@ -1290,21 +1305,22 @@
                         if (computedBldgCap < 0) {
                               Toast.fire({
                                     type: 'error',
-                                    title: 'Room Assignment Error:\nBuilding capacity limit reached.'
+                                    title: 'Room Assignment Error: Building capacity limit reached.',
+                                    timer: 5000
                               })
                         }
 
                         if ($('#assignRoom').val() === '') {
                               Toast.fire({
                                     type: 'error',
-                                    title: 'Room Assignment Error:\nField cannot be empty.'
+                                    title: 'Room Assignment Error: Field cannot be empty.',
+                                    timer: 5000
                               })
                         }
 
                   }
                   
             })
-
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
@@ -1313,7 +1329,7 @@
                   $('#assign_room_form_modal').modal({
                         backdrop: 'static',
                         keyboard: false,
-                        toggle: true
+                        show: true
                   })
 
                   $('#assignRoom').on('select2:select', function(e) {
