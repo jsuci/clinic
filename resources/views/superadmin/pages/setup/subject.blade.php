@@ -1009,13 +1009,15 @@
                                           }
 
 
-                                    },   
+                                    },
+                                    // 
                                     {
                                           'targets': 2,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
                                                 $(td).addClass('align-middle')
-                                                $(td).text(null)
+                                                $(td).addClass('text-center')
+                                                $(td).text(rowData.subjunit)
                                                 
                                           }
                                     },
