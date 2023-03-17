@@ -658,7 +658,11 @@
                         $('#input_type').val(temp_subj[0].type).change()
 
                         process = 'edit'
-                        $('#subject_modal').modal()   
+                        $('#subject_modal').modal({
+                              backdrop: 'static',
+                              keyboard: false,
+                              show: true
+                        })   
                         $('#same_subj').empty()
                           
                   })
