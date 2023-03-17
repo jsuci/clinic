@@ -419,7 +419,6 @@
                         $('#comp_holder').attr('hidden','hidden')
                         $('#input_subjdesc').val("")
                         $('#input_subjcode').val("")
-                        $('#input_subjunit').val("")
                         $('#per').val("")
                         $('#isCon').prop('checked',false)
                         $("#comp_subjects").val([]).change()
@@ -433,7 +432,7 @@
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
                                     duplicate += '<li>'+b.text+'</li>'
-
+                                   
                               })
                               $('#same_subj')[0].innerHTML = duplicate
 
@@ -442,7 +441,7 @@
                                     title: 'Subject already exist!'
                               })
                         }
-
+                     
 
                   })
 
@@ -463,44 +462,6 @@
                                     title: 'Code is required!'
                               })
                         }
-
-                        // JAM START: added subjunit filter
-                        else if($('#input_subjunit').val() == ""){
-                              valid = false
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Unit is required!'
-                              })
-                        }
-
-                        else if($('#input_subjunit').val() != ""){
-
-                              var subjUnitRegex = /^\d+(\.\d)?$/;
-                              var userInputValue = $('#input_subjunit').val()
-
-                              // Check if input matches the pattern
-                              if (!subjUnitRegex.test(userInputValue)) {
-                                    valid = false;
-                                    Toast.fire({
-                                          type: 'warning',
-                                          title: 'Subject Unit Error: Only one number with one decimal place is allowed.',
-                                          timer: 5000
-                                    });
-                              }
-                              // else {
-
-                              //       if (userInputValue.length != 3) {
-                              //             valid = false;
-                              //             Toast.fire({
-                              //                   type: 'warning',
-                              //                   title: 'Subject Unit Error: Only one number with one decimal place is allowed.',
-                              //                   timer: 5000
-                              //             });
-                              //       }
-                              // }
-                        }
-
-                        // JAM END: 
 
                         if($('#filter_type').val() == 1){
                               if($('#per').val() != ""){
@@ -532,7 +493,7 @@
                               }
 
                         return valid;
-
+                          
                   }
 
                   $(document).on('click','#subject_to_create',function(){
@@ -548,12 +509,12 @@
                               if(valid){
                                     subject_update() 
                               }
-
+                             
                         }
                   })
 
                   $(document).on('click','.subject_to_info',function(){
-                        $('#subject_info_modal').modal()
+                      $('#subject_info_modal').modal()
                   })
 
                   $(document).on('click','#subject_to_modal',function(){
@@ -570,7 +531,7 @@
                         $('#subject_to_create').addClass('btn-success')
 
                         var com_subj = all_subject.filter(x=>x.subjCom == null && x.isCon == 0)
-
+               
                         $("#comp_subjects").empty()
                         $("#comp_subjects").select2({
                               data: com_subj,
@@ -745,9 +706,6 @@
                               data:{
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
-                                    // JAM START: add subjunit parameter
-                                    subjunit:parseFloat($('#input_subjunit').val()),
-                                    // JAM END
                                     stage:$('#filter_type').val(),
                                     isCon:isCon,
                                     isSP:isSP,
@@ -758,8 +716,6 @@
                                     isInSF9:isInSF9
                               },
 					success:function(data) {
-
-                                    console.log(data)
 
                                     $('#subject_to_create').removeAttr('disabled')
 
@@ -817,9 +773,6 @@
                                     id:selected_subject,
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
-                                    // JAM START: add subjunit parameter
-                                    subjunit:$('#input_subjunit').val(),
-                                    // JAM END
                                     isCon:isCon ,
                                     isSP:isSP,
                                     comp:comps,
@@ -1209,7 +1162,7 @@
                                                 }else{
                                                       $(td)[0].innerHTML =  buttons
                                                 }
-                                          
+                                               
                                                 $(td).addClass('text-center')
                                                 $(td).addClass('align-middle')
                                                 
