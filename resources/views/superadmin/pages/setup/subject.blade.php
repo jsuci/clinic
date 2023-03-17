@@ -811,6 +811,9 @@
                                     id:selected_subject,
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
+                                    // JAM START: send subjunit
+                                    subjunit:$('#input_subjunit').val(),
+                                    // JAM END: send subjunit
                                     isCon:isCon ,
                                     isSP:isSP,
                                     comp:comps,

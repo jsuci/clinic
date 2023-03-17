@@ -43,6 +43,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $stage = $request->get('stage');
             $subjdesc = $request->get('subjdesc');
             $subjcode = $request->get('subjcode');
+            // JAM START: catch subjunit
+            $subjunit = $request->get('subjunit');
+            // JAM END: catch subjunit
             $isCon = $request->get('isCon');
             $isSP = $request->get('isSP');
             $comp = $request->get('comp');
@@ -51,9 +54,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $isVisible = $request->get('isVisible');
             $isInSF9 = $request->get('isInSF9');
             if($stage == 1){
-                  return self::update($id,$subjdesc,$subjcode,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
+                  return self::update($id,$subjdesc,$subjcode,$subjunit,$isCon,$isSP,$comp,$per,$isVisible,$isInSF9);
             }else{
-                  return self::update_sh($id,$subjdesc,$subjcode,$type,$isInSF9,$isVisible);
+                  return self::update_sh($id,$subjdesc,$subjcode,$subjunit,$type,$isInSF9,$isVisible);
             }
       }
 
@@ -182,6 +185,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $id = null,
             $subjdesc = null,
             $subjcode = null,
+            // JAM START: add new variable subjunit
+            $subjunit = null,
+            // JAM END: add new variable subjunit
             $isCon = null,
             $isSP = null,
             $comp = array(),
@@ -243,6 +249,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                         ->update([
                               'subjdesc'=>$subjdesc,
                               'subjcode'=>$subjcode,
+                              // JAM START: add new variable subjunit
+                              'subjunit'=>$subjunit,
+                              // JAM END: add new variable subjunit
                               'isCon'=>$isCon,
                               'isSP'=>$isSP,
                               'inSF9'=>$isInSF9,
@@ -307,6 +316,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $id = null,
             $subjdesc = null,
             $subjcode = null,
+            // JAM START: add new variable subjunit
+            $subjunit = null,
+            // JAM END: add new variable subjunit
             $type = null,
             $isInSF9 = 1,
             $isVisible = 1
@@ -344,6 +356,9 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                               'inSF9'=>$isInSF9,
                               'subjtitle'=>$subjdesc,
                               'subjcode'=>$subjcode,
+                              // JAM START: add new variable subjunit
+                              'subjunit'=>$subjunit,
+                              // JAM END: add new variable subjunit
                               'type'=>$type,
                               'sh_isVisible'=>$isVisible,
                               'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila'),
