@@ -421,6 +421,9 @@
                         $('#comp_holder').attr('hidden','hidden')
                         $('#input_subjdesc').val("")
                         $('#input_subjcode').val("")
+                        // JAM START: include subjunit to clear input
+                        $('#input_subjunit').val("")
+                        // JAM END: include subjunit to clear input
                         $('#per').val("")
                         $('#isCon').prop('checked',false)
                         $("#comp_subjects").val([]).change()
@@ -735,6 +738,9 @@
                               data:{
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
+                                    // JAM START: send subjunit
+                                    subjunit:$('#input_subjunit').val(),
+                                    // JAM END: send subjunit
                                     stage:$('#filter_type').val(),
                                     isCon:isCon,
                                     isSP:isSP,
