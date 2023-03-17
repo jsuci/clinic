@@ -277,11 +277,12 @@
                                                             <tr>
                                                                   <th width="4%" class="p-0 align-middle text-center" >#</th>
                                                                   <th width="50%" >Description</th>
-                                                                  <th width="7%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th1">Consolidated</th>
-                                                                  <th width="7%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th2">Component</th>
-                                                                  <th width="7%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th3">Specialized</th>
+                                                                  <th width="6%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th0">Units</th>
+                                                                  <th width="6%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th1">Consolidated</th>
+                                                                  <th width="6%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th2">Component</th>
+                                                                  <th width="6%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th3">Specialized</th>
                                                                   <th width="6%" class="p-0 align-middle text-center" style="font-size:.65rem">Display</th>
-                                                                  <th width="8%" class="p-0 align-middle text-center" style="font-size:.65rem">Computation</th>
+                                                                  <th width="5%" class="p-0 align-middle text-center" style="font-size:.65rem">Computation</th>
                                                                   <th width="5%" class="p-0 align-middle text-center" style="font-size:.65rem" id="subj_th4">%</th>
                                                                   <th width="3%"></th>
                                                                   <th width="3%"></th>
@@ -858,7 +859,7 @@
                         })
 
                         var com_subj = all_subject.filter(x=>x.subjCom == null && x.isCon == 0)
-               
+
                         $("#comp_subjects").empty()
                         $("#comp_subjects").select2({
                               data: com_subj,
@@ -866,6 +867,7 @@
                               theme: 'bootstrap4'
                         })
 
+                        // Change DataTable columns base on filter_type value
                         if($('#filter_type').val() == 2){
                               $('#subj_th1').text('Type')
                               $('#subj_th2').attr('hidden','hidden')
@@ -894,9 +896,10 @@
                                           [ 1, "asc" ]
                                     ],
                               columns: [
-                                    { "data": null },
                                     { "data": "subjcode" },
                                     { "data": "search" },
+                                    { "data": null },
+                                    { "data": null },
                                     { "data": null },
                                     { "data": null },
                                     { "data": null },
@@ -906,6 +909,7 @@
                                     { "data": null }
                               ],
                               columnDefs: [
+                                    // # column
                                     {
                                           'targets': 0,
                                           'orderable': false, 
@@ -918,6 +922,7 @@
                                                 
                                           }
                                     },
+                                    // description column
                                     {
                                           'targets': 1,
                                           'orderable': true, 
@@ -1005,17 +1010,17 @@
 
 
                                     },   
-                                    // {
-                                    //       'targets': 1,
-                                    //       'orderable': true, 
-                                    //       'createdCell':  function (td, cellData, rowData, row, col) {
-
-                                    //             $(td).addClass('align-middle')
-                                                
-                                    //       }
-                                    // },
                                     {
                                           'targets': 2,
+                                          'orderable': false, 
+                                          'createdCell':  function (td, cellData, rowData, row, col) {
+                                                $(td).addClass('align-middle')
+                                                $(td).text(null)
+                                                
+                                          }
+                                    },
+                                    {
+                                          'targets': 3,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
 
@@ -1050,10 +1055,8 @@
                                                       }else{
                                                             var buttons = '<i class="fa fa-check text-success"></i>'
                                                       }
-                                                     
                                                 }
 
-                                               
 
                                                 $(td)[0].innerHTML =  buttons
                                                 $(td).addClass('text-center')
@@ -1062,7 +1065,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 3,
+                                          'targets': 4,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
 
@@ -1098,7 +1101,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 4,
+                                          'targets': 5,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
 
@@ -1132,7 +1135,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 5,
+                                          'targets': 6,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
 
@@ -1163,7 +1166,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 6,
+                                          'targets': 7,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
 
@@ -1189,7 +1192,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 7,
+                                          'targets': 8,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
                                                 var buttons = '';
@@ -1215,7 +1218,7 @@
                                     },
 
                                     {
-                                          'targets': 8,
+                                          'targets': 9,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
                                                 var buttons = '<a href="#" class="edit" data-id="'+rowData.id+'"><i class="far fa-edit"></i></a>';
@@ -1226,7 +1229,7 @@
                                           }
                                     },
                                     {
-                                          'targets': 9,
+                                          'targets': 10,
                                           'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
                                                 var buttons = '<a href="#" class="delete" data-id="'+rowData.id+'"><i class="far fa-trash-alt text-danger"></i></a>';
