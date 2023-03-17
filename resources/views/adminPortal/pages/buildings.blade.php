@@ -584,8 +584,8 @@
 
                                     // update rooms datatable
                                     buildingRoomDatatable({
-                                          // selector: '#view_bldginfo_modal',
-                                          // initialState: false
+                                          selector: '#view_bldginfo_modal',
+                                          initialState: true
                                     })
 
                                     // update building datatable
@@ -1278,29 +1278,43 @@
             })
 
             // Save Assign New Room
-            $('#assign_room_save').on('click',function(){
+            $('#assign_room_save').on('click', function(){
                   // calculate first before sending
                   const totalBldgCap = $('#totalCap div').text().trim()
                   const computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
 
-                  // console.log(computedBldgCap)
-
-                  if (computedBldgCap >= 0) {
+                  if (computedBldgCap >= 0 && $('#assignRoom').val() !== '') {
                         roomAssign()
                   } else {
-                        Toast.fire({
-                              type: 'error',
-                              title: 'Room Assignment Error:\nBuilding capacity limit reached.'
-                        })
+
+                        if (computedBldgCap < 0) {
+                              Toast.fire({
+                                    type: 'error',
+                                    title: 'Room Assignment Error:\nBuilding capacity limit reached.'
+                              })
+                        }
+
+                        if ($('#assignRoom').val() === '') {
+                              Toast.fire({
+                                    type: 'error',
+                                    title: 'Room Assignment Error:\nField cannot be empty.'
+                              })
+                        }
+
                   }
                   
             })
+
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
                   // getRoomsExcept(selected_id)
 
-                  $('#assign_room_form_modal').modal('toggle')
+                  $('#assign_room_form_modal').modal({
+                        backdrop: 'static',
+                        keyboard: false,
+                        toggle: true
+                  })
 
                   $('#assignRoom').on('select2:select', function(e) {
                         // Get the capacity value for the selected option

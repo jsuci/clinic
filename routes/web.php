@@ -77,7 +77,7 @@ Route::middleware(['guest'])->group(function(){
 
     });
 
-   
+
 
 
     // Route::post('/payment/online/upload/successful', 'GeneralController@submitpaymentreciept');
@@ -86,7 +86,7 @@ Route::middleware(['guest'])->group(function(){
         return view('paymentupload.paymentinformation');
     });
 
-   
+
 
     Route::get('/payment/online/validateinfo/{quecode}/{fname}/{lname}', function ($quecode,$fname,$lname) {
 
