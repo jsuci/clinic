@@ -135,12 +135,14 @@
                                     <input type="text" class="form-control" id="input_subjcode" autocomplete="off">
                               </div>
                         </div>
+                        <!-- JAM START: add subjunit input-->
                         <div class="row">
                               <div class="col-md-12 form-group">
                                     <label>Subject Unit</label>
                                     <input type="text" class="form-control" id="input_subjunit" autocomplete="off">
                               </div>
                         </div>
+                        <!-- JAM END: add subjunit input-->
                         <div class="row not_sh" hidden>
                               <div class="col-md-12 form-group">
                                     <label class=" mb-0">Percentage </label>
@@ -462,6 +464,33 @@
                                     title: 'Code is required!'
                               })
                         }
+
+                        // JAM START: add filter for subjunit
+                        else if($('#input_subjunit').val() == ""){
+                              valid = false
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Unit is required!'
+                              })
+                        }
+
+                        else if($('#input_subjunit').val() != ""){
+
+                              var subjUnitRegex = /^\d+(\.\d)?$/;
+                              var userInputValue = $('#input_subjunit').val()
+
+                              // Check if input matches the pattern
+                              if (!subjUnitRegex.test(userInputValue)) {
+                                    valid = false;
+                                    Toast.fire({
+                                          type: 'warning',
+                                          title: 'Subject Unit Error: Only numbers with one decimal place is allowed.',
+                                          timer: 5000
+                                    });
+                              }
+
+                        }
+                        // JAM END: add filter for subjunit
 
                         if($('#filter_type').val() == 1){
                               if($('#per').val() != ""){
