@@ -427,19 +427,9 @@
                   }
 
                   // dynamic form validation for subjdesc and subjcode
-                  dynamic_validate([
-                        '#input_subjdesc',
-                        '#input_subjcode'
-                  ], '#subject_to_create', function(isValid) {
-
-                        console.log('dynamic_validate calling', isValid)
+                  dynamic_validate(['#input_subjdesc', '#input_subjcode'], '#subject_to_create', (isValid) => {
                         return isValid
                   })
-
-                  // // dynamic validation for subjcode
-                  // dynamic_validate('#input_subjcode', '#subject_to_create', function(isValid) {
-                  //       return isValid
-                  // })
 
                   $(document).on('input','#input_subjdesc',function(){
                         var text = $(this).val()
@@ -459,6 +449,9 @@
                               })
                         }
                   })
+
+
+                  // JAM START: added functions
 
                   function dynamic_validate(selectors, btnSel, callback) {
                         // This function accepts mutltiple 'selectors'
@@ -512,6 +505,45 @@
                               $(selector).removeClass('is-invalid');
                         });
                   }
+
+                  function update_pagination(options) {
+                        // note that options.selector must be a parent
+                        // of the .dataTables_info
+
+                        var text = $(`${options.selector} .dataTables_info`).text()
+                        const match = text.match(/\d+/g);
+
+                        if (match) {
+                              const entries = parseInt(match[2]);
+                              const maxItemsPerPage = 10
+
+                              if (options) {
+                                    if (options.initialState) {
+                                          const prevSelector = $(`${options.selector} .page-link:contains("Previous")`)
+                                          const pageOneSelector = $(`${options.selector} .page-link:contains("1")`)
+
+                                          if (pageOneSelector.text() === '1') {
+                                                pageOneSelector.click()
+                                          } else {
+                                                prevSelector.click()
+                                          }
+                                          
+                                    } else {
+                                          var page = String(Math.ceil(entries / maxItemsPerPage))
+                                          otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
+
+                                          console.log(otherPageSelector.text())
+
+                                          
+                                          if (otherPageSelector.text() === page) {
+                                                otherPageSelector.click()
+                                          }
+                                    }
+                              }
+                        }
+                  }
+
+                  // JAM END:
 
                   function validate_input(){
                         var valid = true;
@@ -589,7 +621,7 @@
                               }
 
                         return valid;
-                          
+
                   }
 
                   $(document).on('click','#subject_to_create',function(){
@@ -616,7 +648,11 @@
 
                   $(document).on('click','#subject_to_modal',function(){
 
-                        $('#subject_modal').modal()
+                        $('#subject_modal').modal({
+                              backdrop: 'static',
+                              keyboard: false,
+                              show: true,
+                        })
                         $('#same_subj').empty()
                         $('#isSP').prop('checked',false)
                         $('#isCon').prop('checked',false)
@@ -628,7 +664,7 @@
                         $('#subject_to_create').addClass('btn-success')
 
                         var com_subj = all_subject.filter(x=>x.subjCom == null && x.isCon == 0)
-               
+
                         $("#comp_subjects").empty()
                         $("#comp_subjects").select2({
                               data: com_subj,
@@ -919,6 +955,8 @@
 
                   function subject_datatable(){
 
+                        var dtDeferred = $.Deferred();
+
                         $.each(all_subject,function(a,b){
                               var subj_num = 'S'+('000'+b.id).slice (-3)
                               b.text = subj_num + ' - ' + b.text
@@ -974,6 +1012,9 @@
                                     { "data": null },
                                     { "data": null }
                               ],
+                              initComplete: function(settings, json) {
+                                    dtDeferred.resolve();
+                              },
                               columnDefs: [
                                     // # column
                                     {
@@ -1076,7 +1117,7 @@
 
 
                                     },
-                                    // 
+                                    // units column
                                     {
                                           'targets': 2,
                                           'orderable': false, 
@@ -1161,7 +1202,6 @@
                                                 }else{
                                                       var buttons = '<i class="fa fa-check text-success"></i>'
                                                 }
-                                                     
 
                                                 $(td)[0].innerHTML =  buttons
                                                 $(td).addClass('text-center')
@@ -1278,7 +1318,7 @@
                                                 }else{
                                                       $(td)[0].innerHTML =  buttons
                                                 }
-                                               
+
                                                 $(td).addClass('text-center')
                                                 $(td).addClass('align-middle')
                                                 
@@ -1320,6 +1360,13 @@
                         }else{
                               $(label_text)[0].innerHTML = ''
                         }
+
+                        dtDeferred.promise().then(function() {
+                              update_pagination({
+                                    selector: '#subject_table_wrapper',
+                                    initialState: false
+                              });
+                        });
                         
 
                         return temp_table
