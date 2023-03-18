@@ -443,9 +443,6 @@
                               && x.id != selected_subject
                         )
 
-                        console.log(check_dup)
-
-
                         $('#same_subj').empty()
                         if(check_dup.length > 0 && $(this).val() != ""){
 
@@ -1427,7 +1424,6 @@
                         }
 
                         dtDeferred.promise().then(function() {
-                              console.log(initial_state)
                               
                               update_pagination({
                                     selector: '#subject_table_wrapper',
