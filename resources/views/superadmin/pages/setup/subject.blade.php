@@ -416,10 +416,10 @@
 				})
                   }
 
-                  // dynamic form validation for subjdesc and subjcode
-                  dynamic_validate(['#input_subjcode'], '#subject_to_create', (isValid) => {
-                        return isValid
-                  })
+                  // // dynamic form validation for subjdesc and subjcode
+                  // dynamic_validate(['#input_subjcode'], '#subject_to_create', (isValid) => {
+                  //       return isValid
+                  // })
 
                   function clear_fields(){
                         $('#comp_holder').attr('hidden','hidden')
@@ -452,6 +452,7 @@
                               //dynamic validation
                               $('#input_subjdesc').removeClass('is-valid')
                               $('#input_subjdesc').addClass('is-invalid')
+                              $('#subject_to_create').prop("disabled", true);
 
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
@@ -468,9 +469,11 @@
                         } else if ($(this).val() == "") {
                               $('#input_subjdesc').removeClass('is-valid')
                               $('#input_subjdesc').addClass('is-invalid')
+                              $('#subject_to_create').prop("disabled", true);
                         } else {
                               $('#input_subjdesc').removeClass('is-invalid')
                               $('#input_subjdesc').addClass('is-valid')
+                              $('#subject_to_create').prop("disabled", false);
                         }
                   })
 
