@@ -124,14 +124,14 @@
                         </div> --}}
                         <div class="row">
                               <div class="col-md-12 form-group">
-                                    <label>Subject Description</label>
+                                    <label>Subject Description <i class="text-danger text-sm">*</i></label>
                                     <input type="text" class="form-control" id="input_subjdesc" autocomplete="off">
                                     <ul id="same_subj" class="mb-0"></ul>
                               </div>
                         </div>
                         <div class="row">
                               <div class="col-md-12 form-group">
-                                    <label>Subject Code</label>
+                                    <label>Subject Code <i class="text-danger text-sm">*</i></label>
                                     <input type="text" class="form-control" id="input_subjcode" autocomplete="off">
                               </div>
                         </div>
@@ -327,7 +327,7 @@
                   var selected_subject
 
                   process = 'create'
-         
+      
                   var table = subject_datatable()
                   table.state.clear();
                   table.destroy();
@@ -370,8 +370,6 @@
                         }
                   })
 
-
-
                   function filter_change(){
                         if($('#filter_type').val() == 2){
                               $('.is_sh').removeAttr('hidden')
@@ -385,8 +383,6 @@
                         
                         get_subjects()
                   }
-
-
 
                   function get_subjects(){
                         $.ajax({
@@ -430,6 +426,16 @@
                         $("#comp_subjects").val([]).change()
                   }
 
+                  // dynamic form validation for subjdesc and subjcode
+                  dynamic_validate('#input_subjdesc', '#subject_to_create', function(isValid) {
+                        return isValid
+                  })
+
+                  // dynamic validation for subjcode
+                  dynamic_validate('#input_subjcode', '#subject_to_create', function(isValid) {
+                        return isValid
+                  })
+
                   $(document).on('input','#input_subjdesc',function(){
                         var text = $(this).val()
                         var check_dup = all_subject.filter(x=>x.subjdesc.includes(text.toUpperCase()) && x.id != selected_subject)
@@ -438,7 +444,7 @@
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
                                     duplicate += '<li>'+b.text+'</li>'
-                                   
+
                               })
                               $('#same_subj')[0].innerHTML = duplicate
 
@@ -447,12 +453,43 @@
                                     title: 'Subject already exist!'
                               })
                         }
-                     
-
                   })
+
+                  function dynamic_validate(inputSel, btnSel, callback) {
+
+                        function validateInput(input) {
+                              if (!input.val().trim()) {
+                                    // disable add button when error input
+                                    $(btnSel).prop("disabled", true);
+                                    input.removeClass("is-valid").addClass("is-invalid");
+                                    return false;
+                              } else {
+                                    // disable add button when error input
+                                    $(btnSel).prop("disabled", false);
+                                    input.removeClass("is-invalid").addClass("is-valid");
+                                    return true;
+                              }
+                        }
+
+                        // need to finish typing before validating
+                        $(inputSel).on("input", (e) => {
+                              var isValid = validateInput($(inputSel));
+
+                              // return the true if valid false if not to callback
+                              callback(isValid);
+                        });
+                  }
+
+                  function dynamic_validate_reset(selectors) {
+                        selectors.forEach(function(selector) {
+                              $(selector).removeClass('is-valid')
+                              $(selector).removeClass('is-invalid');
+                        });
+                  }
 
                   function validate_input(){
                         var valid = true;
+
                         if($('#input_subjdesc').val() == ""){
                               valid = false
                               Toast.fire({
@@ -530,9 +567,10 @@
                   }
 
                   $(document).on('click','#subject_to_create',function(){
+
                         if(process == 'create'){
                               selected_subject = null
-                              var valid = validate_input()
+                              var valid = validate_input();
                               if(valid){
                                     subject_create()   
                               }
@@ -542,12 +580,12 @@
                               if(valid){
                                     subject_update() 
                               }
-                             
+                        
                         }
                   })
 
                   $(document).on('click','.subject_to_info',function(){
-                      $('#subject_info_modal').modal()
+                        $('#subject_info_modal').modal()
                   })
 
                   $(document).on('click','#subject_to_modal',function(){
@@ -573,9 +611,9 @@
                         })
                         
                         clear_fields()
+                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc'])
                   })
 
-                  
                   $(document).on('change','.acad',function(){
                         if($(this).prop('checked')){
                               $(this).prop('checked',false)
@@ -587,6 +625,8 @@
 
                   $(document).on('click','.edit',function(){
                         
+                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc'])
+
                         selected_subject = $(this).attr('data-id')
                         temp_subj = all_subject.filter(x=>x.id == selected_subject)
                         $('#subject_to_create')[0].innerHTML = '<i class="far fa-edit"></i> Update'
@@ -1260,8 +1300,6 @@
 
                   }
 
-                 
-                        
                   $(document).on('click','.button_to_gradesetup_modal',function(){
                         subjid = $(this).attr('data-id')
                         var subj_info = all_subject.filter(x=>x.id == subjid)
