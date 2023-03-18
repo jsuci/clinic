@@ -327,6 +327,9 @@
                   var subjplot = []
                   var selected_subject
 
+                  // for pagination
+                  var initial_state = true
+
                   process = 'create'
       
                   var table = subject_datatable()
@@ -590,9 +593,6 @@
                                           var page = String(Math.ceil(entries / maxItemsPerPage))
                                           otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
 
-                                          // console.log(otherPageSelector.text())
-
-                                          
                                           if (otherPageSelector.text() === page) {
                                                 otherPageSelector.click()
                                           }
@@ -832,6 +832,7 @@
                   })
 
                   $(document).on('click','.delete',function(){
+                        initial_state = false
                         selected_subject = $(this).attr('data-id')
                         subject_delete()
                   })
@@ -1423,9 +1424,11 @@
                         }
 
                         dtDeferred.promise().then(function() {
+                              console.log(initial_state)
+                              
                               update_pagination({
                                     selector: '#subject_table_wrapper',
-                                    initialState: false
+                                    initialState: initial_state
                               });
                         });
                         
