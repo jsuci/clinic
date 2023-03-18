@@ -427,14 +427,19 @@
                   }
 
                   // dynamic form validation for subjdesc and subjcode
-                  dynamic_validate('#input_subjdesc', '#subject_to_create', function(isValid) {
+                  dynamic_validate([
+                        '#input_subjdesc',
+                        '#input_subjcode'
+                  ], '#subject_to_create', function(isValid) {
+
+                        console.log('dynamic_validate calling', isValid)
                         return isValid
                   })
 
-                  // dynamic validation for subjcode
-                  dynamic_validate('#input_subjcode', '#subject_to_create', function(isValid) {
-                        return isValid
-                  })
+                  // // dynamic validation for subjcode
+                  // dynamic_validate('#input_subjcode', '#subject_to_create', function(isValid) {
+                  //       return isValid
+                  // })
 
                   $(document).on('input','#input_subjdesc',function(){
                         var text = $(this).val()
@@ -455,7 +460,11 @@
                         }
                   })
 
-                  function dynamic_validate(inputSel, btnSel, callback) {
+                  function dynamic_validate(selectors, btnSel, callback) {
+                        // This function accepts mutltiple 'selectors'
+                        // Check each selector for valid input
+                        // If the first selector is invalid it will
+                        // not check the nex selector
 
                         function validateInput(input) {
                               if (!input.val().trim()) {
@@ -471,13 +480,30 @@
                               }
                         }
 
-                        // need to finish typing before validating
-                        $(inputSel).on("input", (e) => {
-                              var isValid = validateInput($(inputSel));
+                        var isValid = false
 
-                              // return the true if valid false if not to callback
-                              callback(isValid);
+                        // dynamic validation check
+                        selectors.forEach(function(selector) {
+
+                              // observe input field changes
+                              $(selector).on("input", function() {
+
+                                    // validate input and update isValid
+                                    isValid = selectors.every(function(s) {
+                                          return validateInput($(s));
+                                    });
+
+                                    // invoke callback with current validation state
+                                    callback(isValid);
+                              });
                         });
+
+                        // initial validation check
+                        isValid = selectors.every(function(s) {
+                              return validateInput($(s));
+                        });
+
+                        callback(isValid);
                   }
 
                   function dynamic_validate_reset(selectors) {
