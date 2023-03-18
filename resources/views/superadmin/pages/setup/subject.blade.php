@@ -133,6 +133,7 @@
                               <div class="col-md-12 form-group">
                                     <label>Subject Code <i class="text-danger text-sm">*</i></label>
                                     <input type="text" class="form-control" id="input_subjcode" autocomplete="off">
+                                    <ul id="same_code" class="mb-0"></ul>
                               </div>
                         </div>
                         <!-- JAM START: add subjunit input-->
@@ -408,11 +409,14 @@
                                           all_subject = []
                                           subject_datatable()
                                     }
-
-                                   
 					}
 				})
                   }
+
+                  // dynamic form validation for subjdesc and subjcode
+                  dynamic_validate(['#input_subjcode'], '#subject_to_create', (isValid) => {
+                        return isValid
+                  })
 
                   function clear_fields(){
                         $('#comp_holder').attr('hidden','hidden')
@@ -426,30 +430,84 @@
                         $("#comp_subjects").val([]).change()
                   }
 
-                  // dynamic form validation for subjdesc and subjcode
-                  dynamic_validate(['#input_subjdesc', '#input_subjcode'], '#subject_to_create', (isValid) => {
-                        return isValid
-                  })
-
+                  // check for existing subject description
                   $(document).on('input','#input_subjdesc',function(){
                         var text = $(this).val()
-                        var check_dup = all_subject.filter(x=>x.subjdesc.includes(text.toUpperCase()) && x.id != selected_subject)
+
+
+                        var check_dup = all_subject.filter(
+                              x => x.text.toLowerCase().includes(text.toLowerCase())
+                              && x.id != selected_subject
+                        )
+
+                        console.log(check_dup)
+
+
                         $('#same_subj').empty()
                         if(check_dup.length > 0 && $(this).val() != ""){
+
+                              //dynamic validation
+                              $('#input_subjdesc').removeClass('is-valid')
+                              $('#input_subjdesc').addClass('is-invalid')
+
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
                                     duplicate += '<li>'+b.text+'</li>'
-
                               })
+
                               $('#same_subj')[0].innerHTML = duplicate
 
                               Toast.fire({
                                     type: 'warning',
-                                    title: 'Subject already exist!'
+                                    title: 'Subject description already exist!'
                               })
+
+                        } else if ($(this).val() == "") {
+                              $('#input_subjdesc').removeClass('is-valid')
+                              $('#input_subjdesc').addClass('is-invalid')
+                        } else {
+                              $('#input_subjdesc').removeClass('is-invalid')
+                              $('#input_subjdesc').addClass('is-valid')
                         }
                   })
 
+                  // check for existing subject code
+                  $(document).on('input','#input_subjcode',function(){
+                        var text = $(this).val()
+
+
+                        var check_dup = all_subject.filter(
+                              x => x.text.toLowerCase().includes(text.toLowerCase())
+                              && x.id != selected_subject
+                        )
+
+                        $('#same_code').empty()
+                        if(check_dup.length > 0 && $(this).val() != ""){
+
+                              //dynamic validation
+                              $('#input_subjcode').removeClass('is-valid')
+                              $('#input_subjcode').addClass('is-invalid')
+
+                              var duplicate = ''
+                              $.each(check_dup,function(a,b){
+                                    duplicate += '<li>'+b.text+'</li>'
+                              })
+
+                              $('#same_code')[0].innerHTML = duplicate
+
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Subject code already exist!'
+                              })
+
+                        } else if ($(this).val() == "") {
+                              $('#input_subjcode').removeClass('is-valid')
+                              $('#input_subjcode').addClass('is-invalid')
+                        } else {
+                              $('#input_subjcode').removeClass('is-invalid')
+                              $('#input_subjcode').addClass('is-valid')
+                        }
+                  })
 
                   // JAM START: added functions
 
@@ -532,7 +590,7 @@
                                           var page = String(Math.ceil(entries / maxItemsPerPage))
                                           otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
 
-                                          console.log(otherPageSelector.text())
+                                          // console.log(otherPageSelector.text())
 
                                           
                                           if (otherPageSelector.text() === page) {
@@ -654,6 +712,8 @@
                               show: true,
                         })
                         $('#same_subj').empty()
+                        $('#same_code').empty()
+
                         $('#isSP').prop('checked',false)
                         $('#isCon').prop('checked',false)
 
@@ -767,6 +827,7 @@
                               show: true
                         })   
                         $('#same_subj').empty()
+                        $('#same_code').empty()
                           
                   })
 
@@ -1001,7 +1062,7 @@
                                     ],
                               columns: [
                                     { "data": "subjcode" },
-                                    { "data": "search" },
+                                    { "data": null },
                                     { "data": null },
                                     { "data": null },
                                     { "data": null },
@@ -1032,7 +1093,7 @@
                                     // description column
                                     {
                                           'targets': 1,
-                                          'orderable': true, 
+                                          'orderable': false, 
                                           'createdCell':  function (td, cellData, rowData, row, col) {
                                                 var comp = '';
                                                 var consolidate = ''
