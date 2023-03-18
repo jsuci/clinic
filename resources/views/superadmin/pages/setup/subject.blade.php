@@ -140,7 +140,7 @@
                         <div class="row">
                               <div class="col-md-12 form-group">
                                     <label>Subject Unit</label>
-                                    <input type="text" class="form-control" id="input_subjunit" autocomplete="off">
+                                    <input type="text" class="form-control" id="input_subjunit" autocomplete="off" onkeyup="check_float_input()">
                               </div>
                         </div>
                         <!-- JAM END: add subjunit input-->
@@ -598,6 +598,19 @@
                                           }
                                     }
                               }
+                        }
+                  }
+
+                  function check_float_input() {
+                        // Get the input element and its value
+                        var input = document.getElementById("input_subjunit");
+                        var inputValue = input.value.trim();
+                  
+                        // Check if the input matches the float pattern
+                        if (/^\d+(\.\d{1,5})?$/.test(inputValue)) {
+                              // Round the input value to the nearest first decimal place
+                              var roundedValue = Math.round(parseFloat(inputValue) * 10) / 10;
+                              input.value = roundedValue.toFixed(1); // Update the input with the rounded value
                         }
                   }
 
