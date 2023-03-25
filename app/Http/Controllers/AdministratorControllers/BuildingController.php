@@ -162,7 +162,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if($check > 0){
                 return array((object)[
                     'status'=>0,
-                    'message'=>'Building Exist',
+                    'message'=>'Building already exist',
                     'icon'=>'error',
                 ]);
             }
