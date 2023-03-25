@@ -125,13 +125,13 @@
                                                       <div class="row mt-2">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Name</label>
-                                                                  <input type="text" name="description" class="form-control form-control-sm" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();">
+                                                                  <input type="text" name="description" class="form-control form-control-sm bldngDesc" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();">
                                                             </div>
                                                       </div>
                                                       <div class="row">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Capacity</label>
-                                                                  <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                                                  <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm bldngCap" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
                                                             </div>
                                                       </div>
                                                       <div class="row mt-3">
@@ -751,6 +751,10 @@
             // JAM: added functions
 
             function buildingCreate(data){
+
+            // Disable the button while the AJAX request is being processed
+            $('#building_create_button').prop('disabled', true);
+
                   $.ajax({
                         type:'GET',
                         url:'/api/building/create',
@@ -767,13 +771,25 @@
 
                                     buildingDatatable()
                                     get_last_index('building')
+                              } else {
+                                    $('#bldgCreateDesc').removeClass('is-valid')
+                                    $('#bldgCreateDesc').addClass('is-invalid')
+                                    $('#validateBldgDesc').text(data[0].message)
                               }
+
                               Toast.fire({
                                     type: data[0].icon,
-                                    title: data[0].message
+                                    title: data[0].message,
+                                    timer: 3000
                               })
 
-                              
+                              // Re-enable the button after the AJAX request is complete
+                              $('#building_create_button').prop('disabled', false);
+
+                        },
+                        error: function() {
+                              // Re-enable the button if there is an error with the AJAX request
+                              $('#building_create_button').prop('disabled', false);
                         }
                   })
             }
@@ -854,13 +870,25 @@
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="description">Description</label>            
-                                                <input type="text" name="description" class="bldgCreateInput form-control form-control-sm" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();">
+                                                <input type="text" name="description" class="bldgCreateInput form-control form-control-sm bldgCreateDesc" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();">
+                                                <div class="valid-feedback">
+                                                      Description looks good!
+                                                </div>
+                                                <div id="validateBldgDesc" class="invalid-feedback">
+                                                      Please provide a description
+                                                </div>
                                           </div>
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12 form-group">
                                                 <label for="capacity">Capacity</label>            
-                                                <input type="text" name="capacity" class="bldgCreateInput form-control form-control-sm" id="bldgCreateCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                                <input type="text" name="capacity" class="bldgCreateInput form-control form-control-sm bldgCreateCap" id="bldgCreateCap" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                                <div class="valid-feedback">
+                                                      Capacity looks good!
+                                                </div>
+                                                <div id="validateBldgCap" class="invalid-feedback">
+                                                      Please provide a valid capacity
+                                                </div>
                                           </div>
                                     </div>
                                     <div class="row">
@@ -1208,7 +1236,7 @@
                   
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         buildingCreate(formData)
-                        $("#building_create_button").prop("disabled", true);
+                        // $("#building_create_button").prop("disabled", true);
                   } else {
                         if (subData['description'] === '') {
                               $('#bldgCreateDesc').addClass('is-invalid')
