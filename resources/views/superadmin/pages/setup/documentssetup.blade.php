@@ -147,7 +147,7 @@
                               <div class="col-md-12 form-group">
                                   <label for=""> Document Description
                                   </label>
-                                  <input class="form-control form-control-sm" id="input_document">
+                                  <input class="form-control form-control-sm" id="input_document" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off">
                               </div>
                         </div>
                         <div class="row">
@@ -385,11 +385,11 @@
 
                         // console.log(selected_doc)
 
-                        // if(selected_doc == null){
-                        //       create_curriculum()
-                        // }else{
-                        //       update_curriculum()
-                        // }
+                        if(selected_doc == null){
+                              create_docdesc()
+                        }else{
+                              // update_docdesc()
+                        }
                   })
 
                   $(document).on('click','#button_document',function(){
@@ -442,7 +442,7 @@
                         process = 'edit'
 
                         var temp_document_id = all_document.filter(x=>x.id == selected_document)
-                       
+                  
                         $('#input_description').val(temp_document_id[0].description)
                         $('#input_sequence').val(temp_document_id[0].docsort)
                         $('#input_acadprog').val(temp_document_id[0].acadprogid).change()
@@ -470,7 +470,7 @@
                   $(document).on('change','#input_description',function(){
                         // $('.edit_curriculum').attr('hidden','hidden')
                         // $('.delete_curriculum').attr('hidden','hidden')
-                
+            
                         if($(this).val() == "add"){
                               $('#document-f-btn').text('Create')
                               $('#document-f-btn').removeClass('btn-success')
@@ -486,7 +486,7 @@
 
                               $('.edit_curriculum').removeAttr('hidden')
                               $('.delete_curriculum').removeAttr('hidden')
-                              $('.print').removeAttr('disabled')
+                              // $('.print').removeAttr('disabled')
 
                               get_subjects(true)
                         }
@@ -692,6 +692,36 @@
                                     })
                               }
                         })
+                  }
+
+                  function create_docdesc(){
+                        docdesc_value = $('#input_document').val()
+                        $.ajax({
+					type:'GET',
+					url: '/superadmin/setup/docdesc/create',
+                              data:{
+                                    description:$('#input_curriculum').val()
+                              },
+					success:function(data) {
+                                    if(data[0].status == 2){
+                                          Toast.fire({
+                                                type: 'warning',
+                                                title: data[0].message
+                                          })
+                                    }else if(data[0].status == 1){
+                                          Toast.fire({
+                                                type: 'success',
+                                                title: data[0].message
+                                          })
+                                          get_curriculum()
+                                    }else{
+                                          Toast.fire({
+                                                type: 'error',
+                                                title: data[0].message
+                                          })
+                                    }
+					}
+				})
                   }
 
                   
