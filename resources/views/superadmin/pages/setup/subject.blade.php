@@ -1453,7 +1453,7 @@
                   $(document).on('input','#input_subjunit',function(){
                         var inputValue = this.value.trim()
                         // var floatRegx = /^\d+(\.\d)?$/;
-                        var floatRegx = /^\d+\.?\d{1}$/
+                        var floatRegx = /^[0-9]+\.[0-9]?$/
                         var charRegx = /[a-zA-Z]/
 
                         if (charRegx.test(inputValue)) {
