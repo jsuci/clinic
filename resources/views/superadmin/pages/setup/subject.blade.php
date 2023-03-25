@@ -644,7 +644,8 @@
 
                         else if($('#input_subjunit').val() != ""){
 
-                              var subjUnitRegex = /^\d+(\.\d)?$/;
+                              // var subjUnitRegex = /^\d+(\.\d)?$/;
+                              var subjUnitRegex = /^[0-9]+\.[0-9]$/
                               var userInputValue = $('#input_subjunit').val()
 
                               // Check if input matches the pattern
@@ -1453,7 +1454,7 @@
                   $(document).on('input','#input_subjunit',function(){
                         var inputValue = this.value.trim()
                         // var floatRegx = /^\d+(\.\d)?$/;
-                        var floatRegx = /^[0-9]+\.[0-9]?$/
+                        var floatRegx = /^[0-9]+\.[0-9]$/
                         var charRegx = /[a-zA-Z]/
 
                         if (charRegx.test(inputValue)) {
