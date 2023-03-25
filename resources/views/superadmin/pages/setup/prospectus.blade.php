@@ -174,7 +174,7 @@
                   </div>
             </div>
       </div>
-</div>   
+</div>
 
 <div class="modal fade" id="addsubject_form_modal" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-xl">

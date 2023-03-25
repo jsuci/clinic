@@ -140,7 +140,7 @@
                         <div class="row">
                               <div class="col-md-12 form-group">
                                     <label>Subject Unit</label>
-                                    <input type="text" class="form-control" id="input_subjunit" autocomplete="off" onkeyup="check_float_input()">
+                                    <input type="text" class="form-control" id="input_subjunit" autocomplete="off">
                               </div>
                         </div>
                         <!-- JAM END: add subjunit input-->
@@ -425,9 +425,7 @@
                         $('#comp_holder').attr('hidden','hidden')
                         $('#input_subjdesc').val("")
                         $('#input_subjcode').val("")
-                        // JAM START: include subjunit to clear input
                         $('#input_subjunit').val("")
-                        // JAM END: include subjunit to clear input
                         $('#per').val("")
                         $('#isCon').prop('checked',false)
                         $("#comp_subjects").val([]).change()
@@ -601,18 +599,18 @@
                         }
                   }
 
-                  function check_float_input() {
-                        // Get the input element and its value
-                        var input = document.getElementById("input_subjunit");
-                        var inputValue = input.value.trim();
+                  // function check_float_input() {
+                  //       // Get the input element and its value
+                  //       var input = document.getElementById("input_subjunit");
+                  //       var inputValue = input.value.trim();
                   
-                        // Check if the input matches the float pattern
-                        if (/^\d+(\.\d{1,5})?$/.test(inputValue)) {
-                              // Round the input value to the nearest first decimal place
-                              var roundedValue = Math.round(parseFloat(inputValue) * 10) / 10;
-                              input.value = roundedValue.toFixed(1); // Update the input with the rounded value
-                        }
-                  }
+                  //       // Check if the input matches the float pattern
+                  //       if (/^\d+(\.\d{1,5})?$/.test(inputValue)) {
+                  //             // Round the input value to the nearest first decimal place
+                  //             var roundedValue = Math.round(parseFloat(inputValue) * 10) / 10;
+                  //             input.value = roundedValue.toFixed(1); // Update the input with the rounded value
+                  //       }
+                  // }
 
                   // JAM END:
 
@@ -746,7 +744,7 @@
                         })
                         
                         clear_fields()
-                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc'])
+                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc', '#input_subjunit'])
                   })
 
                   $(document).on('change','.acad',function(){
@@ -760,7 +758,7 @@
 
                   $(document).on('click','.edit',function(){
                         
-                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc'])
+                        dynamic_validate_reset(['#input_subjcode', '#input_subjdesc', '#input_subjunit'])
 
                         selected_subject = $(this).attr('data-id')
                         temp_subj = all_subject.filter(x=>x.id == selected_subject)
@@ -923,9 +921,7 @@
                               data:{
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
-                                    // JAM START: send subjunit
                                     subjunit:$('#input_subjunit').val(),
-                                    // JAM END: send subjunit
                                     stage:$('#filter_type').val(),
                                     isCon:isCon,
                                     isSP:isSP,
@@ -993,9 +989,7 @@
                                     id:selected_subject,
                                     subjdesc:$('#input_subjdesc').val(),
                                     subjcode:$('#input_subjcode').val(),
-                                    // JAM START: send subjunit
                                     subjunit:$('#input_subjunit').val(),
-                                    // JAM END: send subjunit
                                     isCon:isCon ,
                                     isSP:isSP,
                                     comp:comps,
@@ -1456,6 +1450,40 @@
                         $('#subject_holder').text(subj_info[0].text)
                   })
 
+                  $(document).on('input','#input_subjunit',function(){
+                        var inputValue = this.value.trim()
+                        // var floatRegx = /^\d+(\.\d)?$/;
+                        var floatRegx = /^\d+\.?\d{1}$/
+                        var charRegx = /[a-zA-Z]/
+
+                        if (charRegx.test(inputValue)) {
+                              $('#input_subjunit').removeClass('is-valid')
+                              $('#input_subjunit').addClass('is-invalid')
+                        } else if ($(this).val() == "") {
+                              $('#input_subjunit').removeClass('is-valid')
+                              $('#input_subjunit').addClass('is-invalid')
+                        } else if (!floatRegx.test(inputValue)){
+                              $('#input_subjunit').removeClass('is-valid')
+                              $('#input_subjunit').addClass('is-invalid')
+                        } else {
+                              $('#input_subjunit').removeClass('is-invalid')
+                              $('#input_subjunit').addClass('is-valid')
+                        }
+                  })
+
+                  // $('#input_subjunit').on('keyup', function(){
+                  //       // Get the input element and its value
+                  //       // var input = document.getElementById("input_subjunit");
+                  //       var inputValue = this.value.trim();
+                  
+                  //       // Check if the input matches the float pattern
+                  //       if (/^\d+(\.\d{1,5})?$/.test(inputValue)) {
+                  //             // Round the input value to the nearest first decimal place
+                  //             var roundedValue = Math.round(parseFloat(inputValue) * 10) / 10;
+                  //             this.value = roundedValue.toFixed(1); // Update the input with the rounded value
+                  //       }
+                  // })
+
             })
       </script>
       
@@ -1485,6 +1513,7 @@
                         showConfirmButton: false,
                         timer: 2000,
                   })
+
             })
       </script>
 

@@ -73,6 +73,7 @@
                         ->get();
 @endphp
 
+
 <div class="modal fade" id="modal_document" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -80,7 +81,8 @@
                         <div class="row">
                               <div class="col-md-12 form-group">
                                     <label for="">Document Description</label>
-                                    <input id="input_description" class="form-control" placeholder="Document Description" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off" >
+                                    {{-- <input id="input_description" class="form-control" placeholder="Document Description" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off" > --}}
+                                    <select name="" id="input_description" class=" form-control select2"></select>
                               </div>
                               <div class="col-md-12 form-group">
                                     <label for="">Document Sort</label>
@@ -126,7 +128,33 @@
                   </div>
             </div>
       </div>
-</div>    
+</div>
+
+
+<div class="modal fade" id="document_form_modal" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                  <div class="modal-header pb-2 pt-2 border-0">
+                        <h4 class="modal-title" style="font-size: 1.1rem !important">Add New Document Form</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body pt-0">
+                        <div class="row">
+                              <div class="col-md-12 form-group">
+                                  <label for="">Document Description</label>
+                                  <input class="form-control form-control-sm" id="input_curriculum">
+                              </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-md-12">
+                                    <button class="btn btn-sm btn-primary" id="curriculum-f-btn">Create</button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>
 
 <div class="modal fade" id="copy_document" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-sm">
@@ -345,7 +373,17 @@
                         process = 'create'
                         $('#input_isrequired').prop('checked',false)
                         $('#input_isactive').prop('checked',true)
-                        $('#input_description').val("")
+                        // $('#input_description').val("")
+
+                        $('#input_description').empty()
+                        $('#input_description').append('<option value="">Select Document</option>')
+                        $('#input_description').append('<option value="add">Add Document</option>')
+                        $("#input_description").select2({
+                              data: [],
+                              allowClear: true,
+                              placeholder: "Select Document",
+                        })
+
                         $('#input_sequence').val("")
                         $('#input_acadprog').val("").change()
                         $('#create_document').text('Create')  
@@ -406,7 +444,34 @@
                         $('#create_document').text('Update')           
                   })
 
+                  $(document).on('change','#input_description',function(){
+                        // $('.edit_curriculum').attr('hidden','hidden')
+                        // $('.delete_curriculum').attr('hidden','hidden')
                 
+                        if($(this).val() == "add"){
+                              // $('#curriculum-f-btn').text('Create')
+                              // $('#curriculum-f-btn').removeClass('btn-success')
+                              // $('#curriculum-f-btn').addClass('btn-primary')
+                              // $('#input_curriculum').val("").change()
+                              $('#document_form_modal').modal()
+                              $('#input_description').val("").change()
+                        
+                        }
+                              // $('.print').attr('disabled','disabled')
+
+
+                        //       selected_curri = null
+                        //       subject_list = []
+                        //       plot_subjects()
+                        // }else if($(this).val() != ""){
+                        //       selected_curri = $(this).val()
+                        //       $('.edit_curriculum').removeAttr('hidden')
+                        //       $('.delete_curriculum').removeAttr('hidden')
+                        //       $('.print').removeAttr('disabled')
+                        //       get_subjects(true)
+                        // }
+                  })
+                        
 
                   function get_document(){
                         $.ajax({
