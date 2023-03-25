@@ -80,7 +80,10 @@
                   <div class="modal-body">
                         <div class="row">
                               <div class="col-md-12 form-group">
-                                    <label for="">Document Description</label>
+                                    <label for="">Document Description
+                                          <a href="javascript:void(0)" hidden class="pl-2" id="edit_document"><i class="far fa-edit"></i></a>
+                                          <a href="javascript:void(0)" hidden class="pl-2" id="delete_document"><i class="far fa-trash-alt text-danger"></i></a>
+                                    </label>
                                     {{-- <input id="input_description" class="form-control" placeholder="Document Description" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off" > --}}
                                     <select name="" id="input_description" class=" form-control select2"></select>
                               </div>
@@ -142,7 +145,8 @@
                   <div class="modal-body pt-0">
                         <div class="row">
                               <div class="col-md-12 form-group">
-                                  <label for="">Document Description</label>
+                                  <label for=""> Document Description
+                                  </label>
                                   <input class="form-control form-control-sm" id="input_document">
                               </div>
                         </div>
@@ -319,6 +323,7 @@
             $(document).ready(function(){
 
                   var all_document = []
+                  var selected_doc = null
                   var selected_document
                   var process = 'create'
                   var gradelevel = @json($gradelevel)
@@ -455,21 +460,18 @@
                               $('#input_document').val("").change()
                               $('#document_form_modal').modal()
                               $('#input_description').val("").change()
+
+                              selected_doc = null
                         
+                        } else if($(this).val() != ""){
+                              selected_doc = $(this).val()
+
+                              $('.edit_curriculum').removeAttr('hidden')
+                              $('.delete_curriculum').removeAttr('hidden')
+                              $('.print').removeAttr('disabled')
+
+                              get_subjects(true)
                         }
-                              // $('.print').attr('disabled','disabled')
-
-
-                        //       selected_curri = null
-                        //       subject_list = []
-                        //       plot_subjects()
-                        // }else if($(this).val() != ""){
-                        //       selected_curri = $(this).val()
-                        //       $('.edit_curriculum').removeAttr('hidden')
-                        //       $('.delete_curriculum').removeAttr('hidden')
-                        //       $('.print').removeAttr('disabled')
-                        //       get_subjects(true)
-                        // }
                   })
                         
 
