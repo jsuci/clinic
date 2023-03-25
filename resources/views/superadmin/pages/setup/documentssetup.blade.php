@@ -374,6 +374,24 @@
                   // })
 
 
+                  $(document).on('click','#document-f-btn',function(){
+                        if($('#input_document').val() == ""){
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Document Description is empty'
+                              })
+                              return false;
+                        }
+
+                        // console.log(selected_doc)
+
+                        // if(selected_doc == null){
+                        //       create_curriculum()
+                        // }else{
+                        //       update_curriculum()
+                        // }
+                  })
+
                   $(document).on('click','#button_document',function(){
                         process = 'create'
                         $('#input_isrequired').prop('checked',false)
@@ -473,7 +491,6 @@
                               get_subjects(true)
                         }
                   })
-                        
 
                   function get_document(){
                         $.ajax({
@@ -877,7 +894,7 @@
 
                   document.addEventListener('keydown', (event) => {
                         keysPressed[event.key] = true;
-                        console.log(event.keyCode)
+                        // console.log(event.keyCode)
                         if (keysPressed['p'] && event.key == 'v') {
                               Toast.fire({
                                           type: 'warning',

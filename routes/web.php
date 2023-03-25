@@ -5233,6 +5233,15 @@ Route::middleware([ 'auth'])->group(function () {
     Route::get('/superadmin/setup/document/copy', 'SuperAdminController\DocumentsController@copy');
 });
 
+
+// ADDED BY JAM
+Route::middleware([ 'auth'])->group(function () {
+    Route::get('/superadmin/setup/docdesc/list', 'SuperAdminController\DocumentsDescController@list');
+    Route::get('/superadmin/setup/docdesc/create', 'SuperAdminController\DocumentsDescController@create');
+    Route::get('/superadmin/setup/docdesc/update', 'SuperAdminController\DocumentsDescController@update');
+    Route::get('/superadmin/setup/docdesc/delete', 'SuperAdminController\DocumentsDescController@delete');
+});
+
 Route::middleware([ 'auth'])->group(function () {
     Route::view('setup/track', 'registrar.setup.shtrack');
     Route::get('/setup/track/list', 'RegistrarControllers\RegistrarSetupController@list_sh_track');

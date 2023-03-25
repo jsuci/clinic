@@ -27,6 +27,7 @@ class DocumentsController extends \App\Http\Controllers\Controller
             $studtype = $request->get('studtype');
             return self::documents_create($decription, $isactive, $acadprog, $isrequired, $docsort, $levelid, $studtype);
       }
+
       public static function update(Request $request){
             $documentid = $request->get('documentid');
             $decription = $request->get('description');
@@ -38,10 +39,12 @@ class DocumentsController extends \App\Http\Controllers\Controller
             $studtype = $request->get('studtype');
             return self::documents_update($documentid, $decription, $isactive, $acadprog, $isrequired, $docsort, $levelid, $studtype);
       }
+
       public static function delete(Request $request){
             $documentid = $request->get('documentid');
             return self::documents_delete($documentid);
       }
+
       public static function copy(Request $request){
             $documentid = $request->get('documentid');
             $gradelevel_from = $request->get('gradelevel_from');
@@ -50,7 +53,9 @@ class DocumentsController extends \App\Http\Controllers\Controller
       }
       //attendance setup end
 
+
       //proccess
+
       public static function documents_create(
             $decription = null, 
             $isactive = null,
@@ -148,7 +153,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
                   return self::store_error($e);
             }
       }
-
       
       public static function documents_copy(
             $documentid = null,
@@ -205,7 +209,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
             }
       }
 
-       
       public static function documents_delete(
             $documentid = null
       ){
@@ -242,7 +245,13 @@ class DocumentsController extends \App\Http\Controllers\Controller
 
       
       //data
-      public static function documents_list($id = null, $acadprog = null, $isactive = null, $isrequired = null, $levelid = null){
+      public static function documents_list(
+            $id = null,
+            $acadprog = null,
+            $isactive = null,
+            $isrequired = null,
+            $levelid = null
+      ){
             $documents = DB::table('preregistrationreqlist')
                               ->leftJoin('academicprogram',function($join){
                                     $join->on('preregistrationreqlist.acadprogid','=','academicprogram.id');
@@ -273,7 +282,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
             
       }
 
-
       public static function logs($syid = null){
             return DB::table('logs')->where('module',1)->get();
       }
@@ -301,10 +309,5 @@ class DocumentsController extends \App\Http\Controllers\Controller
                   'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
             ]);
       }
-
-
-      
-     
-      
 
 }
