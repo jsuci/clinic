@@ -143,12 +143,12 @@
                         <div class="row">
                               <div class="col-md-12 form-group">
                                   <label for="">Document Description</label>
-                                  <input class="form-control form-control-sm" id="input_curriculum">
+                                  <input class="form-control form-control-sm" id="input_document">
                               </div>
                         </div>
                         <div class="row">
                               <div class="col-md-12">
-                                    <button class="btn btn-sm btn-primary" id="curriculum-f-btn">Create</button>
+                                    <button class="btn btn-sm btn-primary" id="document-f-btn">Create</button>
                               </div>
                         </div>
                   </div>
@@ -449,10 +449,10 @@
                         // $('.delete_curriculum').attr('hidden','hidden')
                 
                         if($(this).val() == "add"){
-                              // $('#curriculum-f-btn').text('Create')
-                              // $('#curriculum-f-btn').removeClass('btn-success')
-                              // $('#curriculum-f-btn').addClass('btn-primary')
-                              // $('#input_curriculum').val("").change()
+                              $('#document-f-btn').text('Create')
+                              $('#document-f-btn').removeClass('btn-success')
+                              $('#document-f-btn').addClass('btn-primary')
+                              $('#input_document').val("").change()
                               $('#document_form_modal').modal()
                               $('#input_description').val("").change()
                         
