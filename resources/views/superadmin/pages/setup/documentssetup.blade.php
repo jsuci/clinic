@@ -567,7 +567,7 @@
                                     type:'GET',
                                     url: '/superadmin/setup/document/update',
                                     data:{
-                                          description:$('#input_description').val(),
+                                          description:selected_docdesctext,
                                           sequence:$('#input_sequence').val(),
                                           isactive:isactive,
                                           isrequired:isrequied,
@@ -717,7 +717,6 @@
                               $('#delete_docdesc').removeAttr('hidden')
 
 
-                              // get_subjects(true)
                         }
                   })
 
