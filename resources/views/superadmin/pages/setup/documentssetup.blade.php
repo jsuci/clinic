@@ -81,8 +81,8 @@
                         <div class="row">
                               <div class="col-md-12 form-group">
                                     <label for="">Document Description
-                                          <a href="javascript:void(0)" hidden class="pl-2" id="edit_document"><i class="far fa-edit"></i></a>
-                                          <a href="javascript:void(0)" hidden class="pl-2" id="delete_document"><i class="far fa-trash-alt text-danger"></i></a>
+                                          <a href="javascript:void(0)" hidden class="pl-2" id="edit_docdesc"><i class="far fa-edit"></i></a>
+                                          <a href="javascript:void(0)" hidden class="pl-2" id="delete_docdesc"><i class="far fa-trash-alt text-danger"></i></a>
                                     </label>
                                     {{-- <input id="input_description" class="form-control" placeholder="Document Description" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off" > --}}
                                     <select name="" id="input_description" class=" form-control select2"></select>
@@ -323,7 +323,9 @@
             $(document).ready(function(){
 
                   var all_document = []
-                  var selected_doc = null
+                  var all_docdesc = []
+                  var selected_docdescid = null
+                  var selected_docdesctext = null
                   var selected_document
                   var process = 'create'
                   var gradelevel = @json($gradelevel)
@@ -385,7 +387,7 @@
 
                         // console.log(selected_doc)
 
-                        if(selected_doc == null){
+                        if(selected_docdescid == null){
                               create_docdesc()
                         }else{
                               // update_docdesc()
@@ -396,18 +398,11 @@
                         process = 'create'
                         $('#input_isrequired').prop('checked',false)
                         $('#input_isactive').prop('checked',true)
-                        // $('#input_description').val("")
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
 
-                        list_docdesc()
+                        list_all_docdesc()
 
-                        // $('#input_description').empty()
-                        // $('#input_description').append('<option value="">Select Document</option>')
-                        // $('#input_description').append('<option value="add">Add Document</option>')
-                        // $("#input_description").select2({
-                        //       data: [],
-                        //       allowClear: true,
-                        //       placeholder: "Select Document",
-                        // })
 
                         $('#input_sequence').val("")
                         $('#input_acadprog').val("").change()
@@ -469,9 +464,17 @@
                         $('#create_document').text('Update')           
                   })
 
+                  $(document).on('click','#edit_docdesc',function(){
+
+                  })
+
+                  $(document).on('click','#delete_docdesc',function(){
+                        
+                  })
+
                   $(document).on('change','#input_description',function(){
-                        $('#edit_document').attr('hidden','hidden')
-                        $('#delete_document').attr('hidden','hidden')
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
             
                         if($(this).val() == "add"){
                               $('#document-f-btn').text('Create')
@@ -481,15 +484,22 @@
                               $('#document_form_modal').modal()
                               $('#input_description').val("").change()
 
-                              selected_doc = null
+                              console.log(selected_docdescid, selected_docdesctext, 'inside add')
+
+                              all_docdesc = null
+                              selected_docdescid = null
+                              selected_docdesctext = null
                         
                         } else if($(this).val() != ""){
-                              selected_doc = $(this).val()
 
-                              $('#edit_document').removeAttr('hidden')
-                              $('#delete_document').removeAttr('hidden')
+                              selected_docdescid = $(this).val()
+                              selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
 
-                              list_docdesc()
+                              console.log(selected_docdescid, selected_docdesctext)
+
+                              $('#edit_docdesc').removeAttr('hidden')
+                              $('#delete_docdesc').removeAttr('hidden')
+
 
                               // get_subjects(true)
                         }
@@ -554,7 +564,8 @@
                                     type:'GET',
                                     url: '/superadmin/setup/document/create',
                                     data:{
-                                          description:$('#input_description').val(),
+                                          // description:$('#input_description').val(),
+                                          description: selected_docdesctext,
                                           sequence:$('#input_sequence').val(),
                                           isactive:isactive,
                                           isrequired:isrequied,
@@ -646,7 +657,7 @@
                                                 })
                                                 all_document = data[0].info
 
-                                             
+                                          
                                                 $('#modal_document').modal('hide')
                                                 loaddatatable()
                                           }else{
@@ -699,7 +710,6 @@
 
                   // docdesc
                   function create_docdesc(){
-                        docdesc_value = $('#input_document').val()
                         $.ajax({
 					type:'GET',
 					url: '/superadmin/setup/docdesc/create',
@@ -714,7 +724,7 @@
                                           })
                                     }else if(data[0].status == 1){
 
-                                          list_docdesc()
+                                          list_all_docdesc()
 
                                           Toast.fire({
                                                 type: 'success',
@@ -731,47 +741,33 @@
 				})
                   }
 
-                  function list_docdesc(prompt=false){
+                  function list_all_docdesc(prompt=false){
+                        
                         $.ajax({
                               type:'GET',
                               url: '/superadmin/setup/docdesc/list',
-                              data: {
-                                    id: selected_doc
-                              },
                               success:function(data) {
+                                    all_docdesc = data
 
-                                    if(selected_doc != null){
-                                          docdesc_text = data[0].text
-                                          $("#input_description").select2({
-                                                data: docdesc_text,
-                                                allowClear: true,
-                                                placeholder: "Select document",
-                                          })
-                                          $('#input_description').val(docdesc_text)
-
-                                          console.log($('#input_description').val(docdesc_text).text())
-                                    } else {
-                                          $('#input_description').empty()
-                                          $('#input_description').append('<option value="">Select document</option>')
-                                          $('#input_description').append('<option value="add">Add document</option>')
-                                          $("#input_description").select2({
-                                                data: data,
-                                                allowClear: true,
-                                                placeholder: "Select document",
-                                          })
-                                    }
-
-                                    if(prompt){
-                                          Toast.fire({
-                                                type: 'info',
-                                                title: data.length+' document(s) found.'
-                                          })
-                                    }
+                                    $('#input_description').empty()
+                                    $('#input_description').append('<option value="">Select document</option>')
+                                    $('#input_description').append('<option value="add">Add document</option>')
+                                    $("#input_description").select2({
+                                          data: data,
+                                          allowClear: true,
+                                          placeholder: "Select document",
+                                    })
                               }
                         })
+
+                        if(prompt){
+                              Toast.fire({
+                                    type: 'info',
+                                    title: data.length+' document description(s) found.'
+                              })
+                        }
                   }
 
-                  
                   $(document).on('click','.copy_document',function(){
 
                         $("#to_gradelevel").val([]).change();
@@ -983,10 +979,10 @@
                   document.addEventListener('keyup', (event) => {
                         delete keysPressed[event.key];
                   });
-                
+            
             })
       </script>
-     
+
 @endsection
 
 
