@@ -834,15 +834,23 @@
                                           allowClear: true,
                                           placeholder: "Select document",
                                     })
+
+
+                                    if(selected_docdesctext != null){
+                                          $('#input_description').val(selected_docdesctext).change()
+                                    }
+
+
+                                    if(prompt){
+                                          Toast.fire({
+                                                type: 'info',
+                                                title: data.length+' document description(s) found.'
+                                          })
+                                    }
                               }
                         })
 
-                        if(prompt){
-                              Toast.fire({
-                                    type: 'info',
-                                    title: data.length+' document description(s) found.'
-                              })
-                        }
+
                   }
 
                   $(document).on('click','.copy_document',function(){
