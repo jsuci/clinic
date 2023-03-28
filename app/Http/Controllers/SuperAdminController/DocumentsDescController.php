@@ -99,7 +99,7 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
                 return array((object)[
                     'status'=>1,
                     'info'=>$docdesc_setup,
-                    'data'=>'Updated Successfully!'
+                    'message'=>'Updated Successfully!'
                 ]);
 
         }catch(\Exception $e){

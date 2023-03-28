@@ -376,39 +376,6 @@
                   // })
 
 
-                  $(document).on('click','#document-f-btn',function(){
-                        if($('#input_document').val() == ""){
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document Description is empty'
-                              })
-                              return false;
-                        }
-
-                        // console.log(selected_doc)
-
-                        if(selected_docdescid == null){
-                              create_docdesc()
-                        }else{
-                              // update_docdesc()
-                        }
-                  })
-
-                  $(document).on('click','#button_document',function(){
-                        process = 'create'
-                        $('#input_isrequired').prop('checked',false)
-                        $('#input_isactive').prop('checked',true)
-                        $('#edit_docdesc').attr('hidden','hidden')
-                        $('#delete_docdesc').attr('hidden','hidden')
-
-                        list_all_docdesc()
-
-
-                        $('#input_sequence').val("")
-                        $('#input_acadprog').val("").change()
-                        $('#create_document').text('Create')  
-                        $('#modal_document').modal()    
-                  })
 
                   $(document).on('click','#create_document',function(){
                         if(process == 'create'){
@@ -462,47 +429,6 @@
                         
                         $('#modal_document').modal()   
                         $('#create_document').text('Update')           
-                  })
-
-                  $(document).on('click','#edit_docdesc',function(){
-
-                  })
-
-                  $(document).on('click','#delete_docdesc',function(){
-                        
-                  })
-
-                  $(document).on('change','#input_description',function(){
-                        $('#edit_docdesc').attr('hidden','hidden')
-                        $('#delete_docdesc').attr('hidden','hidden')
-            
-                        if($(this).val() == "add"){
-                              $('#document-f-btn').text('Create')
-                              $('#document-f-btn').removeClass('btn-success')
-                              $('#document-f-btn').addClass('btn-primary')
-                              $('#input_document').val("").change()
-                              $('#document_form_modal').modal()
-                              $('#input_description').val("").change()
-
-                              console.log(selected_docdescid, selected_docdesctext, 'inside add')
-
-                              all_docdesc = null
-                              selected_docdescid = null
-                              selected_docdesctext = null
-                        
-                        } else if($(this).val() != ""){
-
-                              selected_docdescid = $(this).val()
-                              selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
-
-                              console.log(selected_docdescid, selected_docdesctext)
-
-                              $('#edit_docdesc').removeAttr('hidden')
-                              $('#delete_docdesc').removeAttr('hidden')
-
-
-                              // get_subjects(true)
-                        }
                   })
 
                   function get_document(){
@@ -709,6 +635,85 @@
                   }
 
                   // docdesc
+                  $(document).on('click','#button_document',function(){
+                        process = 'create'
+                        $('#input_isrequired').prop('checked',false)
+                        $('#input_isactive').prop('checked',true)
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
+
+                        list_all_docdesc()
+
+                        $('#input_sequence').val("")
+                        $('#input_acadprog').val("").change()
+                        $('#create_document').text('Create')  
+                        $('#modal_document').modal()    
+                  })
+
+                  $(document).on('click','#document-f-btn',function(){
+                        if($('#input_document').val() == ""){
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Document Description is empty'
+                              })
+                              return false;
+                        }
+
+                        if(selected_docdescid == null){
+                              create_docdesc()
+                        }else{
+                              update_docdesc()
+                        }
+                  })
+
+                  $(document).on('click','#edit_docdesc',function(){
+                        // process = 'edit'
+                        $('#input_document').val(selected_docdesctext)
+
+                        $('#document-f-btn').removeClass('btn-primary')
+                        $('#document-f-btn').addClass('btn-success')
+
+                        $('#document-f-btn').text('Update')
+                        $('#document_form_modal').modal()   
+                              
+                  })
+
+                  $(document).on('click','#delete_docdesc',function(){
+                        console.log('DELETEEE')
+                  })
+
+                  $(document).on('change','#input_description',function(){
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
+            
+                        if($(this).val() == "add"){
+                              $('#document-f-btn').text('Create')
+                              $('#document-f-btn').removeClass('btn-success')
+                              $('#document-f-btn').addClass('btn-primary')
+                              $('#input_document').val("").change()
+                              $('#document_form_modal').modal()
+                              $('#input_description').val("").change()
+
+                              console.log(selected_docdescid, selected_docdesctext, 'inside add')
+
+                              selected_docdescid = null
+                              selected_docdesctext = null
+                        
+                        } else if($(this).val() != ""){
+
+                              selected_docdescid = $(this).val()
+                              selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
+
+                              console.log(selected_docdescid, selected_docdesctext)
+
+                              $('#edit_docdesc').removeAttr('hidden')
+                              $('#delete_docdesc').removeAttr('hidden')
+
+
+                              // get_subjects(true)
+                        }
+                  })
+
                   function create_docdesc(){
                         $.ajax({
 					type:'GET',
@@ -732,6 +737,43 @@
                                           })
 
                                     }else{
+                                          Toast.fire({
+                                                type: 'error',
+                                                title: data[0].message
+                                          })
+                                    }
+					}
+				})
+                  }
+
+                  function update_docdesc(){
+                        $.ajax({
+					type:'GET',
+					url: '/superadmin/setup/docdesc/update',
+                              data:{
+                                    docdescid: selected_docdescid,
+                                    description: $('#input_document').val()
+                              },
+					success:function(data) {
+                                    if(data[0].status == 2) {
+
+                                          Toast.fire({
+                                                type: 'warning',
+                                                title: data[0].message
+                                          })
+
+                                    } else if(data[0].status == 1) {
+
+                                          Toast.fire({
+                                                type: 'success',
+                                                title: data[0].message
+                                          })
+
+                                          list_all_docdesc()
+
+                                          console.log(selected_docdescid, selected_docdesctext, all_docdesc)
+                                    } else {
+
                                           Toast.fire({
                                                 type: 'error',
                                                 title: data[0].message
