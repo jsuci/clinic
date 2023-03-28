@@ -5,21 +5,17 @@ namespace App\Http\Controllers\SuperAdminController;
 use Illuminate\Http\Request;
 use DB;
 
-class DocumentsController extends \App\Http\Controllers\Controller
+class DocumentsDescController extends \App\Http\Controllers\Controller
 {
     //docdesc setup start
     public static function list(Request $request){
         $id = $request->get('id');
-        return self::docdesc_list(
-            $id,
-        );
+        return self::docdesc_list($id);
     }
 
     public static function create(Request $request){
         $description = $request->get('description');
-        return self::docdesc_create(
-            $description,
-        );
+        return self::docdesc_create($description);
     }
 
     public static function update(Request $request){
@@ -37,27 +33,26 @@ class DocumentsController extends \App\Http\Controllers\Controller
 
     //proccess
     public static function docdesc_create(
-        $description = null, 
+        $description = null
     ){
         try{
                 $check_if_exist = DB::table('preregistration_docdesc')
-                    ->where('description',$description)
+                    ->where('description', $description)
                     ->where('deleted',0)
                     ->get();
 
                 if(count($check_if_exist) > 0){
-
                     return array((object)[
                             'status'=>2,
-                            'data'=>'Document description already exist!',
+                            'message'=>'Document description already exist!',
                     ]);
-
                 }
 
                 $docdescid = DB::table('preregistration_docdesc')
                     ->insertGetId([
                             'description'=>$description,
                             'createdby'=>auth()->user()->id,
+                            'deleted'=>0,
                             'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                     ]);
 
@@ -72,7 +67,7 @@ class DocumentsController extends \App\Http\Controllers\Controller
 
                 return array((object)[
                     'status'=>1,
-                    'data'=>'Created Successfully!',
+                    'message'=>'Created Successfully!',
                     'info'=> $docdesc_setup
                 ]);
 
@@ -83,7 +78,7 @@ class DocumentsController extends \App\Http\Controllers\Controller
 
     public static function docdesc_update(
         $docdescid = null,
-        $description = null, 
+        $description = null
     ){
         try{
                 DB::table('preregistration_docdesc')
@@ -146,16 +141,15 @@ class DocumentsController extends \App\Http\Controllers\Controller
         }
     }
 
-    
     //data
     public static function docdesc_list(
-        $id = null,
+        $id = null
     ){
         $documents = DB::table('preregistration_docdesc')
                         ->where('deleted',0);
 
         if($id != null){
-                $documents = $documents->where('preregistration_docdesc.id',$id);
+                $documents = $documents->where('preregistration_docdesc.id', $id);
         }
 
         $documents = $documents
@@ -177,6 +171,23 @@ class DocumentsController extends \App\Http\Controllers\Controller
             'message'=>$message,
             'createdby'=>auth()->user()->id,
             'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+        ]);
+    }
+
+    public static function logs($syid = null){
+        return DB::table('logs')->where('module',1)->get();
+    }
+
+    public static function store_error($e){
+        DB::table('zerrorlogs')
+        ->insert([
+                    'error'=>$e,
+                    'createdby'=>auth()->user()->id,
+                    'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                    ]);
+        return array((object)[
+            'status'=>0,
+            'data'=>'Something went wrong!'
         ]);
     }
 }

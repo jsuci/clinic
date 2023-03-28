@@ -73,26 +73,22 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
 
       //proccess
       public static function create(
-           $subjdesc = null,
-           $subjcode = null,
-            // JAM START: add new variable subjunit
+            $subjdesc = null,
+            $subjcode = null,
             $subjunit = null,
-            // JAM END: add new variable subjunit
-           $isCon = null,
-           $isSP = null,
-           $comp = array(),
-           $per = 100,
-           $isVisible = 1,
-           $isInSF9 = 1
+            $isCon = null,
+            $isSP = null,
+            $comp = array(),
+            $per = 100,
+            $isVisible = 1,
+            $isInSF9 = 1
       ){
             try{
                   $subject_id = DB::table('subjects')
                         ->insertGetId([
                               'subjdesc'=>$subjdesc,
                               'subjcode'=>$subjcode,
-                              // JAM START: add new variable subjunit
                               'subjunit'=>$subjunit,
-                              // JAM END: add new variable subjunit
                               'isCon'=>$isCon,
                               'isSP'=>$isSP,
                               'deleted'=>0,
@@ -316,9 +312,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $id = null,
             $subjdesc = null,
             $subjcode = null,
-            // JAM START: add new variable subjunit
             $subjunit = null,
-            // JAM END: add new variable subjunit
             $type = null,
             $isInSF9 = 1,
             $isVisible = 1
@@ -356,9 +350,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                               'inSF9'=>$isInSF9,
                               'subjtitle'=>$subjdesc,
                               'subjcode'=>$subjcode,
-                              // JAM START: add new variable subjunit
                               'subjunit'=>$subjunit,
-                              // JAM END: add new variable subjunit
                               'type'=>$type,
                               'sh_isVisible'=>$isVisible,
                               'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila'),
@@ -677,8 +669,6 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
       // Grade Setup ----------------------------------------
 
       public static function grade_setup_list_ajax(){
-
-
 
       }
       

@@ -429,7 +429,7 @@
                                     
                         }else if(process == 'edit'){
                               update_document()  
-                        }              
+                        }
                   })
 
                   $(document).on('click','.delete_document',function(){
@@ -583,7 +583,7 @@
                                     }
                               })
                         }
-                      
+                  
                   }
 
                   function update_document(){
@@ -700,7 +700,7 @@
 					type:'GET',
 					url: '/superadmin/setup/docdesc/create',
                               data:{
-                                    description:$('#input_curriculum').val()
+                                    description:$('#input_document').val()
                               },
 					success:function(data) {
                                     if(data[0].status == 2){
@@ -713,7 +713,7 @@
                                                 type: 'success',
                                                 title: data[0].message
                                           })
-                                          get_curriculum()
+
                                     }else{
                                           Toast.fire({
                                                 type: 'error',
