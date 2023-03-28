@@ -348,6 +348,7 @@
                   })
 
                   loaddatatable()
+                  list_all_docdesc()
                  
                   // $(document).on('click','#filter_button',function(){
                   //       $('#copy_all').removeAttr('disabled','disabled')
@@ -406,8 +407,14 @@
                         process = 'edit'
 
                         var temp_document_id = all_document.filter(x=>x.id == selected_document)
-                  
-                        $('#input_description').val(temp_document_id[0].description)
+                        var temp_docdesc = all_docdesc.filter(x=>x.text == temp_document_id[0].description)
+
+                        if (temp_docdesc.length != 0) {
+                              $('#input_description').val(temp_docdesc[0].id).trigger("change");
+                        } else {
+                              list_all_docdesc()
+                        }
+
                         $('#input_sequence').val(temp_document_id[0].docsort)
                         $('#input_acadprog').val(temp_document_id[0].acadprogid).change()
                         $('#stud_type').val(temp_document_id[0].doc_studtype).change()
@@ -425,8 +432,6 @@
                         }
 
 
-
-                        
                         $('#modal_document').modal()   
                         $('#create_document').text('Update')           
                   })
@@ -643,6 +648,8 @@
                         $('#delete_docdesc').attr('hidden','hidden')
 
                         list_all_docdesc()
+                        selected_docdescid = null
+                        selected_docdesctext = null
 
                         $('#input_sequence').val("")
                         $('#input_acadprog').val("").change()
@@ -696,6 +703,8 @@
                   $(document).on('change','#input_description',function(){
                         $('#edit_docdesc').attr('hidden','hidden')
                         $('#delete_docdesc').attr('hidden','hidden')
+
+
             
                         if($(this).val() == "add"){
                               $('#document-f-btn').text('Create')
@@ -708,16 +717,25 @@
                               selected_docdescid = null
                               selected_docdesctext = null
                         
-                        } else if($(this).val() != ""){
+                        }
+                        else if($(this).val() != "") {
 
                               selected_docdescid = $(this).val()
                               selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
 
+
+                              console.log(selected_docdescid, selected_docdesctext)
+                              
+                              // if (!selected_docdescid && !selected_docdesctext) {
+                              //       selected_docdescid = $(this).val()
+                              //       selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
+                              // }
+
                               $('#edit_docdesc').removeAttr('hidden')
                               $('#delete_docdesc').removeAttr('hidden')
 
-
                         }
+
                   })
 
                   function create_docdesc(){
@@ -777,7 +795,6 @@
 
                                           list_all_docdesc()
 
-                                          console.log(selected_docdescid, selected_docdesctext, all_docdesc)
                                     } else {
 
                                           Toast.fire({
@@ -836,7 +853,7 @@
                                     })
 
 
-                                    if(selected_docdesctext != null){
+                                    if(selected_docdescid != null){
                                           $('#input_description').val(selected_docdesctext).change()
                                     }
 
@@ -1052,7 +1069,6 @@
 
                   document.addEventListener('keydown', (event) => {
                         keysPressed[event.key] = true;
-                        // console.log(event.keyCode)
                         if (keysPressed['p'] && event.key == 'v') {
                               Toast.fire({
                                           type: 'warning',
