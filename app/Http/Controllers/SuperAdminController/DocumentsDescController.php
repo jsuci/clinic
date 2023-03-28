@@ -134,7 +134,7 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
                 return array((object)[
                     'status'=>1,
                     'info'=>$docdesc_setup,
-                    'data'=>'Updated Successfully!'
+                    'message'=>'Deleted Successfully!'
                 ]);
         }catch(\Exception $e){
                 return self::store_error($e);

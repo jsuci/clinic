@@ -679,7 +679,18 @@
                   })
 
                   $(document).on('click','#delete_docdesc',function(){
-                        console.log('DELETEEE')
+                        Swal.fire({
+                              text: `Are you sure you want to remove ${selected_docdesctext}?`,
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#d33', // #3085d6
+                              cancelButtonColor: '#808080', // #d33
+                              confirmButtonText: 'Remove'
+                        }).then((result) => {
+                              if (result.value) {
+                                    delete_docdesc()
+                              }
+                        })
                   })
 
                   $(document).on('change','#input_description',function(){
@@ -694,8 +705,6 @@
                               $('#document_form_modal').modal()
                               $('#input_description').val("").change()
 
-                              console.log(selected_docdescid, selected_docdesctext, 'inside add')
-
                               selected_docdescid = null
                               selected_docdesctext = null
                         
@@ -703,8 +712,6 @@
 
                               selected_docdescid = $(this).val()
                               selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
-
-                              console.log(selected_docdescid, selected_docdesctext)
 
                               $('#edit_docdesc').removeAttr('hidden')
                               $('#delete_docdesc').removeAttr('hidden')
@@ -774,6 +781,35 @@
                                           console.log(selected_docdescid, selected_docdesctext, all_docdesc)
                                     } else {
 
+                                          Toast.fire({
+                                                type: 'error',
+                                                title: data[0].message
+                                          })
+                                    }
+					}
+				})
+                  }
+
+                  function delete_docdesc(){
+                        $.ajax({
+					type:'GET',
+					url: '/superadmin/setup/docdesc/delete',
+                              data:{
+                                    docdescid: selected_docdescid
+                              },
+					success:function(data) {
+                                    if(data[0].status == 2){
+                                          Toast.fire({
+                                                type: 'warning',
+                                                title: data[0].message
+                                          })
+                                    }else if(data[0].status == 1){
+                                          Toast.fire({
+                                                type: 'success',
+                                                title: data[0].message
+                                          })
+                                          list_all_docdesc()
+                                    }else{
                                           Toast.fire({
                                                 type: 'error',
                                                 title: data[0].message
