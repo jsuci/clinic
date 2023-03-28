@@ -213,9 +213,9 @@
             </div>
       </div>
 </section>
-    
+
 <section class="content pt-0">
-    
+
       <div class="container-fluid">
             <div class="row">
                   <div class="col-md-12">
@@ -398,14 +398,16 @@
                         $('#input_isactive').prop('checked',true)
                         // $('#input_description').val("")
 
-                        $('#input_description').empty()
-                        $('#input_description').append('<option value="">Select Document</option>')
-                        $('#input_description').append('<option value="add">Add Document</option>')
-                        $("#input_description").select2({
-                              data: [],
-                              allowClear: true,
-                              placeholder: "Select Document",
-                        })
+                        list_docdesc()
+
+                        // $('#input_description').empty()
+                        // $('#input_description').append('<option value="">Select Document</option>')
+                        // $('#input_description').append('<option value="add">Add Document</option>')
+                        // $("#input_description").select2({
+                        //       data: [],
+                        //       allowClear: true,
+                        //       placeholder: "Select Document",
+                        // })
 
                         $('#input_sequence').val("")
                         $('#input_acadprog').val("").change()
@@ -468,8 +470,8 @@
                   })
 
                   $(document).on('change','#input_description',function(){
-                        // $('.edit_curriculum').attr('hidden','hidden')
-                        // $('.delete_curriculum').attr('hidden','hidden')
+                        $('#edit_document').attr('hidden','hidden')
+                        $('#delete_document').attr('hidden','hidden')
             
                         if($(this).val() == "add"){
                               $('#document-f-btn').text('Create')
@@ -484,11 +486,12 @@
                         } else if($(this).val() != ""){
                               selected_doc = $(this).val()
 
-                              $('.edit_curriculum').removeAttr('hidden')
-                              $('.delete_curriculum').removeAttr('hidden')
-                              // $('.print').removeAttr('disabled')
+                              $('#edit_document').removeAttr('hidden')
+                              $('#delete_document').removeAttr('hidden')
 
-                              get_subjects(true)
+                              list_docdesc()
+
+                              // get_subjects(true)
                         }
                   })
 
@@ -694,6 +697,7 @@
                         })
                   }
 
+                  // docdesc
                   function create_docdesc(){
                         docdesc_value = $('#input_document').val()
                         $.ajax({
@@ -709,6 +713,9 @@
                                                 title: data[0].message
                                           })
                                     }else if(data[0].status == 1){
+
+                                          list_docdesc()
+
                                           Toast.fire({
                                                 type: 'success',
                                                 title: data[0].message
@@ -722,6 +729,46 @@
                                     }
 					}
 				})
+                  }
+
+                  function list_docdesc(prompt=false){
+                        $.ajax({
+                              type:'GET',
+                              url: '/superadmin/setup/docdesc/list',
+                              data: {
+                                    id: selected_doc
+                              },
+                              success:function(data) {
+
+                                    if(selected_doc != null){
+                                          docdesc_text = data[0].text
+                                          $("#input_description").select2({
+                                                data: docdesc_text,
+                                                allowClear: true,
+                                                placeholder: "Select document",
+                                          })
+                                          $('#input_description').val(docdesc_text)
+
+                                          console.log($('#input_description').val(docdesc_text).text())
+                                    } else {
+                                          $('#input_description').empty()
+                                          $('#input_description').append('<option value="">Select document</option>')
+                                          $('#input_description').append('<option value="add">Add document</option>')
+                                          $("#input_description").select2({
+                                                data: data,
+                                                allowClear: true,
+                                                placeholder: "Select document",
+                                          })
+                                    }
+
+                                    if(prompt){
+                                          Toast.fire({
+                                                type: 'info',
+                                                title: data.length+' document(s) found.'
+                                          })
+                                    }
+                              }
+                        })
                   }
 
                   

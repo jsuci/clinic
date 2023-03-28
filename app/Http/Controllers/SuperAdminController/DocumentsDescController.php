@@ -153,7 +153,10 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
         }
 
         $documents = $documents
-                    ->select('id', 'description')
+                    ->select(
+                        'id',
+                        'description as text'
+                    )
                     ->get();
 
         return $documents;

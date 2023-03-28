@@ -5234,13 +5234,14 @@ Route::middleware([ 'auth'])->group(function () {
 });
 
 
-// ADDED BY JAM
+// JAM: custom routes for docdesc
 Route::middleware([ 'auth'])->group(function () {
     Route::get('/superadmin/setup/docdesc/list', 'SuperAdminController\DocumentsDescController@list');
     Route::get('/superadmin/setup/docdesc/create', 'SuperAdminController\DocumentsDescController@create');
     Route::get('/superadmin/setup/docdesc/update', 'SuperAdminController\DocumentsDescController@update');
     Route::get('/superadmin/setup/docdesc/delete', 'SuperAdminController\DocumentsDescController@delete');
 });
+// JAM: custom routes for docdesc
 
 Route::middleware([ 'auth'])->group(function () {
     Route::view('setup/track', 'registrar.setup.shtrack');
