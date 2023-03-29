@@ -721,10 +721,11 @@
                         else if($(this).val() != "") {
 
                               selected_docdescid = $(this).val()
-                              selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)[0].text
+                              selected_docdesctext =  all_docdesc.filter(x=>x.id == selected_docdescid)
 
-
-                              console.log(selected_docdescid, selected_docdesctext)
+                              if (selected_docdesctext.length != 0) {
+                                    selected_docdesctext = selected_docdesctext[0].text
+                              }
                               
                               // if (!selected_docdescid && !selected_docdesctext) {
                               //       selected_docdescid = $(this).val()
