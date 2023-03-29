@@ -25,7 +25,8 @@ class DocumentsController extends \App\Http\Controllers\Controller
             $isrequired = $request->get('isrequired');
             $levelid = $request->get('levelid');
             $studtype = $request->get('studtype');
-            return self::documents_create($decription, $isactive, $acadprog, $isrequired, $docsort, $levelid, $studtype);
+            $headerid = $request->get('headerid');
+            return self::documents_create($decription, $isactive, $acadprog, $isrequired, $docsort, $levelid, $studtype, $headerid);
       }
 
       public static function update(Request $request){
@@ -63,7 +64,8 @@ class DocumentsController extends \App\Http\Controllers\Controller
             $isrequired = null,
             $docsort = null,
             $levelid = null,
-            $studtype = null
+            $studtype = null,
+            $headerid = null
       ){
             try{
                   $check_if_exist = $document_info = DB::table('preregistrationreqlist')
@@ -90,6 +92,7 @@ class DocumentsController extends \App\Http\Controllers\Controller
                               'isRequired'=>$isrequired,
                               'levelid'=>$levelid,
                               'doc_studtype'=>$studtype,
+                              'headerid'=>$headerid,
                               'createdby'=>auth()->user()->id,
                               'createddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                         ]);
