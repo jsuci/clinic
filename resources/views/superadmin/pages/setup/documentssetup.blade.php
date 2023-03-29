@@ -358,14 +358,19 @@
 
                   $(document).on('change','#filter_gradelevel',function(){
                         if($(this).val() == ""){
+
                               $('#copy_all').attr('disabled','disabled')
                               $('#button_document').attr('disabled','disabled')
+
                               all_document = []
                               loaddatatable()
+
                               return false;
                         }
+
                         $('#copy_all').removeAttr('disabled','disabled')
                         $('#button_document').removeAttr('disabled','disabled')
+
                         get_document()
                   })
 
@@ -495,13 +500,13 @@
                                     type:'GET',
                                     url: '/superadmin/setup/document/create',
                                     data:{
-                                          // description:$('#input_description').val(),
                                           description: selected_docdesctext,
                                           sequence:$('#input_sequence').val(),
                                           isactive:isactive,
                                           isrequired:isrequied,
                                           levelid:$('#filter_gradelevel').val(),
-                                          studtype:$('#stud_type').val()
+                                          studtype:$('#stud_type').val(),
+                                          headerid: selected_docdescid
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
@@ -701,12 +706,12 @@
                   })
 
                   $(document).on('change','#input_description',function(){
-                        $('#edit_docdesc').attr('hidden','hidden')
-                        $('#delete_docdesc').attr('hidden','hidden')
 
-
-            
                         if($(this).val() == "add"){
+
+                              $('#edit_docdesc').attr('hidden','hidden')
+                              $('#delete_docdesc').attr('hidden','hidden')
+
                               $('#document-f-btn').text('Create')
                               $('#document-f-btn').removeClass('btn-success')
                               $('#document-f-btn').addClass('btn-primary')
@@ -716,6 +721,7 @@
 
                               selected_docdescid = null
                               selected_docdesctext = null
+                              
                         
                         }
                         else if($(this).val() != "") {
@@ -736,6 +742,10 @@
                               $('#delete_docdesc').removeAttr('hidden')
 
                         }
+                        // else {
+                        //       $('#edit_docdesc').attr('hidden','hidden')
+                        //       $('#delete_docdesc').attr('hidden','hidden')
+                        // }
 
                   })
 
@@ -825,7 +835,12 @@
                                                 type: 'success',
                                                 title: data[0].message
                                           })
-                                          list_all_docdesc()
+
+                                          list_all_docdesc().then(() => {
+                                                $('#edit_docdesc').attr('hidden','hidden')
+                                                $('#delete_docdesc').attr('hidden','hidden')
+                                          })
+
                                     }else{
                                           Toast.fire({
                                                 type: 'error',
@@ -838,7 +853,7 @@
 
                   function list_all_docdesc(prompt=false){
                         
-                        $.ajax({
+                        return $.ajax({
                               type:'GET',
                               url: '/superadmin/setup/docdesc/list',
                               success:function(data) {
@@ -852,12 +867,6 @@
                                           allowClear: true,
                                           placeholder: "Select document",
                                     })
-
-
-                                    if(selected_docdescid != null){
-                                          $('#input_description').val(selected_docdesctext).change()
-                                    }
-
 
                                     if(prompt){
                                           Toast.fire({
