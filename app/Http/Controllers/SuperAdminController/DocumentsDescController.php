@@ -112,10 +112,6 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
     ){
         try{
 
-                $temp_info = DB::table('preregistration_docdesc')
-                                ->where('id',$docdescid)
-                                ->first();
-
                 DB::table('preregistration_docdesc')
                     ->take(1)
                     ->where('id',$docdescid)
