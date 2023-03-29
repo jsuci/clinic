@@ -110,7 +110,21 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
     public static function docdesc_delete(
         $docdescid = null
     ){
-        try{
+        try {
+
+
+                $check = DB::table('preregistrationreqlist')
+                    ->where('headerid',$docdescid)
+                    ->where('deleted',0)
+                    ->count();
+
+                if($check > 0){
+                    return array((object)[
+                        'status'=>0,
+                        'message'=>'Document in used',
+                        'icon'=>'error'
+                    ]);
+                }
 
                 DB::table('preregistration_docdesc')
                     ->take(1)
@@ -132,7 +146,7 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
                     'info'=>$docdesc_setup,
                     'message'=>'Deleted Successfully!'
                 ]);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
                 return self::store_error($e);
         }
     }
