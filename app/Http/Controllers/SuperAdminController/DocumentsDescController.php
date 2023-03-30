@@ -116,8 +116,11 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
                 $check = DB::table('preregistrationreqlist')
                     ->where('headerid',$docdescid)
                     ->where('deleted',0)
+                    // ->get();
                     ->count();
 
+                // dd($check);
+                
                 if($check > 0){
                     return array((object)[
                         'status'=>0,
@@ -125,6 +128,7 @@ class DocumentsDescController extends \App\Http\Controllers\Controller
                         'icon'=>'error'
                     ]);
                 }
+
 
                 DB::table('preregistration_docdesc')
                     ->take(1)
