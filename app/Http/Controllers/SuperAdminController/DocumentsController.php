@@ -68,17 +68,17 @@ class DocumentsController extends \App\Http\Controllers\Controller
             $headerid = null
       ){
             try{
-                  $check_if_exist = $document_info = DB::table('preregistrationreqlist')
-                                                                  ->where('description',$decription)
-                                                                  ->where('levelid',$levelid)
-                                                                  ->where('deleted',0)
-                                                                  ->get();
+                  $check_if_exist = DB::table('preregistrationreqlist')
+                                          ->where('headerid',$headerid)
+                                          ->where('levelid',$levelid)
+                                          ->where('deleted',0)
+                                          ->get();
 
                   if(count($check_if_exist) > 0){
 
                         return array((object)[
                               'status'=>2,
-                              'data'=>'Document already exist!',
+                              'data'=>'Document requirement already exist!',
                         ]);
 
                   }
