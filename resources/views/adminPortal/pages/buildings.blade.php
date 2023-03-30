@@ -748,12 +748,12 @@
                         // }
                   }
             }
-            // JAM: added functions
 
+            // JAM: added functions
             function buildingCreate(data){
 
-            // Disable the button while the AJAX request is being processed
-            $('#building_create_button').prop('disabled', true);
+                  // Disable the button while the AJAX request is being processed
+                  $('#building_create_button').prop('disabled', true);
 
                   $.ajax({
                         type:'GET',
