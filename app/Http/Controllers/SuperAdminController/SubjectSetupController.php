@@ -560,9 +560,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $subjects = $subjects->select(
                                     'id',
                                     'subjcode',
-                                    // JAM START: include subjunit to output data
                                     'subjunit',
-                                    // JAM END
                                     'subjtitle as subjdesc',
                                     'subjtitle as text',
                                     'type',
@@ -573,7 +571,8 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                               ->get();
                               
             foreach($subjects as $item){
-                  $item->search = $item->subjcode . ' - ' .$item->subjdesc. ' - '.$item->id;
+                  // $item->search = $item->subjcode . ' - ' .$item->subjdesc. ' - '.$item->id;
+                  $item->text = $item->subjcode.' - '.$item->subjdesc;
             }
 
             return $subjects;
@@ -591,9 +590,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
                                     'id',
                                     'subjcode',
                                     'subjdesc',
-                                    // JAM START: include subjunit to output data
                                     'subjunit',
-                                    // JAM END
                                     'subjdesc as text',
                                     'isSP',
                                     'subjCom',
