@@ -27,6 +27,11 @@
             .select2-container--default .select2-selection--single .select2-selection__rendered {
                   margin-top: -9px;
             }
+            .has-error .select2-selection {
+                  /*border: 1px solid #a94442;
+                  border-radius: 4px;*/
+                  border-color:#bd2130 !important;
+            }
       </style>
 @endsection
 
@@ -79,13 +84,13 @@
             <div class="modal-content">
                   <div class="modal-body">
                         <div class="row">
-                              <div class="col-md-12 form-group">
+                              <div class="col-md-12 form-group docdesc-form">
                                     <label for="">Document Description
                                           <a href="javascript:void(0)" hidden class="pl-2" id="edit_docdesc"><i class="far fa-edit"></i></a>
                                           <a href="javascript:void(0)" hidden class="pl-2" id="delete_docdesc"><i class="far fa-trash-alt text-danger"></i></a>
                                     </label>
-                                    {{-- <input id="input_description" class="form-control" placeholder="Document Description" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off" > --}}
                                     <select name="" id="input_description" class=" form-control select2"></select>
+                                    <div id="invalidDocDesc" class="invalid-feedback">Please make a selection.</div>
                               </div>
                               <div class="col-md-12 form-group">
                                     <label for="">Document Sort</label>
@@ -145,9 +150,11 @@
                   <div class="modal-body pt-0">
                         <div class="row">
                               <div class="col-md-12 form-group">
-                                  <label for=""> Document Description
+                                  <label for="">Document Description
                                   </label>
                                   <input class="form-control form-control-sm" id="input_document" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off">
+                                  <div id="invalidDocu" class="invalid-feedback"></div>
+                                  <div class="valid-feedback">Document description looks good!</div>
                               </div>
                         </div>
                         <div class="row">
@@ -338,8 +345,6 @@
                         placeholder: "Select Grade Level",
                   })
 
-                  // $('.select2').select2()
-
                   const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-end',
@@ -349,12 +354,7 @@
 
                   loaddatatable()
                   list_all_docdesc()
-                 
-                  // $(document).on('click','#filter_button',function(){
-                  //       $('#copy_all').removeAttr('disabled','disabled')
-                  //       $('#button_document').removeAttr('disabled','disabled')
-                  //       get_document()
-                  // })
+
 
                   $(document).on('change','#filter_gradelevel',function(){
                         if($(this).val() == ""){
@@ -374,27 +374,26 @@
                         get_document()
                   })
 
-                  // $(document).on('change','#filter_gradelevel',function(){
-                  //       $('#copy_all').attr('disabled','disabled')
-                  //       $('#button_document').attr('disabled','disabled')
-                  //       all_document = []
-                  //       loaddatatable()
-                  // })
-
-
-
                   $(document).on('click','#create_document',function(){
                         if(process == 'create'){
-                              var temp_description = $('#input_description').val()
-                              var temp_description = all_document.filter(x=>x.description == temp_description)
-                              if(temp_description.length > 0){
-                                    Toast.fire({
-                                          type: 'warning',
-                                          title: 'Document requirement already exist'
-                                    })
-                              }else{
-                                    create_document()    
-                              }
+
+                              // ***switch to controller validation of duplicate entries
+                              // ***change validation referrence from description to headerid
+
+                              // var temp_description = all_document.filter(x=>x.description == selected_docdesctext)
+
+                              // if(temp_description.length > 0) {
+                              //       Toast.fire({
+                              //             type: 'warning',
+                              //             title: 'Document requirement already exist'
+                              //       })
+                              // }
+                              // else {
+                              //       create_document()    
+                              // }
+
+
+                              create_document()
 
                                     
                         }else if(process == 'edit'){
@@ -470,6 +469,8 @@
 
                   function create_document(){
 
+                        console.log(selected_docdescid, selected_docdesctext)
+
                         var isactive = 0;
                         var isrequied = 0;
                         var isvalid = true;
@@ -482,11 +483,15 @@
                         }
 
                         if($('#input_description').val() == ""){
+
+                              select2_docdesc_error('Please select a document description')
+
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document description is empty!'
                               })    
                               isvalid = false
+
                         }else if($('#input_sequence').val() == ""){
                               Toast.fire({
                                     type: 'warning',
@@ -510,21 +515,29 @@
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
+
+                                                $('#modal_document').modal('hide')
+                                                all_document = data[0].info
+                                                loaddatatable()
+
                                                 Toast.fire({
                                                       type: 'success',
                                                       title: data[0].data
                                                 })
-                                                $('#modal_document').modal('hide')
-                                                all_document = data[0].info
-                                                loaddatatable()
                                           }
                                           else if(data[0].status == 2){
+
+                                                select2_docdesc_error(data[0].data)
+
                                                 Toast.fire({
                                                       type: 'warning',
-                                                      title: 'Document requirement already exist'
+                                                      title: data[0].data
                                                 }) 
                                           }
                                           else{
+
+                                                select2_docdesc_error(data[0].data)
+
                                                 Toast.fire({
                                                       type: 'error',
                                                       title: data[0].data
@@ -549,20 +562,28 @@
                               isactive = 1
                         }
 
-                        var temp_document_id = all_document.filter(x=>x.id != selected_document && x.description == $('#input_description').val())
+                        var temp_document_id = all_document.filter(x=>x.id != selected_document && x.headerid == selected_docdescid)
 
                         if(temp_document_id.length > 0){
+
+                              select2_docdesc_error('Please select a document description')
+
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document requirement already exist'
-                              }) 
+                              })
+
                               isvalid = false
                         }
                         else if($('#input_description').val() == ""){
+
+                              select2_docdesc_error('Document requirement already exist')
+                              
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document description is empty!'
-                              })    
+                              })
+
                               isvalid = false
                         }else if($('#input_sequence').val() == ""){
                               Toast.fire({
@@ -645,14 +666,19 @@
                   }
 
                   // docdesc
+
                   $(document).on('click','#button_document',function(){
                         process = 'create'
+
+                        select2_docdesc_reset()
+
                         $('#input_isrequired').prop('checked',false)
                         $('#input_isactive').prop('checked',true)
                         $('#edit_docdesc').attr('hidden','hidden')
                         $('#delete_docdesc').attr('hidden','hidden')
 
                         list_all_docdesc()
+
                         selected_docdescid = null
                         selected_docdesctext = null
 
@@ -663,17 +689,17 @@
                   })
 
                   $(document).on('click','#document-f-btn',function(){
-                        if($('#input_document').val() == ""){
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document Description is empty'
-                              })
-                              return false;
-                        }
+                        // if($('#input_document').val() == ""){
+                        //       Toast.fire({
+                        //             type: 'warning',
+                        //             title: 'Document Description is empty'
+                        //       })
+                        //       return false;
+                        // }
 
-                        if(selected_docdescid == null){
+                        if(selected_docdescid == null) {
                               create_docdesc()
-                        }else{
+                        } else {
                               update_docdesc()
                         }
                   })
@@ -705,12 +731,22 @@
                         })
                   })
 
+                  $(document).on('select2:clear','#input_description',function(){
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
+                  })
+
                   $(document).on('change','#input_description',function(){
+
+                        select2_docdesc_reset()
 
                         if($(this).val() == "add"){
 
                               $('#edit_docdesc').attr('hidden','hidden')
                               $('#delete_docdesc').attr('hidden','hidden')
+
+                              $('#input_document').removeClass('is-valid')
+                              $('#input_document').removeClass('is-invalid')
 
                               $('#document-f-btn').text('Create')
                               $('#document-f-btn').removeClass('btn-success')
@@ -721,9 +757,9 @@
 
                               selected_docdescid = null
                               selected_docdesctext = null
-                              
                         
                         }
+
                         else if($(this).val() != "") {
 
                               selected_docdescid = $(this).val()
@@ -749,36 +785,78 @@
 
                   })
 
+                  $(document).on('shown.bs.modal','#document_form_modal',function(){
+                        docdesc_isvalid = true
+
+                        validateSelector('#input_document', (result) => {
+                              if(!result) {
+                                    docdesc_isvalid = result
+                                    $('#invalidDocu').text('Please provide a valid document description')
+                              }
+                              
+                        })
+
+                        if(!docdesc_isvalid) {
+
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Document description is empty!'
+                              })
+                        }
+                  })
+
+
                   function create_docdesc(){
-                        $.ajax({
-					type:'GET',
-					url: '/superadmin/setup/docdesc/create',
-                              data:{
-                                    description:$('#input_document').val()
-                              },
-					success:function(data) {
-                                    if(data[0].status == 2){
-                                          Toast.fire({
-                                                type: 'warning',
-                                                title: data[0].message
-                                          })
-                                    }else if(data[0].status == 1){
 
-                                          list_all_docdesc()
+                        isvalid = true
 
-                                          Toast.fire({
-                                                type: 'success',
-                                                title: data[0].message
-                                          })
+                        if($('#input_document').val() == ""){
 
-                                    }else{
-                                          Toast.fire({
-                                                type: 'error',
-                                                title: data[0].message
-                                          })
+                              $('#input_document').removeClass('is-valid')
+                              $('#input_document').addClass('is-invalid')
+                              $('#invalidDocu').text('Please provide a valid document description')
+
+                              Toast.fire({
+                                    type: 'warning',
+                                    title: 'Document description is empty!'
+                              })
+
+                              isvalid = false
+
+                        }
+
+                        if(isvalid) {
+                              $.ajax({
+                                    type:'GET',
+                                    url: '/superadmin/setup/docdesc/create',
+                                    data:{
+                                          description:$('#input_document').val()
+                                    },
+                                    success:function(data) {
+                                          if(data[0].status == 2){
+                                                Toast.fire({
+                                                      type: 'warning',
+                                                      title: data[0].message
+                                                })
+                                          }else if(data[0].status == 1){
+
+                                                list_all_docdesc()
+
+                                                Toast.fire({
+                                                      type: 'success',
+                                                      title: data[0].message
+                                                })
+
+                                          }else{
+                                                Toast.fire({
+                                                      type: 'error',
+                                                      title: data[0].message
+                                                })
+                                          }
                                     }
-					}
-				})
+				      })
+                        }
+
                   }
 
                   function update_docdesc(){
@@ -878,6 +956,40 @@
                         })
 
 
+                  }
+
+                  function select2_docdesc_error(message) {
+                        // error validation styling for #input_description
+                        $('.docdesc-form').addClass('has-error')
+                        $('#invalidDocDesc').addClass('d-block')
+                        $('#invalidDocDesc').text(message)
+                  }
+
+                  function select2_docdesc_reset() {
+                        // reset validation styling for #input_description
+                        $('.docdesc-form').removeClass('has-error')
+                        $('#invalidDocDesc').removeClass('d-block')
+                        $('#invalidDocDesc').text('')
+                  }
+
+                  function validateSelector(selector, callback) {
+
+                        function validateInput(input) {
+                              if (!input.val().trim()) {
+                                    // $("#building_create_button").prop("disabled", true);
+                                    input.removeClass("is-valid").addClass("is-invalid");
+                                    return false;
+                              } else {
+                                    // $("#building_create_button").prop("disabled", false);
+                                    input.removeClass("is-invalid").addClass("is-valid");
+                                    return true;
+                              }
+                        }
+
+                        $(selector).on("input", () => {
+                              var isValid = validateInput($(selector));
+                              callback(isValid);
+                        });
                   }
 
                   $(document).on('click','.copy_document',function(){
