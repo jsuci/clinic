@@ -525,6 +525,34 @@
                   });
             }
 
+            function dynamicValidate(inputSelector, btnSelector, patternStr, callback) {
+
+                  var inputSel = $(`${inputSelector}`)
+                  var pattern = new RegExp(patternStr);
+
+                  function validateInput(inputSel, btnSelector, pattern) {
+
+                        if (!pattern.test(inputSel.val().trim())) {
+                              if (btnSelector !== '') {
+                                    $(btnSelector).prop("disabled", true);
+                              }
+                              inputSel.removeClass("is-valid").addClass("is-invalid");
+                              return false;
+                        } else {
+                              if (btnSelector !== '') {
+                                    $(btnSelector).prop("disabled", false);
+                              }
+                              inputSel.removeClass("is-invalid").addClass("is-valid");
+                              return true;
+                        }
+                  }
+
+                  inputSel.on("input", () => {
+                        var isValid = validateInput(inputSel, btnSelector, pattern);
+                        callback(isValid);
+                  });
+            }
+
             function resetValidation(selector) {
                   $(selector).removeClass('is-valid').removeClass('is-invalid');
             }
@@ -1152,25 +1180,42 @@
                               var descInput = null
                               var capInput = null
 
-                              var descInput = validateSelector('#bldgCreateDesc', (isValid) => {
-                                    descInput = isValid;
+                              var descInput = dynamicValidate(
+                                    '#bldgCreateDesc',
+                                    '#building_create_button',
+                                    /\S+/,
+                                    (result) => {
+                                          descInput = result
+                                    })
+
+                              var capInput = dynamicValidate(
+                                    '#bldgCreateCap',
+                                    '#building_create_button',
+                                    /\S+/,
+                                    (result) => {
+                                          capInput = result
+                                    })
+
+
+                              // var descInput = validateSelector('#bldgCreateDesc', (isValid) => {
+                              //       descInput = isValid;
                                     
-                                    if(descInput && capInput) {
-                                          is_form_valid = true
-                                    } else {
-                                          is_form_valid = false
-                                    }
-                              });
+                              //       if(descInput && capInput) {
+                              //             is_form_valid = true
+                              //       } else {
+                              //             is_form_valid = false
+                              //       }
+                              // });
                               
-                              var capInput = validateSelector('#bldgCreateCap', (isValid) => {
-                                    capInput = isValid;
+                              // var capInput = validateSelector('#bldgCreateCap', (isValid) => {
+                              //       capInput = isValid;
                                     
-                                    if(descInput && capInput) {
-                                          is_form_valid = true
-                                    } else {
-                                          is_form_valid = false
-                                    }
-                              });
+                              //       if(descInput && capInput) {
+                              //             is_form_valid = true
+                              //       } else {
+                              //             is_form_valid = false
+                              //       }
+                              // });
                   }
             })
 
