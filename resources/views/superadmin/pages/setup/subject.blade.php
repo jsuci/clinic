@@ -126,6 +126,12 @@
                               <div class="col-md-12 form-group">
                                     <label>Subject Description <i class="text-danger text-sm">*</i></label>
                                     <input type="text" class="form-control" id="input_subjdesc" autocomplete="off">
+                                    <div class="valid-feedback">
+                                          Subject description looks good!
+                                    </div>
+                                    <div id="validateBldgDesc" class="invalid-feedback">
+                                          Please provide a subject description
+                                    </div>
                                     <ul id="same_subj" class="mb-0"></ul>
                               </div>
                         </div>
@@ -133,6 +139,12 @@
                               <div class="col-md-12 form-group">
                                     <label>Subject Code <i class="text-danger text-sm">*</i></label>
                                     <input type="text" class="form-control" id="input_subjcode" autocomplete="off">
+                                    <div class="valid-feedback">
+                                          Subject code looks good!
+                                    </div>
+                                    <div id="validateBldgDesc" class="invalid-feedback">
+                                          Please provide a subject code
+                                    </div>
                                     <ul id="same_code" class="mb-0"></ul>
                               </div>
                         </div>
@@ -445,30 +457,32 @@
                         if(check_dup.length > 0 && $(this).val() != ""){
 
                               //dynamic validation
-                              $('#input_subjdesc').removeClass('is-valid')
-                              $('#input_subjdesc').addClass('is-invalid')
-                              $('#subject_to_create').prop("disabled", true);
+                              // $('#input_subjdesc').removeClass('is-valid')
+                              // $('#input_subjdesc').addClass('is-invalid')
+                              $('#input_subjdesc').removeClass('is-invalid')
+                              $('#input_subjdesc').addClass('is-valid')
+                              // $('#subject_to_create').prop("disabled", false);
 
+                              // display existing entries
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
                                     duplicate += '<li>'+b.text+'</li>'
                               })
-
                               $('#same_subj')[0].innerHTML = duplicate
 
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Subject description already exist!'
-                              })
+                              // Toast.fire({
+                              //       type: 'warning',
+                              //       title: 'Subject description already exist!'
+                              // })
 
                         } else if ($(this).val() == "") {
                               $('#input_subjdesc').removeClass('is-valid')
                               $('#input_subjdesc').addClass('is-invalid')
-                              $('#subject_to_create').prop("disabled", true);
+                              // $('#subject_to_create').prop("disabled", true);
                         } else {
                               $('#input_subjdesc').removeClass('is-invalid')
                               $('#input_subjdesc').addClass('is-valid')
-                              $('#subject_to_create').prop("disabled", false);
+                              // $('#subject_to_create').prop("disabled", false);
                         }
                   })
 
@@ -486,8 +500,8 @@
                         if(check_dup.length > 0 && $(this).val() != ""){
 
                               //dynamic validation
-                              $('#input_subjcode').removeClass('is-valid')
-                              $('#input_subjcode').addClass('is-invalid')
+                              $('#input_subjcode').removeClass('is-invalid')
+                              $('#input_subjcode').addClass('is-valid')
 
                               var duplicate = ''
                               $.each(check_dup,function(a,b){
@@ -496,10 +510,10 @@
 
                               $('#same_code')[0].innerHTML = duplicate
 
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Subject code already exist!'
-                              })
+                              // Toast.fire({
+                              //       type: 'warning',
+                              //       title: 'Subject code already exist!'
+                              // })
 
                         } else if ($(this).val() == "") {
                               $('#input_subjcode').removeClass('is-valid')
