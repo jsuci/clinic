@@ -954,8 +954,6 @@
                                     }
                               }
                         })
-
-
                   }
 
                   function select2_docdesc_error(message) {

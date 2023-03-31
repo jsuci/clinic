@@ -218,8 +218,22 @@ class DocumentsController extends \App\Http\Controllers\Controller
             try{
 
                   $temp_info = DB::table('preregistrationreqlist')
-                                    ->where('id',$documentid)
-                                    ->first();
+                        ->where('id',$documentid)
+                        ->first();
+
+                  $check_if_exist = DB::table('preregistrationrequirements')
+                        ->where('preregreqtype',$documentid)
+                        ->where('deleted',0)
+                        ->get();
+
+                  if(count($check_if_exist) > 0){
+
+                        return array((object)[
+                              'status'=>2,
+                              'data'=>'Document requirement in used!',
+                        ]);
+
+                  }
 
                   DB::table('preregistrationreqlist')
                         ->take(1)

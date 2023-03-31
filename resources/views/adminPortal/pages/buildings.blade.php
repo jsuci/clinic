@@ -126,12 +126,18 @@
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Name</label>
                                                                   <input type="text" name="description" class="form-control form-control-sm bldngDesc" id="bldngDesc" onkeyup="this.value = this.value.toUpperCase();">
+                                                                  <div id="validateEditDesc" class="invalid-feedback">
+                                                                        Please provide a building name
+                                                                  </div>
                                                             </div>
                                                       </div>
                                                       <div class="row">
                                                             <div class="col-md-12 form-group mb-2">
                                                                   <label>Building Capacity</label>
                                                                   <input type="text" name="capacity" id="bldngCap" class="form-control form-control-sm bldngCap" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+                                                                  <div id="validateEditCap" class="invalid-feedback">
+                                                                        Please provide a capacity
+                                                                  </div>
                                                             </div>
                                                       </div>
                                                       <div class="row mt-3">
@@ -897,13 +903,13 @@
 
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
-                                                <label for="description">Description</label>            
+                                                <label for="description">Building Name</label>            
                                                 <input type="text" name="description" class="bldgCreateInput form-control form-control-sm bldgCreateDesc" id="bldgCreateDesc" onkeyup="this.value = this.value.toUpperCase();">
                                                 <div class="valid-feedback">
-                                                      Description looks good!
+                                                      Building name looks good!
                                                 </div>
                                                 <div id="validateBldgDesc" class="invalid-feedback">
-                                                      Please provide a description
+                                                      Please provide a building name
                                                 </div>
                                           </div>
                                     </div>
@@ -1238,10 +1244,6 @@
 
                   const computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
 
-                  // console.log('bldgCap', totalBldgCap)
-                  // console.log('roomCap', totalRoomCap)
-                  // console.log('roomCap', totalRoomCap)
-
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         if (computedBldgCap >= 0) {
                               buildingUpdate(formData)
@@ -1331,25 +1333,42 @@
                         var capInput = null
 
 
-                        var descInput = validateSelector('#bldngDesc', (isValid) => {
-                              descInput = isValid;
+                        var descInput = dynamicValidate(
+                              '#bldngDesc',
+                              '#building_create_button',
+                              /\S+/,
+                              (result) => {
+                                    descInput = result
+                              })
+
+                        var capInput = dynamicValidate(
+                              '#bldngCap',
+                              '#building_create_button',
+                              /\S+/,
+                              (result) => {
+                                    capInput = result
+                              })
+
+
+                        // var descInput = validateSelector('#bldngDesc', (isValid) => {
+                        //       descInput = isValid;
                               
-                              if(descInput == true && capInput == true) {
-                                    is_form_valid = true
-                              } else {
-                                    is_form_valid = false
-                              }
-                        });
+                        //       if(descInput == true && capInput == true) {
+                        //             is_form_valid = true
+                        //       } else {
+                        //             is_form_valid = false
+                        //       }
+                        // });
                         
-                        var capInput = validateSelector('#bldngCap', (isValid) => {
-                              capInput = isValid;
+                        // var capInput = validateSelector('#bldngCap', (isValid) => {
+                        //       capInput = isValid;
                               
-                              if(descInput == true && capInput == true) {
-                                    is_form_valid = true
-                              } else {
-                                    is_form_valid = false
-                              }
-                        });
+                        //       if(descInput == true && capInput == true) {
+                        //             is_form_valid = true
+                        //       } else {
+                        //             is_form_valid = false
+                        //       }
+                        // });
 
                         updateTotalBldgLeftRoomCap();
 

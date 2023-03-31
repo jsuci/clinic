@@ -1733,8 +1733,7 @@
         }else{
           var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != select_id)
         }
-       
-       
+
         
         if(check_duplicate.length > 0){
             Toast.fire({
