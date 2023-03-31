@@ -153,6 +153,13 @@
                               <div class="col-md-12 form-group">
                                     <label>Subject Unit</label>
                                     <input type="text" class="form-control" id="input_subjunit" autocomplete="off">
+                                    <div class="valid-feedback">
+                                          Subject unit looks good!
+                                    </div>
+                                    <div id="validateBldgDesc" class="invalid-feedback">
+                                          Please provide a valid subject unit
+                                    </div>
+                              
                               </div>
                         </div>
                         <!-- JAM END: add subjunit input-->
