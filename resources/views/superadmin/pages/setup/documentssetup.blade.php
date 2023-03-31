@@ -95,6 +95,7 @@
                               <div class="col-md-12 form-group">
                                     <label for="">Document Sort</label>
                                     <input id="input_sequence" class="form-control" placeholder="Document Sequence" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off">
+                                    <div id="invalidSeq" class="invalid-feedback">Please enter a valid sequence</div>
                               </div>
                               <div class="col-md-12 form-group">
                                     <label for="">Student Type</label>
@@ -484,19 +485,34 @@
 
                         if($('#input_description').val() == ""){
 
-                              select2_docdesc_error('Please select a document description')
+                              select2_docdesc_error(
+                                    '.docdesc-form',
+                                    '#invalidDocDesc',
+                                    'Please select a document description'
+                              )
 
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document description is empty!'
-                              })    
+                              })
+
                               isvalid = false
 
                         }else if($('#input_sequence').val() == ""){
+
+                              // select2_docdesc_error(
+                              //       '.docdesc-form',
+                              //       '#invalidDocDesc',
+                              //       'Document sequence is empty!'
+                              // )
+                              $('#input_sequence').addClass('is-invalid')
+                              $('#invalidSeq').text('Document sequence is empty!')
+
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document sequence is empty!'
                               })
+                              
                               isvalid = false
                         }
 
@@ -527,7 +543,12 @@
                                           }
                                           else if(data[0].status == 2){
 
-                                                select2_docdesc_error(data[0].data)
+                                                // select2_docdesc_error(data[0].data)
+                                                select2_docdesc_error(
+                                                      '.docdesc-form',
+                                                      '#invalidDocDesc',
+                                                      data[0].data
+                                                )
 
                                                 Toast.fire({
                                                       type: 'warning',
@@ -536,7 +557,12 @@
                                           }
                                           else{
 
-                                                select2_docdesc_error(data[0].data)
+                                                // select2_docdesc_error(data[0].data)
+                                                select2_docdesc_error(
+                                                      '.docdesc-form',
+                                                      '#invalidDocDesc',
+                                                      data[0].data
+                                                )
 
                                                 Toast.fire({
                                                       type: 'error',
@@ -566,7 +592,12 @@
 
                         if(temp_document_id.length > 0){
 
-                              select2_docdesc_error('Document requirement already exist')
+                              // select2_docdesc_error('Document requirement already exist')
+                              select2_docdesc_error(
+                                    '.docdesc-form',
+                                    '#invalidDocDesc',
+                                    'Document requirement already exist'
+                              )
 
                               Toast.fire({
                                     type: 'warning',
@@ -577,7 +608,12 @@
                         }
                         else if($('#input_description').val() == ""){
 
-                              select2_docdesc_error('Document description is empty!')
+                              // select2_docdesc_error('Document description is empty!')
+                              select2_docdesc_error(
+                                    '.docdesc-form',
+                                    '#invalidDocDesc',
+                                    'Document description is empty!'
+                              )
                               
                               Toast.fire({
                                     type: 'warning',
@@ -683,6 +719,7 @@
                         selected_docdesctext = null
 
                         $('#input_sequence').val("")
+                        $('#input_sequence').removeClass('is-invalid')
                         $('#input_acadprog').val("").change()
                         $('#create_document').text('Create')  
                         $('#modal_document').modal()    
@@ -958,11 +995,11 @@
                         })
                   }
 
-                  function select2_docdesc_error(message) {
+                  function select2_docdesc_error(formSel, invalidSel, message) {
                         // error validation styling for #input_description
-                        $('.docdesc-form').addClass('has-error')
-                        $('#invalidDocDesc').addClass('d-block')
-                        $('#invalidDocDesc').text(message)
+                        $(`${formSel}`).addClass('has-error')
+                        $(`${invalidSel}`).addClass('d-block')
+                        $(`${invalidSel}`).text(message)
                   }
 
                   function select2_docdesc_reset() {
