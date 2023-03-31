@@ -566,7 +566,7 @@
 
                         if(temp_document_id.length > 0){
 
-                              select2_docdesc_error('Please select a document description')
+                              select2_docdesc_error('Document requirement already exist')
 
                               Toast.fire({
                                     type: 'warning',
@@ -577,7 +577,7 @@
                         }
                         else if($('#input_description').val() == ""){
 
-                              select2_docdesc_error('Document requirement already exist')
+                              select2_docdesc_error('Document description is empty!')
                               
                               Toast.fire({
                                     type: 'warning',
@@ -734,6 +734,8 @@
                   $(document).on('select2:clear','#input_description',function(){
                         $('#edit_docdesc').attr('hidden','hidden')
                         $('#delete_docdesc').attr('hidden','hidden')
+                        selected_docdescid = null
+                        selected_docdesctext = null
                   })
 
                   $(document).on('change','#input_description',function(){
