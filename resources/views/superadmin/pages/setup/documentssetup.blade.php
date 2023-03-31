@@ -96,6 +96,9 @@
                                     <label for="">Document Sort</label>
                                     <input id="input_sequence" class="form-control" placeholder="Document Sequence" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off">
                                     <div id="invalidSeq" class="invalid-feedback">Please enter a valid sequence</div>
+                                    <div class="valid-feedback">
+                                          Document sort looks good!
+                                    </div>
                               </div>
                               <div class="col-md-12 form-group">
                                     <label for="">Student Type</label>
@@ -423,6 +426,7 @@
                         $('#input_sequence').val(temp_document_id[0].docsort)
                         $('#input_acadprog').val(temp_document_id[0].acadprogid).change()
                         $('#stud_type').val(temp_document_id[0].doc_studtype).change()
+                        $('#input_sequence').removeClass('is-invalid')
 
                         if(temp_document_id[0].isActive == 1){
                               $('#input_isactive').prop('checked',true)
@@ -622,6 +626,10 @@
 
                               isvalid = false
                         }else if($('#input_sequence').val() == ""){
+
+                              $('#input_sequence').addClass('is-invalid')
+                              $('#invalidSeq').text('Document sequence is empty!')
+
                               Toast.fire({
                                     type: 'warning',
                                     title: 'Document sequence is empty!'
@@ -717,6 +725,14 @@
 
                         selected_docdescid = null
                         selected_docdesctext = null
+
+                        validateSelector('#input_sequence', (result) => {
+                              if(!result) {
+                                    docdesc_isvalid = result
+                                    $('#invalidSeq').text('Document sequence is empty!')
+                              }
+                              
+                        })
 
                         $('#input_sequence').val("")
                         $('#input_sequence').removeClass('is-invalid')
