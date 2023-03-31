@@ -426,8 +426,9 @@
                         $('#input_sequence').val(temp_document_id[0].docsort)
                         $('#input_acadprog').val(temp_document_id[0].acadprogid).change()
                         $('#stud_type').val(temp_document_id[0].doc_studtype).change()
-                        $('#input_sequence').removeClass('is-invalid')
 
+                        $('#input_sequence').removeClass('is-invalid')
+                        
                         if(temp_document_id[0].isActive == 1){
                               $('#input_isactive').prop('checked',true)
                         }else{
