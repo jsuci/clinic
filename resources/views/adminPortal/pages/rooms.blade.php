@@ -40,34 +40,39 @@
 
   <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-              margin-top: -9px;
+          margin-top: -9px;
         }
         .shadow {
-              box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-              border: 0 !important;
+          box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+          border: 0 !important;
         }
         .no-border-col{
-              border-left: 0 !important;
-              border-right: 0 !important;
+          border-left: 0 !important;
+          border-right: 0 !important;
         }
         .view_info {
-              cursor: pointer;
+          cursor: pointer;
         }
         .tableFixHead thead th {
-                  position: sticky;
-                  top: 0;
-                  background-color: #fff;
-                  outline: 2px solid #dee2e6;
-                  outline-offset: -1px;
-            
-            }
+          position: sticky;
+          top: 0;
+          background-color: #fff;
+          outline: 2px solid #dee2e6;
+          outline-offset: -1px;
+        }
 
-            .calendar-table{
-            display: none;
+        .calendar-table{
+          display: none;
         }
 
         .drp-buttons{
             display: none !important;
+        }
+
+        .has-error .select2-selection {
+          /*border: 1px solid #a94442;
+          border-radius: 4px;*/
+          border-color:#bd2130 !important;
         }
   </style>
 @endsection
@@ -88,9 +93,6 @@
 
 @section('modalSection')
 
-  
-  
-
 
   <div class="modal fade" id="room_form_modal" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-sm">
@@ -105,15 +107,24 @@
                 <div class="form-group">
                     <label>Room Name</label>
                     <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                </div>
+                    <div id="invRoomName" class="invalid-feedback"></div>
+                    <div class="valid-feedback">
+                      Room name looks good!
+                    </div>
+                
+                  </div>
                 <div class="form-group">
                   <label>Room Capacity</label>
                   <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                  <div id="invRoomCap" class="invalid-feedback"></div>
+                  <div class="valid-feedback">
+                    Room capacity looks good!
+                  </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group bldg-form">
                   <label>Building</label>
                   <select name="building" id="building" class="form-control select2">
-                      <option selected value="">SELECT BUILDING</option>
+                    <option selected value="">SELECT BUILDING</option>
                   </select>
                 </div>
                 <div class="row">
@@ -136,7 +147,7 @@
               <span aria-hidden="true">×</span></button>
         </div>
           <div class="modal-body pt-0">
-             <div class="row">
+              <div class="row">
                 <div class="col-md-2">
                   <div class="row">
                     <div class="col-md-12">
@@ -146,12 +157,20 @@
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Name</label>
                               <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
+                              <div id="invRoomName" class="invalid-feedback"></div>
+                              <div class="valid-feedback">
+                                    Room name looks good!
+                              </div>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Capacity</label>
                               <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                              <div id="invRoomCap" class="invalid-feedback"></div>
+                              <div class="valid-feedback">
+                                    Room capacity looks good!
+                              </div>
                             </div>
                           </div>
                           <div class="row">
@@ -212,7 +231,7 @@
                                 </select>
                             </div>
                           </div>
-                         
+                        
                         </div>
                       </div>
                     </div>
@@ -252,7 +271,7 @@
                     </div>
                   </div>
                 </div>
-             </div>
+            </div>
           </div>
       </div>
     </div>
@@ -395,18 +414,18 @@
                   <span aria-hidden="true">×</span></button>
           </div>
           <div class="modal-body pt-0">
-             <div class="row">
+            <div class="row">
                   <div class="col-md-12 form-group">
                       <label for="">Schedule Classification Description</label>
                       <input class="form-control form-control-sm" id="schedclass_desc">
                   </div>
-             </div>
-             <div class="row">
+            </div>
+            <div class="row">
                   <div class="col-md-12">
                       <button class="btn btn-sm btn-primary" id="create_schedclass_button">Create Schedule Classification</button>
                       <button class="btn btn-success btn-primary" id="update_schedclass_button" hidden>Update Schedule Classification</button>
                   </div>
-             </div>
+            </div>
           </div>
       </div>
   </div>
@@ -1057,7 +1076,7 @@
 
         if($(this).attr('iscon') == 1){
             $('#apptocon_holder').removeAttr('hidden')
-           
+        
         }else{
             $('#apptocon_holder').attr('hidden','hidden')
         }
@@ -1078,7 +1097,7 @@
           
         }
         
- 
+
         $('.eval').removeClass('.evalupdate')
         $('.apptocon').prop('checked',false)
 
@@ -1289,10 +1308,6 @@
       }
     }
 
-    
-
-    
-    
     function getsections(){
         $.ajax({
             type:'GET',
@@ -1316,8 +1331,6 @@
             },
         })
     }
-
-    
 
     function getsubjects(sectionid){
 
@@ -1399,6 +1412,7 @@
     var scheduleclassification = []
     var selected_schedclass = null
     get_schedclassification()
+
     function get_schedclassification(){
         $.ajax({
             type:'GET',
@@ -1416,6 +1430,7 @@
             },
         })
     }
+
     function create_schedclassification(){
 
         if($('#schedclass_desc').val() == ""){
@@ -1453,6 +1468,7 @@
             },
         })
     }
+
     function update_schedclassification(){
         $.ajax({
             type:'GET',
@@ -1482,6 +1498,7 @@
             },
         })
     }
+
     function delete_schedclassification(){
         $.ajax({
             type:'GET',
@@ -1511,6 +1528,7 @@
             },
         })
     }
+
     $(document).on('change','#classification',function(){
         if($(this).val() != "" && $(this).val() != "create"){
             $('.edit_schedclass').removeAttr('hidden')
@@ -1536,7 +1554,6 @@
     $(document).on('click','#update_schedclass_button',function(){
         update_schedclassification()
     })
-
 
     $(document).on('click','.delete_schedclass',function(){
         selected_schedclass = $('#classification').val()
@@ -1568,12 +1585,19 @@
   <script>
     $(document).ready(function(){
 
+      var select_id = null
+      var all_rooms = []
+      var all_building = []
+      var selected_roomid = null
+
+      rooms_datatable()
+      get_buildings()
+
       // $('#secttea').select2()
       $('#sectroo').select2()
       $('#input_section').select2()
       $('#input_subject').select2()
       
-
       $(document).on('click','.add_sched',function(){
         
         selected_detailinfo = null
@@ -1668,20 +1692,49 @@
         $('#conflict_holder').empty()
       })
 
-     
-
-      var select_id = null
-
       $(document).on('click','#create_room_button',function(){
+
         $('#roomName').val("")
         $('#roomCapacity').val("")
         $('#building').val("").change()
-        $('#room_form_modal').modal()
+        
         $('#create_room').text('Create')
         $('#create_room').removeClass('btn-success')
         $('#create_room').addClass('bg-primary')
         $('#create_room').attr('data-id',1)
+
+        $('#roomName').removeClass('is-invalid')
+        $('#roomName').removeClass('is-valid')
+        $('#roomCapacity').removeClass('is-valid')
+        $('#roomCapacity').removeClass('is-invalid')
+
+        $('.bldg-form').removeClass('has-error')
+
+
+
+        $('#room_form_modal').modal()
+
         select_id = null
+
+      })
+
+      $(document).on('shown.bs.modal','#room_form_modal',function(){
+        // room name
+        dynamicValidate('#roomName', '', /\S+/, (result) => {
+          // add more options here
+          if(!result) {
+            $('#invRoomName').text('Please enter a room name.')
+          }
+        })
+
+        // room capacity
+        dynamicValidate('#roomCapacity', '', /[0-9]+/, (result) => {
+          // add more options here
+          if(!result) {
+            $('#invRoomCap').text('Please enter a valid room capacity.')
+          }
+        })
+
       })
 
       $(document).on('change','#filter_acad_sy',function(){
@@ -1696,7 +1749,6 @@
         get_sched(selected_roomid)
       })
 
-      
       $(document).on('click','#print_sched',function(){
           var temp_roomid = $(this).attr('data-id')
           window.open('/principal/setup/section/print?schedtype=room&syid='+$('#filter_acad_sy').val()+'&semid='+$('#filter_semester').val()+'&roomid='+temp_roomid+'&timetemp='+$('#filter_timetemplate').val(), '_blank');
@@ -1722,11 +1774,19 @@
         $('#create_room').attr('data-id',2)
       })
 
+      $(document).on('click','.view_info',function(){
+        $('#view_roominfo_modal').modal()
+        selected_roomid = $(this).attr('data-id')
+        get_sched(selected_roomid)
+      })
+
       $(document).on('click','#create_room',function(){
 
         var roomname = $('#roomName').val()
         var capacity = $('#roomCapacity').val()
         var building = $('#building').val()
+
+        console.log($(this).attr('data-id'))
 
         if($(this).attr('data-id') == 1){
           var check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
@@ -1734,16 +1794,25 @@
           var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != select_id)
         }
 
-        
+        console.log(all_rooms)
+        console.log(check_duplicate)
+
         if(check_duplicate.length > 0){
-            Toast.fire({
-              type: 'warning',
-              title: 'Already Exist'
-            })
-            return false;
+          $('#roomName').removeClass('is-valid')
+          $('#roomName').addClass('is-invalid')
+          $('#invRoomName').text('Room Name already exists')
+
+          Toast.fire({
+            type: 'warning',
+            title: 'Room Name already exists'
+          })
+          return false;
         }
 
         if(roomname == ""){
+          $('#roomName').addClass('is-invalid')
+          $('#invRoomName').text('Please enter a room name.')
+
           Toast.fire({
             type: 'warning',
             title: 'Room Name is empty'
@@ -1752,14 +1821,20 @@
         }
         
         if(capacity == ""){
+          $('#roomCapacity').addClass('is-invalid')
+          $('#invRoomCap').text('Please enter a valid room capacity.')
+
           Toast.fire({
             type: 'warning',
             title: 'Capacity is empty'
           })
+
           return false;
         }
 
         if(building == ""){
+          $('.bldg-form').addClass('has-error')
+
           Toast.fire({
             type: 'warning',
             title: 'Building is empty'
@@ -1780,11 +1855,13 @@
         delete_room()
       })
 
-      var all_rooms = []
-      var all_building = []
+      $(document).on('click','#update_information',function(){
+        update_room()
+      })
 
-      rooms_datatable()
-      get_buildings()
+      $(document).on('change','#building',function(){
+        $('.bldg-form').removeClass('has-error')
+      })
       
       function get_buildings(){
         $.ajax({
@@ -1810,6 +1887,7 @@
 
       function create_room(){
         $('#create_room').attr('disabled','disabled')
+
         $.ajax({
 					type:'GET',
 					url: '/rooms/create',
@@ -1850,7 +1928,6 @@
 				})
       }
 
-
       function prompt(status,message){
           if(status == 1){
             var type = 'success'
@@ -1864,13 +1941,10 @@
             title: message
           })
       }
-
-      $(document).on('click','#update_information',function(){
-        update_room()
-      })
       
       function update_room(){
         $('#create_room').attr('disabled','disabled')
+
         $.ajax({
 					type:'GET',
 					url: '/rooms/update',
@@ -1881,7 +1955,9 @@
             building:$('#update_roombuilding').val(),
           },
 					success:function(data) {
+
             $('#create_room').removeAttr('disabled')
+
             if(data[0].status == 1){
               Toast.fire({
                 type: 'success',
@@ -1938,9 +2014,9 @@
                   'targets': 2,
                   'orderable': false, 
                   'createdCell':  function (td, cellData, rowData, row, col) {
-                       $(td)[0].innerHTML = rowData.capacity
-                       $(td).addClass('align-middle')
-                       $(td).addClass('text-center')
+                      $(td)[0].innerHTML = rowData.capacity
+                      $(td).addClass('align-middle')
+                      $(td).addClass('text-center')
                   }
                 },
                 
@@ -2009,16 +2085,35 @@
 
       }
 
-      $(document).on('click','.view_info',function(){
-        $('#view_roominfo_modal').modal()
-        selected_roomid = $(this).attr('data-id')
-        get_sched(selected_roomid)
-      })
+      function dynamicValidate(inputSelector, btnSelector, patternStr, callback) {
 
+        var inputSel = $(`${inputSelector}`)
+        var pattern = new RegExp(patternStr);
+
+        function validateInput(inputSel, btnSelector, pattern) {
+
+              if (!pattern.test(inputSel.val().trim())) {
+                    if (btnSelector !== '') {
+                          $(btnSelector).prop("disabled", true);
+                    }
+                    inputSel.removeClass("is-valid").addClass("is-invalid");
+                    return false;
+              } else {
+                    if (btnSelector !== '') {
+                          $(btnSelector).prop("disabled", false);
+                    }
+                    inputSel.removeClass("is-invalid").addClass("is-valid");
+                    return true;
+              }
+        }
+
+        inputSel.on("input", () => {
+              var isValid = validateInput(inputSel, btnSelector, pattern);
+              callback(isValid);
+        });
+      }
 
     })
-
-    var selected_roomid = null
 
   </script>
 
@@ -2026,7 +2121,7 @@
 
     var all_sched = []
 
-     function get_sched(roomid){
+    function get_sched(roomid){
         $('#sched_holder').empty()
         $.ajax({
 					type:'GET',
@@ -2106,7 +2201,7 @@
           }
 				})
         
-      }
+    }
   </script>
     
 @endsection

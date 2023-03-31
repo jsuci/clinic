@@ -413,6 +413,8 @@
                   $(document).on('click','.edit_document',function(){
                         selected_document = $(this).attr('data-id')
                         process = 'edit'
+                        
+                        $('#input_description').prop("disabled", true);
 
                         var temp_document_id = all_document.filter(x=>x.id == selected_document)
                         var temp_docdesc = all_docdesc.filter(x=>x.text == temp_document_id[0].description)

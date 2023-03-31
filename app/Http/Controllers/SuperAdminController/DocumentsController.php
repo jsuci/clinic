@@ -221,12 +221,17 @@ class DocumentsController extends \App\Http\Controllers\Controller
                         ->where('id',$documentid)
                         ->first();
 
-                  $check_if_exist = DB::table('preregistrationrequirements')
+                  $check_requirements = DB::table('preregistrationrequirements')
                         ->where('preregreqtype',$documentid)
                         ->where('deleted',0)
                         ->get();
 
-                  if(count($check_if_exist) > 0){
+                  $check_registrar = DB::table('preregistrationreqregistrar')
+                        ->where('requirement',$documentid)
+                        ->where('deleted',0)
+                        ->get();
+
+                  if(count($check_requirements) > 0 || count($check_registrar) > 0){
 
                         return array((object)[
                               'status'=>2,
