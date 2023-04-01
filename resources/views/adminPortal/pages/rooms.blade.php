@@ -1694,6 +1694,8 @@
 
       $(document).on('click','#create_room_button',function(){
 
+        console.log(all_building)
+
         $('#roomName').val("")
         $('#roomCapacity').val("")
         $('#building').val("").change()
@@ -1709,8 +1711,6 @@
         $('#roomCapacity').removeClass('is-invalid')
 
         $('.bldg-form').removeClass('has-error')
-
-
 
         $('#room_form_modal').modal()
 
@@ -1868,10 +1868,9 @@
 					type:'GET',
 					url: '/buildings/get',
 					success:function(data) {
-            building = data;
-            // console.log(building)
+            all_building = data
             $("#building").select2({
-                  data: building,
+                  data: data,
                   allowClear: true,
                   placeholder: "Select Building",
             })

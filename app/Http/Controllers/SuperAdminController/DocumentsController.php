@@ -56,7 +56,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
 
 
       //proccess
-
       public static function documents_create(
             $decription = null, 
             $isactive = null,
