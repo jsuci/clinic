@@ -237,7 +237,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
                               'status'=>2,
                               'data'=>'Document requirement in used!',
                         ]);
-
                   }
 
                   DB::table('preregistrationreqlist')
@@ -265,7 +264,6 @@ class DocumentsController extends \App\Http\Controllers\Controller
             }
       }
 
-      
       //data
       public static function documents_list(
             $id = null,
