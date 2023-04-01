@@ -95,7 +95,7 @@
                               <div class="col-md-12 form-group">
                                     <label for="">Document Sort</label>
                                     <input id="input_sequence" class="form-control" placeholder="Document Sequence" onkeyup="this.value = this.value.toUpperCase();" autocomplete="off">
-                                    <div id="invalidSeq" class="invalid-feedback">Please enter a valid sequence</div>
+                                    <div id="invalidSeq" class="invalid-feedback">Please enter a sort value</div>
                                     <div class="valid-feedback">
                                           Document sort looks good!
                                     </div>
@@ -330,7 +330,7 @@
 
       <script>
 
-           
+      
             $(document).ready(function(){
 
                   var all_document = []
@@ -359,7 +359,6 @@
                   loaddatatable()
                   list_all_docdesc()
 
-
                   $(document).on('change','#filter_gradelevel',function(){
                         if($(this).val() == ""){
 
@@ -380,26 +379,7 @@
 
                   $(document).on('click','#create_document',function(){
                         if(process == 'create'){
-
-                              // ***switch to controller validation of duplicate entries
-                              // ***change validation referrence from description to headerid
-
-                              // var temp_description = all_document.filter(x=>x.description == selected_docdesctext)
-
-                              // if(temp_description.length > 0) {
-                              //       Toast.fire({
-                              //             type: 'warning',
-                              //             title: 'Document requirement already exist'
-                              //       })
-                              // }
-                              // else {
-                              //       create_document()    
-                              // }
-
-
                               create_document()
-
-                                    
                         }else if(process == 'edit'){
                               update_document()  
                         }
@@ -413,8 +393,6 @@
                   $(document).on('click','.edit_document',function(){
                         selected_document = $(this).attr('data-id')
                         process = 'edit'
-                        
-                        $('#input_description').prop("disabled", true);
 
                         var temp_document_id = all_document.filter(x=>x.id == selected_document)
                         var temp_docdesc = all_docdesc.filter(x=>x.text == temp_document_id[0].description)
@@ -425,11 +403,13 @@
                               list_all_docdesc()
                         }
 
+                        $('#input_description').prop("disabled", true);
+                        $('#edit_docdesc').attr('hidden','hidden')
+                        $('#delete_docdesc').attr('hidden','hidden')
                         $('#input_sequence').val(temp_document_id[0].docsort)
                         $('#input_acadprog').val(temp_document_id[0].acadprogid).change()
                         $('#stud_type').val(temp_document_id[0].doc_studtype).change()
 
-                        $('#input_sequence').removeClass('is-invalid')
                         
                         if(temp_document_id[0].isActive == 1){
                               $('#input_isactive').prop('checked',true)
@@ -505,23 +485,24 @@
 
                               isvalid = false
 
-                        }else if($('#input_sequence').val() == ""){
-
-                              // select2_docdesc_error(
-                              //       '.docdesc-form',
-                              //       '#invalidDocDesc',
-                              //       'Document sequence is empty!'
-                              // )
-                              $('#input_sequence').addClass('is-invalid')
-                              $('#invalidSeq').text('Document sequence is empty!')
-
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document sequence is empty!'
-                              })
-                              
-                              isvalid = false
                         }
+                        // else if($('#input_sequence').val() == ""){
+
+                        //       // select2_docdesc_error(
+                        //       //       '.docdesc-form',
+                        //       //       '#invalidDocDesc',
+                        //       //       'Document sequence is empty!'
+                        //       // )
+                        //       $('#input_sequence').addClass('is-invalid')
+                        //       $('#invalidSeq').text('Document sequence is empty!')
+
+                        //       Toast.fire({
+                        //             type: 'warning',
+                        //             title: 'Document sequence is empty!'
+                        //       })
+                              
+                        //       isvalid = false
+                        // }
 
                         if(isvalid){
                               $.ajax({
@@ -542,6 +523,7 @@
                                                 $('#modal_document').modal('hide')
                                                 all_document = data[0].info
                                                 loaddatatable()
+                                                list_all_docdesc()
 
                                                 Toast.fire({
                                                       type: 'success',
@@ -595,50 +577,54 @@
                               isactive = 1
                         }
 
-                        var temp_document_id = all_document.filter(x=>x.id != selected_document && x.headerid == selected_docdescid)
+                        // var temp_document_id = all_document.filter(x=>x.id == selected_document && x.headerid == selected_docdescid)
 
-                        if(temp_document_id.length > 0){
+                        // console.log(temp_document_id, selected_document, selected_docdescid, all_document)
 
-                              // select2_docdesc_error('Document requirement already exist')
-                              select2_docdesc_error(
-                                    '.docdesc-form',
-                                    '#invalidDocDesc',
-                                    'Document requirement already exist'
-                              )
 
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document requirement already exist'
-                              })
+                        // if(temp_document_id.length > 0){
 
-                              isvalid = false
-                        }
-                        else if($('#input_description').val() == ""){
+                        //       // select2_docdesc_error('Document requirement already exist')
+                        //       select2_docdesc_error(
+                        //             '.docdesc-form',
+                        //             '#invalidDocDesc',
+                        //             'Document requirement already exist'
+                        //       )
 
-                              // select2_docdesc_error('Document description is empty!')
-                              select2_docdesc_error(
-                                    '.docdesc-form',
-                                    '#invalidDocDesc',
-                                    'Document description is empty!'
-                              )
+                        //       Toast.fire({
+                        //             type: 'warning',
+                        //             title: 'Document requirement already exist'
+                        //       })
+
+                        //       isvalid = false
+                        // }
+                        // else if($('#input_description').val() == ""){
+
+                        //       // select2_docdesc_error('Document description is empty!')
+                        //       select2_docdesc_error(
+                        //             '.docdesc-form',
+                        //             '#invalidDocDesc',
+                        //             'Document description is empty!'
+                        //       )
                               
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document description is empty!'
-                              })
+                        //       Toast.fire({
+                        //             type: 'warning',
+                        //             title: 'Document description is empty!'
+                        //       })
 
-                              isvalid = false
-                        }else if($('#input_sequence').val() == ""){
+                        //       isvalid = false
+                        // }
+                        // else if($('#input_sequence').val() == ""){
 
-                              $('#input_sequence').addClass('is-invalid')
-                              $('#invalidSeq').text('Document sequence is empty!')
+                        //       $('#input_sequence').addClass('is-invalid')
+                        //       $('#invalidSeq').text('Document sequence is empty!')
 
-                              Toast.fire({
-                                    type: 'warning',
-                                    title: 'Document sequence is empty!'
-                              })
-                              isvalid = false
-                        }
+                        //       Toast.fire({
+                        //             type: 'warning',
+                        //             title: 'Document sequence is empty!'
+                        //       })
+                        //       isvalid = false
+                        // }
                         
                         if(isvalid){
                               $.ajax({
@@ -673,12 +659,13 @@
                                     }
                               })
                         }
-                        
                   }
 
                   function delete_document(){
+                        var temp_doc = all_document.filter(x=>x.id == selected_document)
+
                         Swal.fire({
-                              title: 'Do you want to remove document requirement?',
+                              title: `Do you want to remove ${temp_doc[0].description}?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#3085d6',
@@ -700,6 +687,7 @@
                                                       })
                                                       all_document = data[0].info
                                                       loaddatatable()
+                                                      list_all_docdesc()
                                                 }else{
                                                       Toast.fire({
                                                             type: 'error',
@@ -713,12 +701,12 @@
                   }
 
                   // docdesc
-
                   $(document).on('click','#button_document',function(){
                         process = 'create'
 
                         select2_docdesc_reset()
 
+                        $('#input_description').prop("disabled", false);
                         $('#input_isrequired').prop('checked',false)
                         $('#input_isactive').prop('checked',true)
                         $('#edit_docdesc').attr('hidden','hidden')
@@ -729,16 +717,15 @@
                         selected_docdescid = null
                         selected_docdesctext = null
 
-                        validateSelector('#input_sequence', (result) => {
-                              if(!result) {
-                                    docdesc_isvalid = result
-                                    $('#invalidSeq').text('Document sequence is empty!')
-                              }
+                        // validateSelector('#input_sequence', (result) => {
+                        //       if(!result) {
+                        //             docdesc_isvalid = result
+                        //             $('#invalidSeq').text('Document sequence is empty!')
+                        //       }
                               
-                        })
+                        // })
 
                         $('#input_sequence').val("")
-                        $('#input_sequence').removeClass('is-invalid')
                         $('#input_acadprog').val("").change()
                         $('#create_document').text('Create')  
                         $('#modal_document').modal()    
@@ -862,7 +849,6 @@
                               })
                         }
                   })
-
 
                   function create_docdesc(){
 
