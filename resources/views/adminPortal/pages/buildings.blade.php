@@ -1174,7 +1174,39 @@
             }
 
             function create_room() {
-                  console.log('call create_room process')
+                  var isvalid = true
+
+                  if ($('#roomName').hasClass('is-invalid')) {
+                        Toast.fire({
+                              type: 'warning',
+                              title: 'Room Name empty',
+                              timer: 5000
+                        })
+
+                        isvalid = false
+                  }
+                  else if ($('#roomCapacity').hasClass('is-invalid')) {
+                        Toast.fire({
+                              type: 'warning',
+                              title: 'Room Capacity empty',
+                              timer: 5000
+                        })
+
+                        isvalid = false
+                  }
+
+                  if (isvalid) {
+                        $.ajax({
+                              type:'GET',
+                              url: '/api/building/getnewinfo',
+                              data:{
+                                    tablename: tablename
+                              },
+                              success:function(data) {
+                                    console.log(data)
+                              }
+                        })
+                  }
             }
 
             // BUILDING
@@ -1408,7 +1440,6 @@
 
             // 'Room Form' Create button
             $('#create_room').on('click', function(){
-                  console.log(room_process)
                   create_room()
             })
 

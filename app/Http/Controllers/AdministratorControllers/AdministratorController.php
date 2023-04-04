@@ -521,24 +521,23 @@ class AdministratorController extends \App\Http\Controllers\Controller
 
     }
 
-     public static function buildings(){
+    public static function buildings(){
 
-        $buildings = DB::table('building')
-                ->where('building.deleted',0)
-                ->orderBy('description')
-                ->select(
-                    'building.id',
-                    'building.description',
-                    'building.capacity',
-                    'building.description as text'
-                )
-                ->get();
+    $buildings = DB::table('building')
+            ->where('building.deleted',0)
+            ->orderBy('description')
+            ->select(
+                'building.id',
+                'building.description',
+                'building.capacity',
+                'building.description as text'
+            )
+            ->get();
 
-        return $buildings;
+    return $buildings;
 
-     }
+    }
 
-    
     public static function create_room(Request $request){
 
         $roomname = $request->get('roomname');
