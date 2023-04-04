@@ -1694,7 +1694,7 @@
 
       $(document).on('click','#create_room_button',function(){
 
-        console.log(all_building)
+        // console.log(all_building)
 
         $('#roomName').val("")
         $('#roomCapacity').val("")
@@ -1754,25 +1754,24 @@
           window.open('/principal/setup/section/print?schedtype=room&syid='+$('#filter_acad_sy').val()+'&semid='+$('#filter_semester').val()+'&roomid='+temp_roomid+'&timetemp='+$('#filter_timetemplate').val(), '_blank');
       })
 
-      $(document).on('click','.view_info',function(){
-        var temp_id = $(this).attr('data-id')
-        var data = all_rooms.filter(x=>x.id == temp_id)
-        select_id = temp_id
+      // $(document).on('click','.view_info',function(){
+      //   var temp_id = $(this).attr('data-id')
+      //   var data = all_rooms.filter(x=>x.id == temp_id)
+      //   select_id = temp_id
 
-        // console.log(data)
 
-        $('#print_sched').attr('data-id',select_id)
+      //   $('#print_sched').attr('data-id',select_id)
 
-        $('#update_roomname').val(data[0].roomname)
-        $('#update_roomcap').val(data[0].capacity)
-        $('#update_roombuilding').val(data[0].buildingid).change()
-        $('#room_name').text(data[0].roomname)
-        // $('#room_form_modal').modal()
-        $('#create_room').text('Update')
-        $('#create_room').removeClass('btn-primary')
-        $('#create_room').addClass('btn-success')
-        $('#create_room').attr('data-id',2)
-      })
+      //   $('#update_roomname').val(data[0].roomname)
+      //   $('#update_roomcap').val(data[0].capacity)
+      //   $('#update_roombuilding').val(data[0].buildingid).change()
+      //   $('#room_name').text(data[0].roomname)
+      //   // $('#room_form_modal').modal()
+      //   $('#create_room').text('Update')
+      //   $('#create_room').removeClass('btn-primary')
+      //   $('#create_room').addClass('btn-success')
+      //   $('#create_room').attr('data-id',2)
+      // })
 
       $(document).on('click','.view_info',function(){
         $('#view_roominfo_modal').modal()
