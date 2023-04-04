@@ -719,13 +719,6 @@
                                     }
                               })
                         }
-                  }).then(() => {
-                        // setTimeout(function() {
-                        //       updatePagination({
-                        //             selector: '#view_bldginfo_modal',
-                        //             initialState: true
-                        //       });
-                        // }, 1500);
                   })
                   
             }
@@ -1032,6 +1025,7 @@
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
                               $(row).addClass("view_info");
+                              $(row).css("cursor", "pointer")
                         },
                   });
                   
@@ -1230,7 +1224,6 @@
                   
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         buildingCreate(formData)
-                        // $("#building_create_button").prop("disabled", true);
                   } else {
                         if (subData['description'] === '') {
                               $('#bldgCreateDesc').addClass('is-invalid')
