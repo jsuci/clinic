@@ -218,7 +218,6 @@
       </div>
 </div>
 
-
 <div class="modal fade" id="assign_room_form_modal" style="display: none;" aria-hidden="true">
       <div class="modal-dialog modal-sm">
       <div class="modal-content">
@@ -231,12 +230,17 @@
                   <div class="message"></div>
                   <div class="form-group">
                         <label>Rooms</label>
+                        <a href="javascript:void(0)" hidden class="pl-2" id="edit_docdesc"><i class="far fa-edit"></i></a>
+                        <a href="javascript:void(0)" hidden class="pl-2" id="delete_docdesc"><i class="far fa-trash-alt text-danger"></i></a>
                         <select name="roomname" id="assignRoom" class="form-select form-control select2">
                               <option selected value="">Select Room</option>
                         </select>
                   </div>
                   <div class="row">
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-6 text-left">
+                              <button type="button" class="btn btn-primary btn-sm" id="create_room_save">Create</button>
+                        </div>
+                        <div class="col-md-6 text-right">
                               <button type="button" class="btn btn-success btn-sm" id="assign_room_save">Save</button>
                         </div>
                   </div>
@@ -245,6 +249,44 @@
       </div>
       </div>
 </div>
+
+<div class="modal fade" id="room_form_modal" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header pb-2 pt-2 border-0">
+                  <h4 class="modal-title">Room Form</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                  <div class="message"></div>
+                  <div class="form-group">
+                      <label>Room Name</label>
+                      <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
+                      <div id="invRoomName" class="invalid-feedback">Please provide a room name</div>
+                      <div class="valid-feedback">
+                        Room name looks good!
+                      </div>
+                  
+                    </div>
+                  <div class="form-group">
+                    <label>Room Capacity</label>
+                    <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
+                    <div id="invRoomCap" class="invalid-feedback">Please provide a valid room capacity</div>
+                    <div class="valid-feedback">
+                      Room capacity looks good!
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <button  type="button" class="btn btn-primary btn-sm" id="create_room">Create</button>
+                    </div>
+                  </div>
+              </div>
+            
+          </div>
+      </div>
+    </div>
 @endsection
 
 
@@ -308,6 +350,7 @@
             var button_enable = null;
             var connected_stat = false
             var is_form_valid = false;
+            var room_process = null;
 
             const Toast = Swal.mixin({
                   toast: true,
@@ -1130,6 +1173,12 @@
                   });
             }
 
+            function create_room() {
+                  console.log('call create_room process')
+            }
+
+            // BUILDING
+
             // 'Add New' button
             $(document).on('click','#building_create',function() {
                   $('#bldgCreateDesc').val("")
@@ -1303,6 +1352,8 @@
                   }
             })
 
+            // ROOM
+
             // 'Assign New Room' Save button
             $('#assign_room_save').on('click', function(){
 
@@ -1333,6 +1384,34 @@
                   
             })
 
+            // 'Assign New Room' Create button
+            $('#create_room_save').on('click', function(){
+                  // set room_process
+                  room_process = 'create_room'
+
+                  // reset values and styles of input
+                  $('#roomName').val('')
+                  $('#roomCapacity').val('')
+
+                  $('#roomName').removeClass('is-valid')
+                  $('#roomName').removeClass('is-invalid')
+                  $('#roomCapacity').removeClass('is-valid')
+                  $('#roomCapacity').removeClass('is-invalid')
+
+                  // open modal
+                  $('#room_form_modal').modal()
+
+                  // dynamic validation
+                  dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
+                  dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
+            })
+
+            // 'Room Form' Create button
+            $('#create_room').on('click', function(){
+                  console.log(room_process)
+                  create_room()
+            })
+
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
                   // getRoomsExcept(selected_id)
@@ -1347,12 +1426,6 @@
                         // Get the capacity value for the selected option
                         currRoomCapacity = e.params.data.capacity;
                   });
-            })
-
-            // Delete a room
-            $(document).on('mouseover','.view_room_info',function(){
-                  selected_room_id = $(this).attr('data-id')
-                  selected_room_name = $(this).find('td:nth-child(1)').text()
             })
 
             // Delete room button

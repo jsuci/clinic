@@ -824,7 +824,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rooms/create','AdministratorControllers\AdministratorController@create_room');
     Route::get('/rooms/delete','AdministratorControllers\AdministratorController@delete_room');
 });
-//rooms
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
