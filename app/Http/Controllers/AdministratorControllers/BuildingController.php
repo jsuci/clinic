@@ -590,13 +590,13 @@ class BuildingController extends \App\Http\Controllers\Controller
 
         try {
             DB::table('rooms')
-            ->where('id', $roomid)
-            ->update([
-                'id'=> $roomid,
-                'buildingid'=> $buildingid,
-                'updatedby'=> auth()->user()->id,
-                'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
-            ]);
+                ->where('id', $roomid)
+                ->update([
+                    'id'=> $roomid,
+                    'buildingid'=> $buildingid,
+                    'updatedby'=> auth()->user()->id,
+                    'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+                ]);
 
             return array((object)[
                 'status'=> 1,
@@ -640,7 +640,5 @@ class BuildingController extends \App\Http\Controllers\Controller
         }
 
     } 
-    // JAM: custom controller
-
 
 }

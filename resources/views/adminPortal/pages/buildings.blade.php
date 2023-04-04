@@ -302,6 +302,7 @@
             var selected_room_name = ''
             var selected_bldg_name = ''
             var currRoomCapacity = 0
+            var currBldgCapacity = 0
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -578,7 +579,6 @@
                               buildingid: selected_id
                         },
                         success:function(data) {
-                              // console.log(data)
                               $("#assignRoom").select2({
                                     data: data,
                                     allowClear: true,
@@ -594,7 +594,7 @@
             }
 
             function roomAssign() {
-                  // console.log('buildingid:', selected_id, 'roomid:', $('#assignRoom').val())
+
 
                   $.ajax({
                         type:'GET',
@@ -604,7 +604,6 @@
                               buildingid: selected_id,
                         },
                         success:function(data) {
-                              // console.log(data)
                               
                               if (data[0].status == 1) {
                                     Toast.fire({
@@ -658,11 +657,11 @@
                               datatable: false
                         },
                         success: function(data) {
+
                               jsonData = JSON.parse(data)
                               var totalBldgCapacityLeft = jsonData['data'][0]['totalBldgCapacityLeft']
                               var totalRoomCapacity = jsonData['data'][0]['totalRoomCapacity']
 
-                              // console.log(totalBldgCapacityLeft)
 
                               $('#totalCap div').html(totalBldgCapacityLeft);
                               $('#totalRoomCap div').html(totalRoomCapacity);
@@ -739,7 +738,6 @@
                         const entries = parseInt(match[2]);
                         const maxItemsPerPage = 10
 
-                        // console.log(entries)
 
                         // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
 
@@ -758,7 +756,6 @@
                                     var page = String(Math.ceil(entries / maxItemsPerPage))
                                     otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
 
-                                    console.log(otherPageSelector.text())
 
                                     
                                     if (otherPageSelector.text() === page) {
@@ -767,23 +764,9 @@
                               }
                         }
 
-
-                        
-                        // if (entries < maxItemsPerPage ) {
-                        //       if ($(`#view_bldginfo_modal [data-dt-idx='1']`)) {
-                        //             $(`#view_bldginfo_modal [data-dt-idx='1']`).click()
-                        //       }
-                              
-                        // } else {
-                        //       var page = Math.ceil(entries / maxItemsPerPage)
-                        //       if ($(`#view_bldginfo_modal [data-dt-idx='${page}']`)) {
-                        //             $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
-                        //       }
-                        // }
                   }
             }
 
-            // JAM: added functions
             function buildingCreate(data){
 
                   // Disable the button while the AJAX request is being processed
@@ -1000,7 +983,6 @@
                               url: 'api/buildings-rooms/datatable',
                               type: 'GET',
                               dataSrc: function ( json ) {
-                                    // console.log(json.data)
                                     buildings_datatable = json.data
                                     return json.data;
                               }
@@ -1063,8 +1045,6 @@
 
                   dtDeferred.promise().then(function() {
                         // code to execute after the DataTable has finished initializing
-                        // console.log('finished loading table')
-                        // console.log('update pagination')
 
                         if (options) {
                               updatePagination({
@@ -1072,22 +1052,12 @@
                                     initialState: options.initialState
                               });
                         }
-
-                        // setTimeout(function() {
-                        //       console.log('update pagination')
-                        //       updatePagination({
-                        //             selector: options.selector,
-                        //             initialState: options.initialState
-                        //       });
-                        // }, 1000);
                   });
 
 
             }
 
             function buildingRoomDatatable(options) {
-
-                  // console.log(options)
 
                   var rooms_table;
                   var dtDeferred = $.Deferred();
@@ -1156,8 +1126,6 @@
 
                   dtDeferred.promise().then(function() {
                         // code to execute after the DataTable has finished initializing
-                        // console.log('finished loading table')
-                        // console.log('update pagination')
 
                         if (options) {
                               updatePagination({
@@ -1168,7 +1136,7 @@
                   });
             }
 
-            // Add New button
+            // 'Add New' button
             $(document).on('click','#building_create',function() {
                   $('#bldgCreateDesc').val("")
                   $('#bldgCreateCap').val("")
@@ -1201,27 +1169,6 @@
                                     (result) => {
                                           capInput = result
                                     })
-
-
-                              // var descInput = validateSelector('#bldgCreateDesc', (isValid) => {
-                              //       descInput = isValid;
-                                    
-                              //       if(descInput && capInput) {
-                              //             is_form_valid = true
-                              //       } else {
-                              //             is_form_valid = false
-                              //       }
-                              // });
-                              
-                              // var capInput = validateSelector('#bldgCreateCap', (isValid) => {
-                              //       capInput = isValid;
-                                    
-                              //       if(descInput && capInput) {
-                              //             is_form_valid = true
-                              //       } else {
-                              //             is_form_valid = false
-                              //       }
-                              // });
                   }
             })
 
@@ -1274,7 +1221,7 @@
                   }
             })
 
-            // Save button
+            // 'Building Form' Save button
             $(document).on('submit','#bldgCreateForm',function(event){
                   event.preventDefault();
                   var formData = $(this).serialize();
@@ -1349,27 +1296,6 @@
                                     capInput = result
                               })
 
-
-                        // var descInput = validateSelector('#bldngDesc', (isValid) => {
-                        //       descInput = isValid;
-                              
-                        //       if(descInput == true && capInput == true) {
-                        //             is_form_valid = true
-                        //       } else {
-                        //             is_form_valid = false
-                        //       }
-                        // });
-                        
-                        // var capInput = validateSelector('#bldngCap', (isValid) => {
-                        //       capInput = isValid;
-                              
-                        //       if(descInput == true && capInput == true) {
-                        //             is_form_valid = true
-                        //       } else {
-                        //             is_form_valid = false
-                        //       }
-                        // });
-
                         updateTotalBldgLeftRoomCap();
 
                         getRoomsExcept(selected_id)
@@ -1384,8 +1310,9 @@
                   }
             })
 
-            // Save Assign New Room
+            // 'Assign New Room' Save button
             $('#assign_room_save').on('click', function(){
+
                   // calculate first before sending
                   const totalBldgCap = $('#totalCap div').text().trim()
                   const computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
@@ -1409,7 +1336,6 @@
                                     timer: 5000
                               })
                         }
-
                   }
                   
             })
