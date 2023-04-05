@@ -1223,6 +1223,63 @@
                   }
             }
 
+            function update_room() {
+                  var isvalid = true
+
+                  if ($('#roomName').hasClass('is-invalid')) {
+                        Toast.fire({
+                              type: 'warning',
+                              title: 'Room Name empty',
+                              timer: 5000
+                        })
+
+                        isvalid = false
+                  }
+                  else if ($('#roomCapacity').hasClass('is-invalid')) {
+                        Toast.fire({
+                              type: 'warning',
+                              title: 'Room Capacity empty',
+                              timer: 5000
+                        })
+
+                        isvalid = false
+                  }
+
+                  if (isvalid) {
+                        $("#create_room").prop("disabled", true);
+
+                        $.ajax({
+                              type:'GET',
+                              url: '/rooms/update',
+                              data:{
+                                    // do not attach to a building
+                                    building: null,
+                                    roomname: $('#roomName').val(),
+                                    capacity: $('#roomCapacity').val(),
+                                    id: $('#assignRoom').val()
+                              },
+                              success:function(data) {
+                                    console.log(data)
+                                    if (data[0].status == 1) {
+
+                                          // update rooms selection
+                                          getRoomsExcept(selected_id)
+
+                                          // close add room modal
+                                          $('#room_form_modal').modal('hide')
+                                    }
+
+                                    $("#create_room").prop("disabled", false);
+
+                                    Toast.fire({
+                                          type: data[0].icon,
+                                          title: data[0].message
+                                    })
+                              }
+                        })
+                  }
+            }
+
             // BUILDING
 
             // 'Add New' button
@@ -1430,32 +1487,16 @@
                   
             })
 
-            // // 'Assign New Room' Create button
-            // $('#create_room_save').on('click', function(){
-            //       // set room_process
-            //       room_process = 'create_room'
-
-            //       // reset values and styles of input
-            //       $('#roomName').val('')
-            //       $('#roomCapacity').val('')
-            //       $('#assignRoom').val("").change()
-
-            //       $('#roomName').removeClass('is-valid')
-            //       $('#roomName').removeClass('is-invalid')
-            //       $('#roomCapacity').removeClass('is-valid')
-            //       $('#roomCapacity').removeClass('is-invalid')
-
-            //       // open modal
-            //       $('#room_form_modal').modal()
-
-            //       // dynamic validation
-            //       dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
-            //       dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
-            // })
-
             // 'Room Form' Create button
             $('#create_room').on('click', function(){
-                  create_room()
+                  console.log(room_process)
+
+                  if(room_process == 'create_room') {
+                        create_room()
+                  }
+                  else if (room_process == 'edit_room') {
+                        update_document()  
+                  }
             })
 
             // Show Room Form Modal
@@ -1522,6 +1563,19 @@
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
                   }
+            })
+
+            // Edit 
+            $(document).on('click','#edit_rooms',function(){
+                  process = 'edit'
+
+                  $('#input_document').val(selected_docdesctext)
+
+                  $('#document-f-btn').removeClass('btn-primary')
+                  $('#document-f-btn').addClass('btn-success')
+
+                  $('#document-f-btn').text('Update')
+                  $('#document_form_modal').modal()
             })
 
       </script>
