@@ -457,7 +457,7 @@
 
                   function create_document(){
 
-                        console.log(selected_docdescid, selected_docdesctext)
+                        // console.log(selected_docdescid, selected_docdesctext)
 
                         var isactive = 0;
                         var isrequied = 0;

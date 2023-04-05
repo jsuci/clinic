@@ -230,17 +230,14 @@
                   <div class="message"></div>
                   <div class="form-group">
                         <label>Rooms</label>
-                        <a href="javascript:void(0)" hidden class="pl-2" id="edit_docdesc"><i class="far fa-edit"></i></a>
-                        <a href="javascript:void(0)" hidden class="pl-2" id="delete_docdesc"><i class="far fa-trash-alt text-danger"></i></a>
+                        <a href="javascript:void(0)" hidden class="pl-2" id="edit_rooms"><i class="far fa-edit"></i></a>
+                        <a href="javascript:void(0)" hidden class="pl-2" id="delete_rooms"><i class="far fa-trash-alt text-danger"></i></a>
                         <select name="roomname" id="assignRoom" class="form-select form-control select2">
                               <option selected value="">Select Room</option>
                         </select>
                   </div>
                   <div class="row">
-                        <div class="col-md-6 text-left">
-                              <button type="button" class="btn btn-primary btn-sm" id="create_room_save">Create</button>
-                        </div>
-                        <div class="col-md-6 text-right">
+                        <div class="col-md-12 text-right">
                               <button type="button" class="btn btn-success btn-sm" id="assign_room_save">Save</button>
                         </div>
                   </div>
@@ -609,11 +606,11 @@
 
             function getRoomsExcept(selected_id){
                   // redraw selection to get new selection
-                  $("#assignRoom").html(
-                        `<select name="roomname" id="assignRoom" class="form-select form-control select2">
-                              <option selected value="">Select Room</option>
-                        </select>`
-                  )
+                  // $("#assignRoom").html(
+                  //       `<select name="roomname" id="assignRoom" class="form-select form-control select2">
+                  //             <option selected value="">Select Room</option>
+                  //       </select>`
+                  // )
 
                   $.ajax({
                         type:'GET',
@@ -622,13 +619,22 @@
                               buildingid: selected_id
                         },
                         success:function(data) {
+                              $('#assignRoom').empty()
+                              $('#assignRoom').append('<option value="">Select Room</option>')
+                              $('#assignRoom').append('<option value="add">Add Room</option>')
                               $("#assignRoom").select2({
                                     data: data,
                                     allowClear: true,
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
-                                          // Create a new jQuery object for the option
-                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+                                          var $option = null
+                                          if (data.capacity != null) {
+                                                $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+                                                
+                                          } else {
+                                                $option = $(`<option value='add'>Add Room</option>`);
+                                          }
+
                                           return $option;
                                     }
                               })
@@ -637,7 +643,6 @@
             }
 
             function roomAssign() {
-
 
                   $.ajax({
                         type:'GET',
@@ -1477,6 +1482,38 @@
             // Delete room button
             $(document).on('click','#delete_room',function(){
                   roomUnassign()
+            })
+
+            // Rooms Selection change
+            $(document).on('change','#assignRoom',function(){
+                  
+                  if ($(this).val() == "add") {
+                        $('#edit_rooms').attr('hidden','hidden')
+                        $('#delete_rooms').attr('hidden','hidden')
+
+
+                        // set room_process
+                        room_process = 'create_room'
+
+                        // reset values and styles of input
+                        $('#roomName').val('')
+                        $('#roomCapacity').val('')
+
+                        $('#roomName').removeClass('is-valid')
+                        $('#roomName').removeClass('is-invalid')
+                        $('#roomCapacity').removeClass('is-valid')
+                        $('#roomCapacity').removeClass('is-invalid')
+
+                        // open modal
+                        $('#room_form_modal').modal()
+
+                        // dynamic validation
+                        dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
+                        dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
+                  } else {
+                        $('#edit_rooms').removeAttr('hidden')
+                        $('#delete_rooms').removeAttr('hidden')
+                  }
             })
 
       </script>
