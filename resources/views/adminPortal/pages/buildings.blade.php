@@ -719,7 +719,7 @@
                   })
             }
 
-            function roomDelete() {
+            function roomUnassign() {
 
                   Swal.fire({
                         text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name}?`,
@@ -732,7 +732,7 @@
                         if (result.value) {
                               $.ajax({
                                     type:'GET',
-                                    url:'/api/room/delete',
+                                    url:'/api/room/unassign',
                                     data:{
                                           'id':selected_room_id
                                     },
@@ -904,17 +904,6 @@
                               })
                         }
                   })
-                  // .then(() => {
-
-                  //       setTimeout(function() {
-                  //             updatePagination({
-                  //                   selector: '#building_datatable_holder',
-                  //                   initialState: true
-                  //             });
-                  //       }, 1500);
-                  // })
-
-            
             }
 
             function buildingform(formholder,modal=false){
@@ -1196,14 +1185,34 @@
                   }
 
                   if (isvalid) {
+                        $("#create_room").prop("disabled", true);
+
                         $.ajax({
                               type:'GET',
-                              url: '/api/building/getnewinfo',
+                              url: '/rooms/create',
                               data:{
-                                    tablename: tablename
+                                    // do not attach to a building
+                                    building: null,
+                                    roomname: $('#roomName').val(),
+                                    capacity: $('#roomCapacity').val()
                               },
                               success:function(data) {
                                     console.log(data)
+                                    if (data[0].status == 1) {
+
+                                          // update rooms selection
+                                          getRoomsExcept(selected_id)
+
+                                          // close add room modal
+                                          $('#room_form_modal').modal('hide')
+                                    }
+
+                                    $("#create_room").prop("disabled", false);
+
+                                    Toast.fire({
+                                          type: data[0].icon,
+                                          title: data[0].message
+                                    })
                               }
                         })
                   }
@@ -1459,12 +1468,16 @@
                   });
             })
 
-            // Delete room button
-            $(document).on('click','#delete_room',function(){
-                  roomDelete()
+            // Assign room on hover
+            $(document).on('mouseover','.view_room_info',function(){
+                  selected_room_id = $(this).attr('data-id')
+                  selected_room_name = $(this).find('td:nth-child(1)').text()
             })
 
-
+            // Delete room button
+            $(document).on('click','#delete_room',function(){
+                  roomUnassign()
+            })
 
       </script>
 @endsection
