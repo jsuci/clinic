@@ -628,7 +628,7 @@
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
                                           // Create a new jQuery object for the option
-                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} - (${data.capacity})</option>`);
+                                          var $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
                                           return $option;
                                     }
                               })
