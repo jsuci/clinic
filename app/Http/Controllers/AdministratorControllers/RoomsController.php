@@ -22,16 +22,16 @@ class RoomsController extends \App\Http\Controllers\Controller
             if($levelid == 14 || $levelid == 15){
 
                 $sectionblockass = DB::table('sh_sectionblockassignment')
-                                              ->join('sh_block',function($join){
-                                                  $join->on('sh_sectionblockassignment.blockid','=','sh_block.id');
-                                                  $join->where('sh_block.deleted',0);
-                                              })
-                                              ->where('sh_sectionblockassignment.syid',$syid)
-                                              ->where('sh_sectionblockassignment.deleted',0)
-                                              ->where('sh_sectionblockassignment.sectionid',$sectionid)
-                                              ->select('strandid')
-                                              ->get();
-      
+                                            ->join('sh_block',function($join){
+                                                $join->on('sh_sectionblockassignment.blockid','=','sh_block.id');
+                                                $join->where('sh_block.deleted',0);
+                                            })
+                                            ->where('sh_sectionblockassignment.syid',$syid)
+                                            ->where('sh_sectionblockassignment.deleted',0)
+                                            ->where('sh_sectionblockassignment.sectionid',$sectionid)
+                                            ->select('strandid')
+                                            ->get();
+
                 $subjects = DB::table('subject_plot')
                                 ->where('subject_plot.deleted',0)
                                 ->where('subject_plot.syid',$syid)
@@ -86,7 +86,6 @@ class RoomsController extends \App\Http\Controllers\Controller
         }
 
     }
-
 
     public static function getsections(Request $request){
 
@@ -215,12 +214,14 @@ class RoomsController extends \App\Http\Controllers\Controller
 
                 return  array((object)[
                     'status'=>1,
-                    'message'=>'Room Created'
+                    'message'=>'Room Created',
+                    'icon'=>'success',
                 ]);
             }else{
                 return  array((object)[
                     'status'=>0,
-                    'message'=>'Already Exist'
+                    'message'=>'Already Exist',
+                    'icon'=>'error',
                 ]);
             }
 
@@ -362,7 +363,6 @@ class RoomsController extends \App\Http\Controllers\Controller
               'message'=>'Something went wrong!'
         ]);
     }
-   
 
 
 }
