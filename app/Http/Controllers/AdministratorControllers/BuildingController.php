@@ -612,7 +612,7 @@ class BuildingController extends \App\Http\Controllers\Controller
         }
     }
 
-    public static function roomDelete(Request $request) {
+    public static function unAssignRoomsToBuilding(Request $request) {
         try{
 
 
@@ -625,13 +625,11 @@ class BuildingController extends \App\Http\Controllers\Controller
                     'buildingid'=>null,
                     'updatedby'=>auth()->user()->id,
                     'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
-                    // 'deletedby'=>auth()->user()->id,
-                    // 'deleteddatetime'=>\Carbon\Carbon::now('Asia/Manila')
                 ]);
 
             return array((object)[
                 'status'=>1,
-                'message'=>'Room Deleted',
+                'message'=>'Room Unassigned',
                 'icon'=>'success',
             ]);
 
