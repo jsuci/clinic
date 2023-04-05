@@ -28,14 +28,13 @@ Route::middleware(['cors'])->group(function () {
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
-    Route::get('api/room/delete','AdministratorControllers\BuildingController@roomDelete');
 
     // JAM: custom routes
     Route::get('api/building/rooms','AdministratorControllers\BuildingController@getBuildingRooms');
     Route::get('api/building/all-rooms-except','AdministratorControllers\BuildingController@getAllRoomsExcept');
     Route::get('api/buildings-rooms/datatable','AdministratorControllers\BuildingController@getBuildingsRoomsDatatable');
     Route::get('api/rooms/assign','AdministratorControllers\BuildingController@assignRoomsToBuilding');
-
+    Route::get('api/room/unassign','AdministratorControllers\BuildingController@unAssignRoomsToBuilding');
 
     //building sync
     Route::get('api/building/syncnew','AdministratorControllers\BuildingController@syncNew');
@@ -817,13 +816,13 @@ Route::middleware(['auth'])->group(function () {
 
 
 //rooms
-Route::middleware(['auth'])->group(function () {
-    Route::view('/rooms','adminPortal.pages.rooms');
-    Route::get('/rooms/get','AdministratorControllers\AdministratorController@rooms');
-    Route::get('/rooms/update','AdministratorControllers\AdministratorController@udpate_room');
-    Route::get('/rooms/create','AdministratorControllers\AdministratorController@create_room');
-    Route::get('/rooms/delete','AdministratorControllers\AdministratorController@delete_room');
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::view('/rooms','adminPortal.pages.rooms');
+//     Route::get('/rooms/get','AdministratorControllers\AdministratorController@rooms');
+//     Route::get('/rooms/update','AdministratorControllers\AdministratorController@udpate_room');
+//     Route::get('/rooms/create','AdministratorControllers\AdministratorController@create_room');
+//     Route::get('/rooms/delete','AdministratorControllers\AdministratorController@delete_room');
+// });
 
 
 Route::middleware(['auth'])->group(function () {
@@ -6100,6 +6099,8 @@ Route::middleware(['auth'])->group(function () {
 });
 //college grade summary
 
+
+// rooms
 Route::middleware(['cors'])->group(function () {
     Route::view('/rooms','adminPortal.pages.rooms');
     Route::get('/rooms/get','AdministratorControllers\RoomsController@rooms');
@@ -6109,8 +6110,8 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/rooms/getsections','AdministratorControllers\RoomsController@getsections');
     Route::get('/rooms/getsubjects','AdministratorControllers\RoomsController@getsubjects');
 
-    Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
-    Route::get('/buildings/create','AdministratorControllers\AdministratorController@buildings_create');
+    // Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
+    // Route::get('/buildings/create','AdministratorControllers\AdministratorController@buildings_create');
     
 });
 
