@@ -1430,27 +1430,28 @@
                   
             })
 
-            // 'Assign New Room' Create button
-            $('#create_room_save').on('click', function(){
-                  // set room_process
-                  room_process = 'create_room'
+            // // 'Assign New Room' Create button
+            // $('#create_room_save').on('click', function(){
+            //       // set room_process
+            //       room_process = 'create_room'
 
-                  // reset values and styles of input
-                  $('#roomName').val('')
-                  $('#roomCapacity').val('')
+            //       // reset values and styles of input
+            //       $('#roomName').val('')
+            //       $('#roomCapacity').val('')
+            //       $('#assignRoom').val("").change()
 
-                  $('#roomName').removeClass('is-valid')
-                  $('#roomName').removeClass('is-invalid')
-                  $('#roomCapacity').removeClass('is-valid')
-                  $('#roomCapacity').removeClass('is-invalid')
+            //       $('#roomName').removeClass('is-valid')
+            //       $('#roomName').removeClass('is-invalid')
+            //       $('#roomCapacity').removeClass('is-valid')
+            //       $('#roomCapacity').removeClass('is-invalid')
 
-                  // open modal
-                  $('#room_form_modal').modal()
+            //       // open modal
+            //       $('#room_form_modal').modal()
 
-                  // dynamic validation
-                  dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
-                  dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
-            })
+            //       // dynamic validation
+            //       dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
+            //       dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
+            // })
 
             // 'Room Form' Create button
             $('#create_room').on('click', function(){
@@ -1459,7 +1460,10 @@
 
             // Show Room Form Modal
             $(document).on('click','#assign_room_button',function(){
-                  // getRoomsExcept(selected_id)
+
+                  $('#assignRoom').val('').change()
+                  $('#edit_rooms').attr('hidden','hidden')
+                  $('#delete_rooms').attr('hidden','hidden')
 
                   $('#assign_room_form_modal').modal({
                         backdrop: 'static',
@@ -1488,6 +1492,8 @@
             $(document).on('change','#assignRoom',function(){
                   
                   if ($(this).val() == "add") {
+
+                        // remove edit delete options on rooms
                         $('#edit_rooms').attr('hidden','hidden')
                         $('#delete_rooms').attr('hidden','hidden')
 
@@ -1495,9 +1501,11 @@
                         // set room_process
                         room_process = 'create_room'
 
-                        // reset values and styles of input
+                        // reset values and styles of input, selection
                         $('#roomName').val('')
                         $('#roomCapacity').val('')
+                        
+                        $('#assignRoom').val('').change()
 
                         $('#roomName').removeClass('is-valid')
                         $('#roomName').removeClass('is-invalid')
@@ -1510,7 +1518,7 @@
                         // dynamic validation
                         dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
                         dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
-                  } else {
+                  } else if ($(this).val() != "") {
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
                   }
