@@ -353,6 +353,7 @@
             var room_selection_id = ''
             var room_selection_name = ''
             var room_selection_cap = ''
+            var room_selected = null
 
             const Toast = Swal.mixin({
                   toast: true,
@@ -625,11 +626,18 @@
                                     allowClear: true,
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
-                                          return $('<option>', {
+                                          
+                                          if(data.capacity !== undefined) {
+                                                return $('<option>', {
                                                       'data-capacity': data.capacity,
                                                       'value': data.id,
                                                       'text': data.text + (data.capacity !== undefined ? ' (' + data.capacity + ')' : '')
                                                 });
+                                          }
+
+                                          if(data.id == 'add') {
+                                                return $('<option value="add">Add Room</option>');
+                                          }
                                     }
                               })
                         }
@@ -1257,7 +1265,6 @@
                                           // update rooms selection
                                           getRoomsExcept(selected_bldg_id)
                                     
-
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
                                     }
@@ -1271,6 +1278,35 @@
                               }
                         })
                   }
+            }
+
+            function delete_room() {
+                  $.ajax({
+                        type:'GET',
+                        url: '/rooms/delete',
+                        data:{
+                              id: room_selection_id
+                        },
+                        success:function(data) {
+                              if (data[0].status == 1) {
+                                    // update rooms selection
+                                    getRoomsExcept(selected_bldg_id)
+
+                                    // remove edit delete options on rooms
+                                    $('#edit_rooms').attr('hidden','hidden')
+                                    $('#delete_rooms').attr('hidden','hidden')
+                                    $('#assignRoom').val('').change()
+
+                                    // close add room modal
+                                    $('#room_form_modal').modal('hide')
+                              }
+
+                              Toast.fire({
+                                    type: data[0].icon,
+                                    title: data[0].message
+                              })
+                        }
+                  })
             }
 
             // BUILDING
@@ -1552,14 +1588,16 @@
                         // set room_process
                         room_process = 'edit_room'
 
-                        var room_selected = all_rooms_except.filter(x=>x.id == $(this).val())[0]
-
-                        room_selection_id = room_selected.id
-
+                        room_selection_id = $('#assignRoom').val()
+                        room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                        room_selection_name = room_selected.text
+                        room_selection_cap = room_selected.capacity
 
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
                   }
+
+
 
                   // reset validation
                   $('#roomName').removeClass('is-valid')
@@ -1575,8 +1613,7 @@
             // Edit Room selection button
             $(document).on('click','#edit_rooms',function(){
 
-                  var room_selection_id = $('#assignRoom').val()
-                  var room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                  room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
                   room_selection_name = room_selected.text
                   room_selection_cap = room_selected.capacity
 
@@ -1597,6 +1634,23 @@
                   $('#roomName').removeClass('is-invalid')
                   $('#roomCapacity').removeClass('is-valid')
                   $('#roomCapacity').removeClass('is-invalid')
+            })
+
+            // Delete Room selection button
+            $(document).on('click','#delete_rooms',function(){
+
+                  Swal.fire({
+                        text: `Are you sure you want to remove ${room_selection_name}?`,
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33', // #3085d6
+                        cancelButtonColor: '#808080', // #d33
+                        confirmButtonText: 'Remove'
+                  }).then((result) => {
+                        if (result.value) {
+                              delete_room()
+                        }
+                  })
             })
 
       </script>
