@@ -348,6 +348,10 @@
             var connected_stat = false
             var is_form_valid = false;
             var room_process = null;
+            var all_rooms_except = []
+            var room_selection_id = ''
+            var room_selection_name = ''
+            var room_selection_cap = ''
 
             const Toast = Swal.mixin({
                   toast: true,
@@ -619,7 +623,9 @@
                               buildingid: selected_id
                         },
                         success:function(data) {
-                              $('#assignRoom').empty()
+                              all_rooms_except = data
+
+                              // $('#assignRoom').empty()
                               $('#assignRoom').append('<option value="">Select Room</option>')
                               $('#assignRoom').append('<option value="add">Add Room</option>')
                               $("#assignRoom").select2({
@@ -627,15 +633,22 @@
                                     allowClear: true,
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
-                                          var $option = null
-                                          if (data.capacity != null) {
-                                                $option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+                                          if (!data.capacity) {
+                                                // Check if "Add Room" option already exists
+                                                var addRoomOption = $('#assignRoom option[value="add"]');
+                                                if (addRoomOption.length > 1) {
+                                                      // console.log(addRoomOption.length)
+                                                      // console.log(addRoomOption)
+                                                      // addRoomOption.remove(); // Remove the previous "Add Room" option
+                                                      return addRoomOption[addRoomOption.length - 1]
+                                                }
                                                 
-                                          } else {
-                                                $option = $(`<option value='add'>Add Room</option>`);
+                                                return $('<option value="add">Add Room</option>');
                                           }
 
-                                          return $option;
+                                          var option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
+
+                                          return option;
                                     }
                               })
                         }
@@ -1489,13 +1502,11 @@
 
             // 'Room Form' Create button
             $('#create_room').on('click', function(){
-                  console.log(room_process)
-
                   if(room_process == 'create_room') {
                         create_room()
                   }
                   else if (room_process == 'edit_room') {
-                        update_document()  
+                        update_room()  
                   }
             })
 
@@ -1512,10 +1523,10 @@
                         show: true
                   })
 
-                  $('#assignRoom').on('select2:select', function(e) {
-                        // Get the capacity value for the selected option
-                        currRoomCapacity = e.params.data.capacity;
-                  });
+                  // $('#assignRoom').on('select2:select', function(e) {
+                  //       // Get the capacity value for the selected option
+                  //       currRoomCapacity = e.params.data.capacity;
+                  // });
             })
 
             // Assign room on hover
@@ -1538,44 +1549,70 @@
                         $('#edit_rooms').attr('hidden','hidden')
                         $('#delete_rooms').attr('hidden','hidden')
 
-
                         // set room_process
                         room_process = 'create_room'
 
-                        // reset values and styles of input, selection
+                        // change create button color
+                        $('#create_room').removeClass('btn-success')
+                        $('#create_room').addClass('btn-primary')
+
+                        // change create button text
+                        $('#create_room').text('Create')
+            
+                        // reset input
                         $('#roomName').val('')
                         $('#roomCapacity').val('')
-                        
                         $('#assignRoom').val('').change()
-
-                        $('#roomName').removeClass('is-valid')
-                        $('#roomName').removeClass('is-invalid')
-                        $('#roomCapacity').removeClass('is-valid')
-                        $('#roomCapacity').removeClass('is-invalid')
 
                         // open modal
                         $('#room_form_modal').modal()
 
-                        // dynamic validation
-                        dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
-                        dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
                   } else if ($(this).val() != "") {
+
+                        // set room_process
+                        room_process = 'edit_room'
+
+                        var room_selected = all_rooms_except.filter(x=>x.id == $(this).val())[0]
+
+                        room_selection_id = room_selected.id
+                        room_selection_name = room_selected.text
+                        room_selection_cap = room_selected.capacity
+
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
                   }
+
+                  // reset validation
+                  $('#roomName').removeClass('is-valid')
+                  $('#roomName').removeClass('is-invalid')
+                  $('#roomCapacity').removeClass('is-valid')
+                  $('#roomCapacity').removeClass('is-invalid')
+
+                  // dynamic validation
+                  dynamicValidate('#roomName', '', /\S+/, (result) => {return result})
+                  dynamicValidate('#roomCapacity', '', /\S+/, (result) => {return result})
             })
 
-            // Edit 
+            // Edit Room selection button
             $(document).on('click','#edit_rooms',function(){
-                  process = 'edit'
 
-                  $('#input_document').val(selected_docdesctext)
+                  // assing selected values
+                  $('#roomName').val(room_selection_name)
+                  $('#roomCapacity').val(room_selection_cap)
 
-                  $('#document-f-btn').removeClass('btn-primary')
-                  $('#document-f-btn').addClass('btn-success')
+                  // change create button color
+                  $('#create_room').removeClass('btn-primary')
+                  $('#create_room').addClass('btn-success')
 
-                  $('#document-f-btn').text('Update')
-                  $('#document_form_modal').modal()
+                  // change create button text
+                  $('#create_room').text('Update')
+                  $('#room_form_modal').modal()
+
+                  // reset validation
+                  $('#roomName').removeClass('is-valid')
+                  $('#roomName').removeClass('is-invalid')
+                  $('#roomCapacity').removeClass('is-valid')
+                  $('#roomCapacity').removeClass('is-invalid')
             })
 
       </script>
