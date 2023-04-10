@@ -266,12 +266,14 @@ class RoomsController extends \App\Http\Controllers\Controller
 
                 return  array((object)[
                     'status'=>1,
-                    'message'=>'Room Updated'
+                    'message'=>'Room Updated',
+                    'icon'=>'success'
                 ]);
             }else{
                 return  array((object)[
                     'status'=>0,
-                    'message'=>'Already Exist'
+                    'message'=>'Already Exist',
+                    'icon'=>'error'
                 ]);
             }
 
