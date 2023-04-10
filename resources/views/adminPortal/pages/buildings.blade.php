@@ -666,7 +666,7 @@
 
 
                                     // update rooms datatable
-                                    buildingRoomDatatable({
+                                    roomDatatable({
                                           selector: '#view_bldginfo_modal',
                                           initialState: true
                                     })
@@ -746,7 +746,7 @@
                                     success: function(data) {
                                           if (data[0].status == 1) {
                                                 // update rooms datatable
-                                                buildingRoomDatatable({
+                                                roomDatatable({
                                                       selector: '#view_bldginfo_modal',
                                                       initialState: false
                                                 })
@@ -1090,7 +1090,7 @@
 
             }
 
-            function buildingRoomDatatable(options) {
+            function roomDatatable(options) {
 
                   var rooms_table;
                   var dtDeferred = $.Deferred();
@@ -1442,7 +1442,7 @@
                         $('#bldgId').val(selected_bldg_id)
 
 
-                        buildingRoomDatatable({
+                        roomDatatable({
                               selector: '#view_bldginfo_modal',
                               initialState: true
                         })
@@ -1539,10 +1539,10 @@
                         show: true
                   })
 
-                  // $('#assignRoom').on('select2:select', function(e) {
-                  //       // Get the capacity value for the selected option
-                  //       currRoomCapacity = e.params.data.capacity;
-                  // });
+                  $('#assignRoom').on('select2:select', function(e) {
+                        // Get the capacity value for the selected option
+                        currRoomCapacity = e.params.data.capacity;
+                  });
             })
 
             // Assign room on hover
