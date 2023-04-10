@@ -301,7 +301,8 @@ class RoomsController extends \App\Http\Controllers\Controller
             if($check_usage > 0){
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'Room is already used!'
+                    'message'=>'Room is in used!',
+                    'icon'=>'warning'
                 ]);
             }
 
@@ -313,21 +314,24 @@ class RoomsController extends \App\Http\Controllers\Controller
             if($check_usage > 0){
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'Room is already used!'
+                    'message'=>'Room is in used!',
+                    'icon'=>'warning'
                 ]);
             }
 
-            $check_usage = DB::table('scheddetail')
-                        ->where('roomid',$id)
-                        ->where('deleted',0)
-                        ->count();
+            // deleted column not found
+            // $check_usage = DB::table('scheddetail')
+            //             ->where('roomid',$id)
+            //             ->where('deleted',0)
+            //             ->count();
 
-            if($check_usage > 0){
-                return  array((object)[
-                    'status'=>2,
-                    'message'=>'Room is already used!'
-                ]);
-            }
+            // if($check_usage > 0){
+            //     return  array((object)[
+            //         'status'=>2,
+            //         'message'=>'Room is in used!',
+            //         'icon'=>'warning'
+            //     ]);
+            // }
 
             DB::table('rooms')
                 ->where('id',$id)
@@ -339,14 +343,16 @@ class RoomsController extends \App\Http\Controllers\Controller
             
             return  array((object)[
                 'status'=>1,
-                'message'=>'Room Deleted!'
+                'message'=>'Room Deleted!',
+                'icon'=>'success'
             ]);
     
         }catch(\Exception $e){
             return $e;
             return  array((object)[
                 'status'=>0,
-                'message'=>'Something went wrong!'
+                'message'=>'Something went wrong!',
+                'icon'=>'error'
             ]);
 
         }

@@ -234,6 +234,7 @@
                         <a href="javascript:void(0)" hidden class="pl-2" id="delete_rooms"><i class="far fa-trash-alt text-danger"></i></a>
                         <select name="roomname" id="assignRoom" class="form-select form-control select2">
                               <option selected value="">Select Room</option>
+                              <option selected value="add">Add Room</option>
                         </select>
                   </div>
                   <div class="row">
@@ -336,7 +337,7 @@
             var buildings = []
             var buildings_datatable = []
             var rooms_datatable_instance = null
-            var selected_id = null
+            var selected_bldg_id = null
             var selected_room_id = null
             var selected_room_name = ''
             var selected_bldg_name = ''
@@ -608,47 +609,27 @@
                   $(selector).removeClass('is-valid').removeClass('is-invalid');
             }
 
-            function getRoomsExcept(selected_id){
-                  // redraw selection to get new selection
-                  // $("#assignRoom").html(
-                  //       `<select name="roomname" id="assignRoom" class="form-select form-control select2">
-                  //             <option selected value="">Select Room</option>
-                  //       </select>`
-                  // )
-
+            function getRoomsExcept(selected_bldg_id){
                   $.ajax({
                         type:'GET',
                         url: 'api/building/all-rooms-except',
                         data: {
-                              buildingid: selected_id
+                              buildingid: selected_bldg_id
                         },
                         success:function(data) {
                               all_rooms_except = data
 
                               // $('#assignRoom').empty()
-                              $('#assignRoom').append('<option value="">Select Room</option>')
-                              $('#assignRoom').append('<option value="add">Add Room</option>')
                               $("#assignRoom").select2({
                                     data: data,
                                     allowClear: true,
                                     placeholder: "Select Room",
                                     templateResult: function(data) {
-                                          if (!data.capacity) {
-                                                // Check if "Add Room" option already exists
-                                                var addRoomOption = $('#assignRoom option[value="add"]');
-                                                if (addRoomOption.length > 1) {
-                                                      // console.log(addRoomOption.length)
-                                                      // console.log(addRoomOption)
-                                                      // addRoomOption.remove(); // Remove the previous "Add Room" option
-                                                      return addRoomOption[addRoomOption.length - 1]
-                                                }
-                                                
-                                                return $('<option value="add">Add Room</option>');
-                                          }
-
-                                          var option = $(`<option data-capacity='${data.capacity}' value='${data.id}'>${data.text} (${data.capacity})</option>`);
-
-                                          return option;
+                                          return $('<option>', {
+                                                      'data-capacity': data.capacity,
+                                                      'value': data.id,
+                                                      'text': data.text + (data.capacity !== undefined ? ' (' + data.capacity + ')' : '')
+                                                });
                                     }
                               })
                         }
@@ -662,7 +643,7 @@
                         url: 'api/rooms/assign',
                         data:{
                               roomid: $('#assignRoom').val(),
-                              buildingid: selected_id,
+                              buildingid: selected_bldg_id,
                         },
                         success:function(data) {
                               
@@ -673,7 +654,7 @@
                                     })
 
                                     // update selection
-                                    getRoomsExcept(selected_id)
+                                    getRoomsExcept(selected_bldg_id)
 
 
                                     // update rooms datatable
@@ -714,7 +695,7 @@
                         type:'GET',
                         url:'/api/building/rooms',
                         data: {
-                              buildingid: selected_id,
+                              buildingid: selected_bldg_id,
                               datatable: false
                         },
                         success: function(data) {
@@ -770,7 +751,7 @@
                                                 updateTotalBldgLeftRoomCap()
 
                                                 // update selection
-                                                getRoomsExcept(selected_id)
+                                                getRoomsExcept(selected_bldg_id)
                                           }
 
                                           Toast.fire({
@@ -900,7 +881,7 @@
                                     type:'GET',
                                     url:'/api/building/delete',
                                     data:{
-                                          'id':selected_id
+                                          'id':selected_bldg_id
                                     },
                                     success:function(data) {
                                           if(data[0].status == 1){
@@ -1117,7 +1098,7 @@
                               url: '/api/building/rooms',
                               type: 'GET',
                               data: {
-                                    buildingid: selected_id,
+                                    buildingid: selected_bldg_id,
                                     datatable: true
                               },
                               dataSrc: function ( json ) {
@@ -1215,11 +1196,10 @@
                                     capacity: $('#roomCapacity').val()
                               },
                               success:function(data) {
-                                    console.log(data)
                                     if (data[0].status == 1) {
 
                                           // update rooms selection
-                                          getRoomsExcept(selected_id)
+                                          getRoomsExcept(selected_bldg_id)
 
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
@@ -1272,11 +1252,11 @@
                                     id: $('#assignRoom').val()
                               },
                               success:function(data) {
-                                    console.log(data)
                                     if (data[0].status == 1) {
 
                                           // update rooms selection
-                                          getRoomsExcept(selected_id)
+                                          getRoomsExcept(selected_bldg_id)
+                                    
 
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
@@ -1416,14 +1396,14 @@
                   var temp_bldnginfo = buildings_datatable.filter(x=>x.id == temp_id)
                   selected_bldg_name = temp_bldnginfo[0].description
 
-                  selected_id = temp_id
+                  selected_bldg_id = temp_id
 
-                  if (selected_id) {
+                  if (selected_bldg_id) {
                         
                         $('#bldngDesc').val(selected_bldg_name)
                         $('#bldngCap').val(temp_bldnginfo[0].capacity)
                         $('#bldg_name').html(selected_bldg_name)
-                        $('#bldgId').val(selected_id)
+                        $('#bldgId').val(selected_bldg_id)
 
 
                         buildingRoomDatatable({
@@ -1456,7 +1436,7 @@
 
                         updateTotalBldgLeftRoomCap();
 
-                        getRoomsExcept(selected_id)
+                        getRoomsExcept(selected_bldg_id)
 
                         $('#view_bldginfo_modal').modal({
                               backdrop: 'static',
@@ -1575,8 +1555,7 @@
                         var room_selected = all_rooms_except.filter(x=>x.id == $(this).val())[0]
 
                         room_selection_id = room_selected.id
-                        room_selection_name = room_selected.text
-                        room_selection_cap = room_selected.capacity
+
 
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
@@ -1595,6 +1574,11 @@
 
             // Edit Room selection button
             $(document).on('click','#edit_rooms',function(){
+
+                  var room_selection_id = $('#assignRoom').val()
+                  var room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                  room_selection_name = room_selected.text
+                  room_selection_cap = room_selected.capacity
 
                   // assing selected values
                   $('#roomName').val(room_selection_name)
