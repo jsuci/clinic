@@ -230,8 +230,8 @@
                   <div class="message"></div>
                   <div class="form-group">
                         <label>Rooms</label>
-                        <a href="javascript:void(0)" hidden class="pl-2" id="edit_rooms"><i class="far fa-edit"></i></a>
-                        <a href="javascript:void(0)" hidden class="pl-2" id="delete_rooms"><i class="far fa-trash-alt text-danger"></i></a>
+                        <a href="javascript:void(0)" class="pl-2" id="edit_rooms"><i class="far fa-edit"></i></a>
+                        <a href="javascript:void(0)" class="pl-2" id="delete_rooms"><i class="far fa-trash-alt text-danger"></i></a>
                         <select name="roomname" id="assignRoom" class="form-select form-control select2">
                               <option selected value="">Select Room</option>
                               <option selected value="add">Add Room</option>
@@ -1504,8 +1504,8 @@
             $(document).on('click','#assign_room_button',function(){
 
                   $('#assignRoom').val('').change()
-                  $('#edit_rooms').attr('hidden','hidden')
-                  $('#delete_rooms').attr('hidden','hidden')
+                  $('#edit_rooms').hide()
+                  $('#delete_rooms').hide()
 
                   $('#assign_room_form_modal').modal({
                         backdrop: 'static',
@@ -1532,12 +1532,10 @@
 
             // Rooms Selection change
             $(document).on('change','#assignRoom',function(){
+
+                  console.log($(this).val())
                   
                   if ($(this).val() == "add") {
-
-                        // remove edit delete options on rooms
-                        $('#edit_rooms').attr('hidden','hidden')
-                        $('#delete_rooms').attr('hidden','hidden')
 
                         // set room_process
                         room_process = 'create_room'
@@ -1557,13 +1555,17 @@
                         // open modal
                         $('#room_form_modal').modal()
 
+                        // remove edit delete options on rooms
+                        $('#edit_rooms').hide()
+                        $('#delete_rooms').hide()
+
                   } else if ($(this).val() != "") {
 
                         // set room_process
                         room_process = 'edit_room'
 
-                        $('#edit_rooms').removeAttr('hidden')
-                        $('#delete_rooms').removeAttr('hidden')
+                        $('#edit_rooms').show()
+                        $('#delete_rooms').show()
                   }
 
 
