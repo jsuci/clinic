@@ -402,6 +402,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if ($datatable === 'true') {
 
                 $rooms = DB::table('rooms')
+                ->orderBy('updateddatetime', 'asc')
                 ->where('deleted',0)
                 ->where('buildingid', $buildingid)
                 ->where(function($query) use($search){
@@ -438,6 +439,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             } else {
 
                 $specific_building = DB::table('building')
+                ->orderBy('id', 'asc')
                 ->where('deleted',0)
                 ->where('id', $buildingid)
                 ->select(
@@ -497,6 +499,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             $search = $search['value'];
 
             $all_buildings = DB::table('building')
+            ->orderBy('createddatetime', 'asc')
             ->where('deleted', 0)
             ->where(function($query) use($search){
                 if($search != null){
@@ -543,7 +546,6 @@ class BuildingController extends \App\Http\Controllers\Controller
                                 }
                             })
                             ->count();
-
 
             return @json_encode((object)[
                 'data'=>$buildings,
