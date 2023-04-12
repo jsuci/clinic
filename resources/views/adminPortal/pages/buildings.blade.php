@@ -1410,6 +1410,8 @@
                         $('#bldgId').val(selected_bldg_id)
 
 
+                        var roomTable = $('#bldg_rooms_table').DataTable()
+                        roomTable.state.clear()
                         roomDatatable()
 
                         resetValidation('#bldngDesc')
