@@ -293,6 +293,7 @@ class RoomsController extends \App\Http\Controllers\Controller
 
         try{
 
+            // check usage in 'classscheddetail'
             $check_usage = DB::table('classscheddetail')
                             ->where('roomid',$id)
                             ->where('deleted',0)
@@ -306,9 +307,25 @@ class RoomsController extends \App\Http\Controllers\Controller
                 ]);
             }
 
+            // check usage in 'sh_classscheddetail'
             $check_usage = DB::table('sh_classscheddetail')
                         ->where('roomid',$id)
                         ->where('deleted',0)
+                        ->count();
+
+            if($check_usage > 0){
+                return  array((object)[
+                    'status'=>2,
+                    'message'=>'Room is in used!',
+                    'icon'=>'warning'
+                ]);
+            }
+
+            // check usage in 'rooms'
+            $check_usage = DB::table('rooms')
+                        ->where('id',$id)
+                        ->where('deleted',0)
+                        ->where('buildingid', '!=', null)
                         ->count();
 
             if($check_usage > 0){
