@@ -840,8 +840,10 @@
 
             function buildingDelete(){
 
+                  console.log(selected_bldg_name)
+
                   Swal.fire({
-                        text: 'Are you sure you want to delete this building?',
+                        text: `Are you sure you want to delete building ${selected_bldg_name}?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
