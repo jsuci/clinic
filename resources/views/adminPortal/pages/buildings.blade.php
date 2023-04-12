@@ -1137,6 +1137,8 @@
 
             function create_room() {
                   var isvalid = true
+                  var totalBldgCap = $('#totalCap div').text().trim()
+                  var computedBldgCap = parseInt(totalBldgCap) - parseInt($('#roomCapacity').val())
 
                   if ($('#roomName').hasClass('is-invalid')) {
                         Toast.fire({
@@ -1152,6 +1154,14 @@
                               type: 'warning',
                               title: 'Room Capacity empty',
                               timer: 5000
+                        })
+
+                        isvalid = false
+                  } else if (computedBldgCap <= 0) {
+                        Toast.fire({
+                              type: 'error',
+                              title: 'Room Assignment Error: Building capacity limit reached.',
+                              timer: 9000
                         })
 
                         isvalid = false
@@ -1470,7 +1480,7 @@
                               Toast.fire({
                                     type: 'error',
                                     title: 'Room Assignment Error: Building capacity limit reached.',
-                                    timer: 5000
+                                    timer: 9000
                               })
                         }
 
@@ -1478,7 +1488,7 @@
                               Toast.fire({
                                     type: 'error',
                                     title: 'Room Assignment Error: Field cannot be empty.',
-                                    timer: 5000
+                                    timer: 9000
                               })
                         }
                   }
@@ -1508,8 +1518,8 @@
                         show: true
                   })
 
+                   // Set the currRoomCapacity value for the selected option
                   $('#assignRoom').on('select2:select', function(e) {
-                        // Get the capacity value for the selected option
                         currRoomCapacity = e.params.data.capacity;
                   });
             })
