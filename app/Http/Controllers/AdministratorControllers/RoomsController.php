@@ -245,37 +245,51 @@ class RoomsController extends \App\Http\Controllers\Controller
 
         try{
 
-            $check = DB::table('rooms')
+            // check usage in 'rooms'
+            $check_usage = DB::table('rooms')
+                        ->where('id',$id)
+                        ->where('deleted',0)
+                        ->where('buildingid', '!=', null)
+                        ->count();
+
+            if($check_usage > 0){
+                return  array((object)[
+                    'status'=>2,
+                    'message'=>'Room is in used!',
+                    'icon'=>'warning'
+                ]);
+            }
+
+            $check_usage = DB::table('rooms')
                         ->where('roomname',$roomname)
                         ->where('id','!=',$id)
                         ->where('deleted',0)
                         ->count();
 
-            if($check == 0){
-
-                DB::table('rooms')
-                    ->where('id',$id)
-                    ->take(1)
-                    ->update([
-                        'roomname'=>$roomname,
-                        'buildingid'=>$building,
-                        'capacity'=>$capacity,
-                        'updatedby'=>auth()->user()->id,
-                        'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
-                    ]);
-
-                return  array((object)[
-                    'status'=>1,
-                    'message'=>'Room Updated',
-                    'icon'=>'success'
-                ]);
-            }else{
+            if($check_usage > 0){
                 return  array((object)[
                     'status'=>0,
-                    'message'=>'Already Exist',
+                    'message'=>'Room already exist',
                     'icon'=>'error'
                 ]);
             }
+
+            DB::table('rooms')
+            ->where('id',$id)
+            ->take(1)
+            ->update([
+                'roomname'=>$roomname,
+                'buildingid'=>$building,
+                'capacity'=>$capacity,
+                'updatedby'=>auth()->user()->id,
+                'updateddatetime'=>\Carbon\Carbon::now('Asia/Manila')
+            ]);
+
+            return  array((object)[
+                'status'=>1,
+                'message'=>'Room Updated',
+                'icon'=>'success'
+            ]);
 
         }catch(\Exception $e){
             return  array((object)[
