@@ -746,14 +746,10 @@
                                     success: function(data) {
                                           if (data[0].status == 1) {
                                                 // update rooms datatable
-                                                roomDatatable({
-                                                      selector: '#view_bldginfo_modal',
-                                                      initialState: false
-                                                })
+                                                roomDatatable()
 
                                                 // update buildings datable
                                                 buildingDatatable()
-
 
                                                 // update totals
                                                 updateTotalBldgLeftRoomCap()
@@ -773,42 +769,42 @@
                   
             }
 
-            function updatePagination(options) {
-                  var text = $(`${options.selector} .dataTables_info`).text()
-                  const match = text.match(/\d+/g);
+            // function updatePagination(options) {
+            //       var text = $(`${options.selector} .dataTables_info`).text()
+            //       const match = text.match(/\d+/g);
 
-                  if (match) {
-                        const entries = parseInt(match[2]);
-                        const maxItemsPerPage = 10
+            //       if (match) {
+            //             const entries = parseInt(match[2]);
+            //             const maxItemsPerPage = 10
 
 
-                        // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
+            //             // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
 
-                        if (options) {
-                              if (options.initialState) {
-                                    const prevSelector = $(`${options.selector} .page-link:contains("Previous")`)
-                                    const pageOneSelector = $(`${options.selector} .page-link:contains("1")`)
+            //             if (options) {
+            //                   if (options.initialState) {
+            //                         const prevSelector = $(`${options.selector} .page-link:contains("Previous")`)
+            //                         const pageOneSelector = $(`${options.selector} .page-link:contains("1")`)
 
-                                    if (pageOneSelector.text() === '1') {
-                                          pageOneSelector.click()
-                                    } else {
-                                          prevSelector.click()
-                                    }
+            //                         if (pageOneSelector.text() === '1') {
+            //                               pageOneSelector.click()
+            //                         } else {
+            //                               prevSelector.click()
+            //                         }
                                     
-                              } else {
-                                    var page = String(Math.ceil(entries / maxItemsPerPage))
-                                    otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
+            //                   } else {
+            //                         var page = String(Math.ceil(entries / maxItemsPerPage))
+            //                         otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
 
 
                                     
-                                    if (otherPageSelector.text() === page) {
-                                          otherPageSelector.click()
-                                    }
-                              }
-                        }
+            //                         if (otherPageSelector.text() === page) {
+            //                               otherPageSelector.click()
+            //                         }
+            //                   }
+            //             }
 
-                  }
-            }
+            //       }
+            // }
 
             function buildingCreate(data){
 
@@ -1078,12 +1074,13 @@
 
                   dtDeferred.promise().then(function() {
                         // code to execute after the DataTable has finished initializing
+                        var prevBtn = $('#bldg_rooms_table_previous')
+                        var isPrevBtnDisabled = prevBtn.hasClass('disabled')
+                        var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
-                        if (options) {
-                              updatePagination({
-                                    selector: options.selector,
-                                    initialState: options.initialState
-                              });
+                        if (!isPrevBtnDisabled && noRecordsCount == 1) {
+                              // click the previous button
+                              prevBtn.click()
                         }
                   });
 
@@ -1159,12 +1156,14 @@
 
                   dtDeferred.promise().then(function() {
                         // code to execute after the DataTable has finished initializing
+                        // specify the class in which the datatable belongs
+                        var prevBtn = $('#bldg_rooms_table_previous')
+                        var isPrevBtnDisabled = prevBtn.hasClass('disabled')
+                        var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
-                        if (options) {
-                              updatePagination({
-                                    selector: options.selector,
-                                    initialState: options.initialState
-                              });
+                        if (!isPrevBtnDisabled && noRecordsCount == 1) {
+                              // click the previous button
+                              prevBtn.click()
                         }
                   });
             }
@@ -1198,8 +1197,8 @@
                               type:'GET',
                               url: '/rooms/create',
                               data:{
-                                    // do not attach to a building
-                                    building: null,
+                                    // attach to a building
+                                    building: selected_bldg_id,
                                     roomname: $('#roomName').val(),
                                     capacity: $('#roomCapacity').val()
                               },
@@ -1211,6 +1210,10 @@
 
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
+
+                                          // close 'Assign New Room'
+                                          $('#assign_room_form_modal').modal('hide')
+
                                     }
 
                                     $("#create_room").prop("disabled", false);
@@ -1522,7 +1525,7 @@
                         create_room()
                   }
                   else if (room_process == 'edit_room') {
-                        update_room()  
+                        update_room()
                   }
             })
 
