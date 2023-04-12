@@ -397,7 +397,6 @@ class BuildingController extends \App\Http\Controllers\Controller
             $buildingid = $request->get('buildingid');
             $datatable = $request->get('datatable');
 
-            // dd($datatable, $datatable === 'true');
 
             if ($datatable === 'true') {
 
@@ -439,7 +438,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             } else {
 
                 $specific_building = DB::table('building')
-                ->orderBy('id', 'asc')
+                ->orderBy('createddatetime', 'asc')
                 ->where('deleted',0)
                 ->where('id', $buildingid)
                 ->select(
@@ -473,8 +472,6 @@ class BuildingController extends \App\Http\Controllers\Controller
                         'totalRoomCapacity' => $totalRoomCapacity,
                     ];
                 });
-
-                // dd($building_data);
 
                 return @json_encode((object)[
                     'data'=>$building_data
