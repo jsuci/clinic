@@ -22,17 +22,20 @@ use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
 Route::middleware(['cors'])->group(function () {
 
     Route::view('/buildings','adminPortal.pages.buildings');
-    Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildingsDatatable');
-    Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
+    // Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildingsDatatable');
+    // Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
     Route::get('api/buildings/select','AdministratorControllers\BuildingController@getBuildingsSelect');
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
 
     // JAM: custom routes
-    Route::get('api/building/rooms','AdministratorControllers\BuildingController@getBuildingRooms');
+    Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildingsDatatable');
+    Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
+
+    Route::get('api/building/rooms/datatable','AdministratorControllers\BuildingController@getRoomsDataTable');
     Route::get('api/building/all-rooms-except','AdministratorControllers\BuildingController@getAllRoomsExcept');
-    Route::get('api/buildings-rooms/datatable','AdministratorControllers\BuildingController@getBuildingsRoomsDatatable');
+    
     Route::get('api/rooms/assign','AdministratorControllers\BuildingController@assignRoomsToBuilding');
     Route::get('api/room/unassign','AdministratorControllers\BuildingController@unAssignRoomsToBuilding');
 
