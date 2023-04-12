@@ -1267,8 +1267,8 @@
                                     getRoomsExcept(selected_bldg_id)
 
                                     // remove edit delete options on rooms
-                                    $('#edit_rooms').attr('hidden','hidden')
-                                    $('#delete_rooms').attr('hidden','hidden')
+                                    $('#edit_rooms').hide()
+                                    $('#delete_rooms').hide()
                                     $('#assignRoom').val('').change()
 
                                     // close add room modal
@@ -1533,8 +1533,7 @@
             // Rooms Selection change
             $(document).on('change','#assignRoom',function(){
 
-                  console.log($(this).val())
-                  
+
                   if ($(this).val() == "add") {
 
                         // set room_process
@@ -1559,16 +1558,19 @@
                         $('#edit_rooms').hide()
                         $('#delete_rooms').hide()
 
-                  } else if ($(this).val() != "") {
+                  } else if ($(this).val() != "" && $(this).val() != null) {
 
                         // set room_process
                         room_process = 'edit_room'
 
+                        room_selection_id = $('#assignRoom').val()
+                        room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                        room_selection_name = room_selected.text
+                        room_selection_cap = room_selected.capacity
+
                         $('#edit_rooms').show()
                         $('#delete_rooms').show()
                   }
-
-
 
                   // reset validation
                   $('#roomName').removeClass('is-valid')
