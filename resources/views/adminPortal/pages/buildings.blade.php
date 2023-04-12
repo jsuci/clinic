@@ -701,7 +701,7 @@
             function updateTotalBldgLeftRoomCap() {
                   $.ajax({
                         type:'GET',
-                        url:'/api/building/rooms',
+                        url:'api/building/rooms/datatable',
                         data: {
                               buildingid: selected_bldg_id,
                               datatable: false
@@ -1007,8 +1007,7 @@
                         serverSide: true,
                         processing: true,
                         ajax:{
-                              // url: '/api/buildings/datatable',
-                              url: 'api/buildings-rooms/datatable',
+                              url: 'api/buildings/datatable',
                               type: 'GET',
                               dataSrc: function ( json ) {
                                     buildings_datatable = json.data
@@ -1019,6 +1018,7 @@
                               // Resolve the Deferred object
                               dtDeferred.resolve();
                         },
+                        order: [[0, 'asc']],
                         columns: [
                                     { "data": "description" },
                                     { "data": "capacity" },
@@ -1026,36 +1026,34 @@
                                     { "data": "totalRoomCapacity" }
                               ],
                         columnDefs: [
-                        {
-                              'orderable': true,
-                              'targets': 0,
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('align-middle')
-                              }
-                        },
-                        {
-                              'targets': 1,
-                              'orderable': false, 
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('align-middle')
-                              }
-                        },
-                        {
-                              'targets': 2,
-                              'orderable': false, 
-                              'createdCell':  function (td, cellData, rowData, row, col) {
+                              {
+                                    'orderable': true,
+                                    'targets': 0,
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
                                           $(td).addClass('align-middle')
-                                          // $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
+                                    }
+                              },
+                              {
+                                    'targets': 1,
+                                    'orderable': true, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle')
+                                    }
+                              },
+                              {
+                                    'targets': 2,
+                                    'orderable': true, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                                $(td).addClass('align-middle')
+                                    }
+                              },
+                              {
+                                    'targets': 3,
+                                    'orderable': true, 
+                                    'createdCell':  function (td, cellData, rowData, row, col) {
+                                          $(td).addClass('align-middle')
+                                    }
                               }
-                        },
-                        {
-                              'targets': 3,
-                              'orderable': false, 
-                              'createdCell':  function (td, cellData, rowData, row, col) {
-                                    $(td).addClass('align-middle')
-                                    // $(td).html('<div class="dropdown text-center"><spa style="line-height: 1 !important; font-size:1rem !important">&nbsp;</span></div>')
-                              }
-                        }
                         ],
                         createdRow: function (row, data, dataIndex) {
                               $(row).attr("data-id",data.id);
@@ -1100,7 +1098,7 @@
                         serverSide: true,
                         processing: true,
                         ajax: {
-                              url: '/api/building/rooms',
+                              url: '/api/building/rooms/datatable',
                               type: 'GET',
                               data: {
                                     buildingid: selected_bldg_id,
