@@ -620,7 +620,7 @@
                         success:function(data) {
                               all_rooms_except = data
 
-                              // $('#assignRoom').empty()
+                              $('#assignRoom').empty()
                               $("#assignRoom").select2({
                                     data: data,
                                     allowClear: true,
@@ -640,6 +640,17 @@
                                           }
                                     }
                               })
+                        }
+                  }).then(() => {
+                        // // create the option and append to Select2
+                        // var option = new Option('Add Room', 'add', true, true);
+                        // $('#assignRoom').append(option)
+
+                        $('#assignRoom').prepend('<option value="add">Add Room</option>')
+
+                        // update select2 current selection
+                        if(room_selection_id != '') {
+                              $('#assignRoom').val(room_selection_id).trigger('change')
                         }
                   })
             }
@@ -769,43 +780,6 @@
                   
             }
 
-            // function updatePagination(options) {
-            //       var text = $(`${options.selector} .dataTables_info`).text()
-            //       const match = text.match(/\d+/g);
-
-            //       if (match) {
-            //             const entries = parseInt(match[2]);
-            //             const maxItemsPerPage = 10
-
-
-            //             // $(`#view_bldginfo_modal [data-dt-idx='${page}']`).click()
-
-            //             if (options) {
-            //                   if (options.initialState) {
-            //                         const prevSelector = $(`${options.selector} .page-link:contains("Previous")`)
-            //                         const pageOneSelector = $(`${options.selector} .page-link:contains("1")`)
-
-            //                         if (pageOneSelector.text() === '1') {
-            //                               pageOneSelector.click()
-            //                         } else {
-            //                               prevSelector.click()
-            //                         }
-                                    
-            //                   } else {
-            //                         var page = String(Math.ceil(entries / maxItemsPerPage))
-            //                         otherPageSelector = $(`${options.selector} .page-link:contains("${page}")`)
-
-
-                                    
-            //                         if (otherPageSelector.text() === page) {
-            //                               otherPageSelector.click()
-            //                         }
-            //                   }
-            //             }
-
-            //       }
-            // }
-
             function buildingCreate(data){
 
                   // Disable the button while the AJAX request is being processed
@@ -910,7 +884,6 @@
             }
 
             function buildingform(formholder,modal=false){
-
 
                   var buildingform = `<div class="row">
                                           <div class="col-md-12 form-group">
@@ -1589,11 +1562,6 @@
                         // set room_process
                         room_process = 'edit_room'
 
-                        room_selection_id = $('#assignRoom').val()
-                        room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
-                        room_selection_name = room_selected.text
-                        room_selection_cap = room_selected.capacity
-
                         $('#edit_rooms').removeAttr('hidden')
                         $('#delete_rooms').removeAttr('hidden')
                   }
@@ -1614,6 +1582,7 @@
             // Edit Room selection button
             $(document).on('click','#edit_rooms',function(){
 
+                  room_selection_id = $('#assignRoom').val()
                   room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
                   room_selection_name = room_selected.text
                   room_selection_cap = room_selected.capacity
