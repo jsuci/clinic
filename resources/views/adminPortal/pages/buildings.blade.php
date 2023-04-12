@@ -642,10 +642,7 @@
                               })
                         }
                   }).then(() => {
-                        // // create the option and append to Select2
-                        // var option = new Option('Add Room', 'add', true, true);
-                        // $('#assignRoom').append(option)
-
+                        // prepend 'Add Room' to selection
                         $('#assignRoom').prepend('<option value="add">Add Room</option>')
 
                         // update select2 current selection
@@ -677,10 +674,7 @@
 
 
                                     // update rooms datatable
-                                    roomDatatable({
-                                          selector: '#view_bldginfo_modal',
-                                          initialState: true
-                                    })
+                                    roomDatatable()
 
                                     // update building datatable
                                     buildingDatatable()
@@ -1045,7 +1039,7 @@
 
                   dtDeferred.promise().then(function() {
                         // code to execute after the DataTable has finished initializing
-                        var prevBtn = $('#bldg_rooms_table_previous')
+                        var prevBtn = $('#buildings_datatable_previous')
                         var isPrevBtnDisabled = prevBtn.hasClass('disabled')
                         var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
@@ -1058,7 +1052,7 @@
 
             }
 
-            function roomDatatable(options) {
+            function roomDatatable() {
 
                   var rooms_table;
                   var dtDeferred = $.Deferred();
@@ -1416,10 +1410,7 @@
                         $('#bldgId').val(selected_bldg_id)
 
 
-                        roomDatatable({
-                              selector: '#view_bldginfo_modal',
-                              initialState: true
-                        })
+                        roomDatatable()
 
                         resetValidation('#bldngDesc')
                         resetValidation('#bldngCap')
