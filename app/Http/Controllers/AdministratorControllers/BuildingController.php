@@ -560,8 +560,9 @@ class BuildingController extends \App\Http\Controllers\Controller
         $buildingid = $request->get('buildingid');
 
         $rooms = DB::table('rooms')
-        ->orderBy('createddatetime', 'asc')
+        ->orderBy('createddatetime', 'desc')
         ->where('deleted', 0)
+        // ->where('buildingid', null)
         ->where(function($query) use ($buildingid) {
             $query->whereNotIn('buildingid', [$buildingid])
                 ->orWhereNull('buildingid');
@@ -600,13 +601,15 @@ class BuildingController extends \App\Http\Controllers\Controller
 
             return array((object)[
                 'status'=> 1,
-                'message'=> 'Room Assigned'
+                'message'=> 'Room Assigned',
+                'icon'=> 'success'
             ]);
 
         } catch(\Exception $e) {
             return  array((object)[
                 'status'=> 0,
-                'message'=> 'Something went wrong!'
+                'message'=> 'Something went wrong!',
+                'icon'=> 'error'
             ]);
 
         }
