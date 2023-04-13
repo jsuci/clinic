@@ -840,8 +840,6 @@
 
             function buildingDelete(){
 
-                  console.log(selected_bldg_name)
-
                   Swal.fire({
                         text: `Are you sure you want to delete building ${selected_bldg_name}?`,
                         type: 'warning',
@@ -860,10 +858,9 @@
                                     success:function(data) {
                                           if(data[0].status == 1){
 
-                                                buildingDatatable({
-                                                      selector: '#building_datatable_holder',
-                                                      initialState: false
-                                                })
+                                                // var bldgTable = $('#buildings_datatable').DataTable()
+                                                // bldgTable.state.clear()
+                                                buildingDatatable()
 
                                                 // get_deleted('building')
 
@@ -959,7 +956,7 @@
                   buildingDatatable()
             }
 
-            function buildingDatatable(options) {
+            function buildingDatatable() {
 
                   var dtDeferred = $.Deferred();
 
@@ -1045,7 +1042,7 @@
                         var isPrevBtnDisabled = prevBtn.hasClass('disabled')
                         var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
-                        if (!isPrevBtnDisabled && noRecordsCount == 1) {
+                        if (!isPrevBtnDisabled && noRecordsCount == 2) {
                               // click the previous button
                               prevBtn.click()
                         }
