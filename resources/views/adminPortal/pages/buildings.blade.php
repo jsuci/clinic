@@ -341,8 +341,13 @@
             var selected_room_id = null
             var selected_room_name = ''
             var selected_bldg_name = ''
+
             var currRoomCapacity = 0
             var currBldgCapacity = 0
+            var totalBldgCap = 0
+            var totalRoomCap = 0
+            var computedBldgCap = 0
+
             var projectsetup = []
             var syncEnabled = false;
             var button_enable = null;
@@ -350,6 +355,7 @@
             var is_form_valid = false;
             var room_process = null;
             var all_rooms_except = []
+
             var room_selection_id = ''
             var room_selection_name = ''
             var room_selection_cap = ''
@@ -654,53 +660,60 @@
 
             function roomAssign() {
 
-                  $.ajax({
-                        type:'GET',
-                        url: 'api/rooms/assign',
-                        data:{
-                              roomid: $('#assignRoom').val(),
-                              buildingid: selected_bldg_id,
-                        },
-                        success:function(data) {
-                              
-                              if (data[0].status == 1) {
-                                    Toast.fire({
-                                          type: 'success',
-                                          title: 'Room Assigned!'
-                                    })
+                  var isvalid = true
 
-                                    // update selection
-                                    getRoomsExcept(selected_bldg_id)
+                  temp_room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+
+                  if (temp_room_selected['buildingid'] != null) {
+                        Toast.fire({
+                              type: 'warning',
+                              title: 'Room already in used',
+                              timer: 5000
+                        })
+
+                        isvalid = false
+                  }
+
+                  if (isvalid) {
+                        $("#create_room").prop("disabled", true);
+
+                        $.ajax({
+                              type:'GET',
+                              url: 'api/rooms/assign',
+                              data:{
+                                    roomid: $('#assignRoom').val(),
+                                    buildingid: selected_bldg_id,
+                              },
+                              success:function(data) {
+                                    
+                                    if (data[0].status == 1) {
+                                          Toast.fire({
+                                                type: 'success',
+                                                title: 'Room Assigned!'
+                                          })
+
+                                          // update selection
+                                          getRoomsExcept(selected_bldg_id)
 
 
-                                    // update rooms datatable
-                                    roomDatatable()
+                                          // update rooms datatable
+                                          roomDatatable()
 
-                                    // update building datatable
-                                    buildingDatatable()
+                                          // update building datatable
+                                          buildingDatatable()
 
-                                    // update totals
-                                    updateTotalBldgLeftRoomCap()
+                                          // update totals
+                                          updateTotalBldgLeftRoomCap()
 
 
-                                    // close assign new room modal
-                                    $('#assign_room_form_modal').modal('hide')
+                                          // close assign new room modal
+                                          $('#assign_room_form_modal').modal('hide')
+                                    }
 
-                              } else {
-                                    Toast.fire({
-                                          type: 'error',
-                                          title: 'Something went wrong!'
-                                    })
+                                    $("#create_room").prop("disabled", false);
                               }
-                        },
-                        error:function(){
-                              $('#create_room').removeAttr('disabled')
-                              Toast.fire({
-                                    type: 'error',
-                                    title: 'Something went wrong!'
-                              })
-                        }
-                  })
+                        })
+                  }
             }
 
             function updateTotalBldgLeftRoomCap() {
@@ -1134,8 +1147,9 @@
 
             function create_room() {
                   var isvalid = true
-                  var totalBldgCap = $('#totalCap div').text().trim()
-                  var computedBldgCap = parseInt(totalBldgCap) - parseInt($('#roomCapacity').val())
+
+                  totalBldgCap = $('#totalCap div').text().trim()
+                  computedBldgCap = parseInt(totalBldgCap) - parseInt($('#roomCapacity').val())
 
                   if ($('#roomName').hasClass('is-invalid')) {
                         Toast.fire({
@@ -1245,8 +1259,16 @@
                               success:function(data) {
                                     if (data[0].status == 1) {
 
+                                          currRoomCapacity = $('#roomCapacity').val()
+
                                           // update rooms selection
                                           getRoomsExcept(selected_bldg_id)
+
+                                          // update rooms datatable
+                                          roomDatatable()
+
+                                          // update capacity
+                                          updateTotalBldgLeftRoomCap()
                                     
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
@@ -1344,10 +1366,10 @@
                   subData = deserializeString(formData)
 
                   // calculate first before sending
-                  const totalBldgCap = subData['capacity']
-                  const totalRoomCap = $('#totalRoomCap div').text().trim()
+                  totalBldgCap = subData['capacity']
+                  totalRoomCap = $('#totalRoomCap div').text().trim()
 
-                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
+                  computedBldgCap = parseInt(totalBldgCap) - parseInt(totalRoomCap)
 
                   if (is_form_valid || (subData['description'] && subData['capacity'])) {
                         if (computedBldgCap >= 0) {
@@ -1472,8 +1494,8 @@
             $('#assign_room_save').on('click', function(){
 
                   // calculate first before sending
-                  const totalBldgCap = $('#totalCap div').text().trim()
-                  const computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
+                  totalBldgCap = $('#totalCap div').text().trim()
+                  computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
 
                   if (computedBldgCap >= 0 && $('#assignRoom').val() !== '') {
                         roomAssign()
