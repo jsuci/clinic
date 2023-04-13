@@ -1182,6 +1182,12 @@
                                           // update rooms selection
                                           getRoomsExcept(selected_bldg_id)
 
+                                          // update rooms datatable
+                                          roomDatatable()
+
+                                          // update capacity
+                                          updateTotalBldgLeftRoomCap()
+
                                           // close add room modal
                                           $('#room_form_modal').modal('hide')
 
