@@ -1151,6 +1151,8 @@
                   totalBldgCap = $('#totalCap div').text().trim()
                   computedBldgCap = parseInt(totalBldgCap) - parseInt($('#roomCapacity').val())
 
+                  console.log('room cap:', $('#roomCapacity').val(), 'bldg cap:', totalBldgCap)
+
                   if ($('#roomName').hasClass('is-invalid')) {
                         Toast.fire({
                               type: 'warning',
@@ -1168,7 +1170,7 @@
                         })
 
                         isvalid = false
-                  } else if (computedBldgCap <= 0) {
+                  } else if (computedBldgCap < 0) {
                         Toast.fire({
                               type: 'error',
                               title: 'Room Assignment Error: Building capacity limit reached.',
@@ -1265,7 +1267,7 @@
                                           getRoomsExcept(selected_bldg_id)
 
                                           // update rooms datatable
-                                          roomDatatable()
+                                          // roomDatatable()
 
                                           // update capacity
                                           updateTotalBldgLeftRoomCap()

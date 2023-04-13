@@ -22,15 +22,15 @@ class RoomsController extends \App\Http\Controllers\Controller
             if($levelid == 14 || $levelid == 15){
 
                 $sectionblockass = DB::table('sh_sectionblockassignment')
-                                            ->join('sh_block',function($join){
-                                                $join->on('sh_sectionblockassignment.blockid','=','sh_block.id');
-                                                $join->where('sh_block.deleted',0);
-                                            })
-                                            ->where('sh_sectionblockassignment.syid',$syid)
-                                            ->where('sh_sectionblockassignment.deleted',0)
-                                            ->where('sh_sectionblockassignment.sectionid',$sectionid)
-                                            ->select('strandid')
-                                            ->get();
+                                        ->join('sh_block',function($join){
+                                            $join->on('sh_sectionblockassignment.blockid','=','sh_block.id');
+                                            $join->where('sh_block.deleted',0);
+                                        })
+                                        ->where('sh_sectionblockassignment.syid',$syid)
+                                        ->where('sh_sectionblockassignment.deleted',0)
+                                        ->where('sh_sectionblockassignment.sectionid',$sectionid)
+                                        ->select('strandid')
+                                        ->get();
 
                 $subjects = DB::table('subject_plot')
                                 ->where('subject_plot.deleted',0)
@@ -71,7 +71,6 @@ class RoomsController extends \App\Http\Controllers\Controller
                                 ->get();
             }
 
-          
 
             return array((object)[
                 'status'=>1,
