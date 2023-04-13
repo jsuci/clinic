@@ -401,7 +401,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if ($datatable === 'true') {
 
                 $rooms = DB::table('rooms')
-                ->orderBy('updateddatetime', 'asc')
+                ->orderBy('id', 'asc')
                 ->where('deleted',0)
                 ->where('buildingid', $buildingid)
                 ->where(function($query) use($search){
@@ -560,6 +560,7 @@ class BuildingController extends \App\Http\Controllers\Controller
         $buildingid = $request->get('buildingid');
 
         $rooms = DB::table('rooms')
+        ->orderBy('createddatetime', 'asc')
         ->where('deleted', 0)
         ->where(function($query) use ($buildingid) {
             $query->whereNotIn('buildingid', [$buildingid])
