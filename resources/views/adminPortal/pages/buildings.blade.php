@@ -1294,7 +1294,8 @@
 
                                     Toast.fire({
                                           type: data[0].icon,
-                                          title: data[0].message
+                                          html: data[0].message,
+                                          timer: 9000
                                     })
                               }
                         })
@@ -1324,7 +1325,8 @@
 
                               Toast.fire({
                                     type: data[0].icon,
-                                    title: data[0].message
+                                    html: data[0].message,
+                                    timer: 9000
                               })
                         }
                   })
