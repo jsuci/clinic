@@ -249,13 +249,20 @@ class RoomsController extends \App\Http\Controllers\Controller
                         ->where('id',$id)
                         ->where('deleted',0)
                         ->where('buildingid', '!=', null)
-                        ->count();
+                        ->get();
 
-            if($check_usage > 0){
+            if($check_usage->count() > 0){
+                $room = $check_usage[0];
+
+                $room_blg_assigned = DB::table('building')
+                ->where('deleted',0)
+                ->where('id', $room->buildingid)
+                ->get();
+
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'Room is in used!',
-                    'icon'=>'warning'
+                    'message'=>'<p class="text-left" style="margin-bottom: 0;padding-left:6px;"><b>Update Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+                    'icon'=>'error'
                 ]);
             }
 
@@ -339,13 +346,20 @@ class RoomsController extends \App\Http\Controllers\Controller
                         ->where('id',$id)
                         ->where('deleted',0)
                         ->where('buildingid', '!=', null)
-                        ->count();
+                        ->get();
 
-            if($check_usage > 0){
+            if($check_usage->count() > 0){
+                $room = $check_usage[0];
+
+                $room_blg_assigned = DB::table('building')
+                ->where('deleted',0)
+                ->where('id', $room->buildingid)
+                ->get();
+
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'Room is in used!',
-                    'icon'=>'warning'
+                    'message'=>'<p class="text-left" style="margin-bottom: 0;padding-left:6px;"><b>Delete Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+                    'icon'=>'error'
                 ]);
             }
 
