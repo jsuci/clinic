@@ -30,7 +30,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
 
     // JAM: custom routes
-    Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildingsDatatable');
+    Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildings');
     Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
 
     Route::get('api/building/rooms/datatable','AdministratorControllers\BuildingController@getRoomsDataTable');
