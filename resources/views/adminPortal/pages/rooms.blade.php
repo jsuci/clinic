@@ -961,7 +961,7 @@
 
   <!-- toast config -->
   <script>
-     const Toast = Swal.mixin({
+    const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-end',
                         showConfirmButton: false,
@@ -1644,7 +1644,7 @@
         $('.eval').removeAttr('disabled')
 
 
-        if($(this).attr('data-stime') != null){
+        if ($(this).attr('data-stime') != null) {
           $('.reservationtime').daterangepicker({
             timePicker: true,
             startDate: $(this).attr('data-stime'),
@@ -1655,8 +1655,7 @@
                 cancelLabel: 'Clear'
             }
           })
-        }else{
-
+        } else{
           $('.reservationtime').daterangepicker({
             timePicker: true,
             startDate: '07:30 AM',
@@ -1676,16 +1675,16 @@
 
         $('#time').removeAttr('disabled')
         selectedSubject = $(this).attr('data-id')
-        // var temp_sched = all_sched.filter(x=>x.subjid == selectedSubject)
+        var temp_sched = all_sched.filter(x=>x.subjid == selectedSubject)
 
-        // $('#secttea').val(section.teacherid).change()
-        // $('#sectroo').val(section.roomid).change()
+        $('#secttea').val(section.teacherid).change()
+        $('#sectroo').val(section.roomid).change()
 
-        // $.each(temp_sched[0].schedule,function(a,b){
-        //     $('#secttea').val(b.teacherid).change()
-        //     $('#sectroo').val(b.roomid).change()
+        $.each(temp_sched[0].schedule,function(a,b){
+            $('#secttea').val(b.teacherid).change()
+            $('#sectroo').val(b.roomid).change()
           
-        // })
+        })
 
 
         // $('#subject_desc').val(temp_sched[0].subjcode + ' - '+temp_sched[0].subjdesc )
@@ -1863,6 +1862,7 @@
       })
       
       function get_buildings(){
+        console.log('updating building selection')
         $.ajax({
 					type:'GET',
 					url: '/buildings/get',
@@ -1876,7 +1876,7 @@
             })
 
             $("#update_roombuilding").select2({
-                  data: building,
+                  data: all_building,
                   allowClear: true,
                   placeholder: "Select Building",
             })
