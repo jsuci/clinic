@@ -758,7 +758,7 @@
             function roomUnassign() {
 
                   Swal.fire({
-                        text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name} building?`,
+                        text: `Are you sure you want to unassign room ${selected_room_name} to ${selected_bldg_name} building?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
