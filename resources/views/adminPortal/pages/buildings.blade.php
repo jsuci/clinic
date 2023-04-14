@@ -320,21 +320,22 @@
                         delete keysPressed[event.key];
                   });
       
-                  const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000,
-                  })
+                  // const Toast = Swal.mixin({
+                  //       toast: true,
+                  //       position: 'top-end',
+                  //       showConfirmButton: false,
+                  //       timer: 2000,
+                  // })
 
                   buildingtable('#building_datatable_holder',true)
                   buildingform('',true)
+
             })
       </script>
 
       <script>
             
-            var buildings = []
+            var all_buildings = []
             var buildings_datatable = []
             var rooms_datatable_instance = null
             var selected_bldg_id = null
@@ -368,6 +369,7 @@
                   timer: 2000,
             })
 
+            
             function getProjectSetup(){
                   $.ajax({
                         type:'GET',
@@ -526,14 +528,13 @@
                               data:info
                         },
                         success:function(data) {
-                        if(status == 'delete'){
-                        process_update(tablename,alldata)
-                        }else if(status == 'update'){
-                        process_update(tablename,alldata)
-                        }else if(status == 'create'){
-                        process_create(tablename,alldata,data,first)
-                        }
-                        
+                              if(status == 'delete'){
+                                    process_update(tablename,alldata)
+                              }else if(status == 'update'){
+                                    process_update(tablename,alldata)
+                              }else if(status == 'create'){
+                                    process_create(tablename,alldata,data,first)
+                              }
                         },
                   })
             }
@@ -543,10 +544,8 @@
                         type:'GET',
                         url:'/api/buildings',
                         success:function(data) {
-                              if(data[0].status == 1){
-                                    buildings = data[0].data
-                              }else{
-
+                              if (data[0].status == 1) {
+                                    all_buildings = data[0].data
                               }
                         }
                   })
@@ -662,13 +661,26 @@
 
                   var isvalid = true
 
-                  temp_room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                  // check capacity
+                  totalBldgCap = $('#totalCap div').text().trim()
+                  computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
 
-                  if (temp_room_selected['buildingid'] != null) {
+                  if (computedBldgCap < 0) {
                         Toast.fire({
-                              type: 'warning',
-                              title: 'Room already in used',
-                              timer: 5000
+                              type: 'error',
+                              title: 'Room Assignment Error: Building capacity limit reached.',
+                              timer: 9000
+                        })
+
+                        isvalid = false
+                  }
+
+                  // check blank input
+                  if ($('#assignRoom').val() == '') {
+                        Toast.fire({
+                              type: 'error',
+                              title: 'Room Assignment Error: Field cannot be empty.',
+                              timer: 9000
                         })
 
                         isvalid = false
@@ -695,7 +707,6 @@
                                           // update selection
                                           getRoomsExcept(selected_bldg_id)
 
-
                                           // update rooms datatable
                                           roomDatatable()
 
@@ -705,7 +716,6 @@
                                           // update totals
                                           updateTotalBldgLeftRoomCap()
 
-
                                           // close assign new room modal
                                           $('#assign_room_form_modal').modal('hide')
                                     }
@@ -714,6 +724,7 @@
                               }
                         })
                   }
+
             }
 
             function updateTotalBldgLeftRoomCap() {
@@ -808,6 +819,8 @@
 
                                     buildingDatatable()
                                     get_last_index('building')
+                                    getBuildings()
+
                               } else {
                                     $('#bldgCreateDesc').removeClass('is-valid')
                                     $('#bldgCreateDesc').addClass('is-invalid')
@@ -842,6 +855,7 @@
                                     updateTotalBldgLeftRoomCap()
                                     buildingDatatable()
                                     get_updated('building')
+                                    getBuildings()
                               }
                               Toast.fire({
                                     type: resp[0].icon,
@@ -875,7 +889,8 @@
                                                 // bldgTable.state.clear()
                                                 buildingDatatable()
 
-                                                // get_deleted('building')
+                                                // get latest building data
+                                                getBuildings()
 
                                                 $('#view_bldginfo_modal').modal('hide')
                                           }
@@ -967,6 +982,7 @@
 
                   $(datatableholder)[0].innerHTML = table
                   buildingDatatable()
+                  getBuildings()
             }
 
             function buildingDatatable() {
@@ -1150,8 +1166,6 @@
 
                   totalBldgCap = $('#totalCap div').text().trim()
                   computedBldgCap = parseInt(totalBldgCap) - parseInt($('#roomCapacity').val())
-
-                  console.log('room cap:', $('#roomCapacity').val(), 'bldg cap:', totalBldgCap)
 
                   if ($('#roomName').hasClass('is-invalid')) {
                         Toast.fire({
@@ -1495,30 +1509,30 @@
             // 'Assign New Room' Save button
             $('#assign_room_save').on('click', function(){
 
-                  // calculate first before sending
-                  totalBldgCap = $('#totalCap div').text().trim()
-                  computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
+                  // check if room is already assigned to another building
+                  var temp_room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
 
-                  if (computedBldgCap >= 0 && $('#assignRoom').val() !== '') {
-                        roomAssign()
+                  if (temp_room_selected['buildingid'] != null) {
+                        var temp_bldg_selected = all_buildings.filter(x => x.id == temp_room_selected['buildingid'])[0]
+
+                        Swal.fire({
+                              html: `Room already assigned to ${temp_bldg_selected['description']} building.<br/>Are you sure you want to re-assign this room?`,
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#d33', //'#3085d6'
+                              cancelButtonColor: '#6c757d', //'#d33'
+                              confirmButtonText: 'Reassign'
+                        }).then((result) => {
+                              if (result.value) {
+                                    roomAssign()
+                              }
+                        })
                   } else {
-
-                        if (computedBldgCap < 0) {
-                              Toast.fire({
-                                    type: 'error',
-                                    title: 'Room Assignment Error: Building capacity limit reached.',
-                                    timer: 9000
-                              })
-                        }
-
-                        if ($('#assignRoom').val() === '') {
-                              Toast.fire({
-                                    type: 'error',
-                                    title: 'Room Assignment Error: Field cannot be empty.',
-                                    timer: 9000
-                              })
-                        }
+                        roomAssign()
                   }
+
+
+
                   
             })
 
