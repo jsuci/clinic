@@ -1862,7 +1862,6 @@
       })
       
       function get_buildings(){
-        console.log('updating building selection')
         $.ajax({
 					type:'GET',
 					url: '/buildings/get',
@@ -1944,6 +1943,8 @@
       function update_room(){
         $('#create_room').attr('disabled','disabled')
 
+        // console.log(select_id, $('#update_roomname').val(), $('#update_roomcap').val(), $('#update_roombuilding').val())
+
         $.ajax({
 					type:'GET',
 					url: '/rooms/update',
@@ -1954,30 +1955,25 @@
             building:$('#update_roombuilding').val(),
           },
 					success:function(data) {
-
+            
             $('#create_room').removeAttr('disabled')
 
-            if(data[0].status == 1){
+            if (data[0].status == 1) {
+
               Toast.fire({
                 type: 'success',
                 title: 'Room Updated!'
               })
+
               $('#room_name').text($('#update_roomname').val())
               rooms_datatable()
-            }else{
-              Toast.fire({
-                type: 'error',
-                title: 'Something went wrong!'
-              })
             }
-					},
-          error:function(){
-            $('#create_room').removeAttr('disabled')
+            
             Toast.fire({
-              type: 'error',
-              title: 'Something went wrong!'
+                  type: data[0].icon,
+                  title: data[0].message,
             })
-          }
+					}
 				})
       }
 
