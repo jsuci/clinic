@@ -1532,10 +1532,6 @@
                   } else {
                         roomAssign()
                   }
-
-
-
-                  
             })
 
             // 'Room Form' Create button
