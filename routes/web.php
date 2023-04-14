@@ -22,8 +22,6 @@ use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
 Route::middleware(['cors'])->group(function () {
 
     Route::view('/buildings','adminPortal.pages.buildings');
-    // Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildingsDatatable');
-    // Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
     Route::get('api/buildings/select','AdministratorControllers\BuildingController@getBuildingsSelect');
     Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
     Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
@@ -832,7 +830,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
     Route::get('/buildings/create','AdministratorControllers\AdministratorController@buildings_create');
 });
-       
+
 
 Route::middleware(['checkModule:adminit','auth','isDefaultPass','withSchoolInfo'])->group(function () {
 

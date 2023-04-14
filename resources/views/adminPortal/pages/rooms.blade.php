@@ -580,8 +580,8 @@
   <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
   <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
 
+  <!-- time temp detail -->
   <script>
-    //time temp detail
     var all_timetempdetail = [];
     var selected_timetempdetail = null;
 
@@ -785,10 +785,8 @@
 
   </script>
 
-
-  
+  <!-- time template -->
   <script>
-    //time template
     var all_timetemplate = @json($schedtimetemplate);
     var selected_timetemp = null;
 
@@ -961,6 +959,7 @@
     // input_timetemplate
   </script>
 
+  <!-- toast config -->
   <script>
      const Toast = Swal.mixin({
                         toast: true,
@@ -970,6 +969,7 @@
                   })
   </script>
 
+  <!-- scheduling crud -->
   <script>
 
     var selected_detailinfo = null;
@@ -1273,6 +1273,7 @@
     })
   </script>
 
+  <!-- time template -->
   <script>
     var all_sections = []
     var all_subjects = []
@@ -1404,11 +1405,10 @@
      
     })
 
-
   </script>
 
+  <!-- sched classification -->
   <script>
-    //schedule classification
     var scheduleclassification = []
     var selected_schedclass = null
     get_schedclassification()
@@ -1581,7 +1581,7 @@
     })
   </script>
 
-
+  <!-- rooms -->
   <script>
     $(document).ready(function(){
 
@@ -1754,24 +1754,24 @@
           window.open('/principal/setup/section/print?schedtype=room&syid='+$('#filter_acad_sy').val()+'&semid='+$('#filter_semester').val()+'&roomid='+temp_roomid+'&timetemp='+$('#filter_timetemplate').val(), '_blank');
       })
 
-      // $(document).on('click','.view_info',function(){
-      //   var temp_id = $(this).attr('data-id')
-      //   var data = all_rooms.filter(x=>x.id == temp_id)
-      //   select_id = temp_id
+      $(document).on('click','.view_info',function(){
+        var temp_id = $(this).attr('data-id')
+        var data = all_rooms.filter(x=>x.id == temp_id)
+        select_id = temp_id
 
 
-      //   $('#print_sched').attr('data-id',select_id)
+        $('#print_sched').attr('data-id',select_id)
 
-      //   $('#update_roomname').val(data[0].roomname)
-      //   $('#update_roomcap').val(data[0].capacity)
-      //   $('#update_roombuilding').val(data[0].buildingid).change()
-      //   $('#room_name').text(data[0].roomname)
-      //   // $('#room_form_modal').modal()
-      //   $('#create_room').text('Update')
-      //   $('#create_room').removeClass('btn-primary')
-      //   $('#create_room').addClass('btn-success')
-      //   $('#create_room').attr('data-id',2)
-      // })
+        $('#update_roomname').val(data[0].roomname)
+        $('#update_roomcap').val(data[0].capacity)
+        $('#update_roombuilding').val(data[0].buildingid).change()
+        $('#room_name').text(data[0].roomname)
+        // $('#room_form_modal').modal()
+        $('#create_room').text('Update')
+        $('#create_room').removeClass('btn-primary')
+        $('#create_room').addClass('btn-success')
+        $('#create_room').attr('data-id',2)
+      })
 
       $(document).on('click','.view_info',function(){
         $('#view_roominfo_modal').modal()
@@ -1868,6 +1868,7 @@
 					url: '/buildings/get',
 					success:function(data) {
             all_building = data
+            
             $("#building").select2({
                   data: data,
                   allowClear: true,
@@ -2115,6 +2116,7 @@
 
   </script>
 
+  <!-- scheduling -->
   <script>
 
     var all_sched = []
