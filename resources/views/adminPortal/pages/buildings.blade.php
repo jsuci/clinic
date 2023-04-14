@@ -668,7 +668,7 @@
                   if (computedBldgCap < 0) {
                         Toast.fire({
                               type: 'error',
-                              title: 'Room Assignment Error: Building capacity limit reached.',
+                              title: '<p class="text-left" style="margin-bottom: 0;">Save Error:<br/>Building capacity limit reached.</p>',
                               timer: 9000
                         })
 
@@ -758,7 +758,7 @@
             function roomUnassign() {
 
                   Swal.fire({
-                        text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name}?`,
+                        text: `Are you sure you want to unassign ${selected_room_name} to ${selected_bldg_name} building?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
@@ -868,7 +868,7 @@
             function buildingDelete(){
 
                   Swal.fire({
-                        text: `Are you sure you want to delete building ${selected_bldg_name}?`,
+                        text: `Are you sure you want to delete ${selected_bldg_name} building?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
@@ -1187,7 +1187,7 @@
                   } else if (computedBldgCap < 0) {
                         Toast.fire({
                               type: 'error',
-                              title: 'Room Assignment Error: Building capacity limit reached.',
+                              title: '<p class="text-left" style="margin-bottom: 0;">Save Error:<br/>Building capacity limit reached.</p>',
                               timer: 9000
                         })
 
@@ -1294,7 +1294,7 @@
 
                                     Toast.fire({
                                           type: data[0].icon,
-                                          html: data[0].message,
+                                          title: data[0].message,
                                           timer: 9000
                                     })
                               }
@@ -1325,7 +1325,7 @@
 
                               Toast.fire({
                                     type: data[0].icon,
-                                    html: data[0].message,
+                                    title: data[0].message,
                                     timer: 9000
                               })
                         }
@@ -1662,7 +1662,7 @@
             $(document).on('click','#delete_rooms',function(){
 
                   Swal.fire({
-                        text: `Are you sure you want to remove ${room_selection_name}?`,
+                        text: `Are you sure you want to remove room ${room_selection_name}?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', // #3085d6

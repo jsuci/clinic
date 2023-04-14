@@ -261,7 +261,7 @@ class RoomsController extends \App\Http\Controllers\Controller
 
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'<p class="text-left" style="margin-bottom: 0;padding-left:6px;"><b>Update Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+                    'message'=>'<p class="text-left" style="margin-bottom: 0;"><b>Update Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
                     'icon'=>'error'
                 ]);
             }
@@ -358,7 +358,7 @@ class RoomsController extends \App\Http\Controllers\Controller
 
                 return  array((object)[
                     'status'=>2,
-                    'message'=>'<p class="text-left" style="margin-bottom: 0;padding-left:6px;"><b>Delete Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+                    'message'=>'<p class="text-left" style="margin-bottom: 0;">Delete Error:<br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
                     'icon'=>'error'
                 ]);
             }
