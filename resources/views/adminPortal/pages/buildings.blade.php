@@ -1617,6 +1617,8 @@
                         $('#delete_rooms').show()
                   }
 
+                  
+
                   // reset validation
                   $('#roomName').removeClass('is-valid')
                   $('#roomName').removeClass('is-invalid')
@@ -1722,6 +1724,11 @@
                   }
 
             })
+
+            // Capture Selection Close
+            $('#assignRoom').on('select2:close', function (e) {
+                  $('#select2-assignRoom-container').text(`${room_selection_name} (${room_selection_cap})`)
+            });
 
       </script>
 @endsection
