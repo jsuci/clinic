@@ -1585,7 +1585,6 @@
   <script>
     $(document).ready(function(){
 
-      var select_id = null
       var all_rooms = []
       var all_building = []
       var selected_roomid = null
@@ -1714,7 +1713,7 @@
 
         $('#room_form_modal').modal()
 
-        select_id = null
+        selected_roomid = null
 
       })
 
@@ -1784,7 +1783,7 @@
         if($(this).attr('data-id') == 1){
           var check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
         }else{
-          var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != select_id)
+          var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != selected_roomid)
         }
 
         if(check_duplicate.length > 0){
@@ -1840,16 +1839,83 @@
 
       })
 
-      $(document).on('click','.delete_room',function(){
-        select_id = $(this).attr('data-id')
-        delete_room()
-      })
+      // $(document).on('click','.delete_room',function(){
+      //   select_id = $(this).attr('data-id')
+      //   delete_room()
+      // })
 
       $(document).on('click','#update_information',function(){
+        var isvalid = true
 
-        // check room reassignment
+        // check blank input for update_roomname
+        if ($('#update_roomname').val() == '') {
+              Toast.fire({
+                    type: 'error',
+                    title: 'Update Error: Room name cannot be empty.',
+                    timer: 9000
+              })
 
-        update_room()
+              isvalid = false
+        }
+
+        // check blank input for update_roomcap
+        if ($('#update_roomcap').val() == '') {
+              Toast.fire({
+                    type: 'error',
+                    title: 'Update Error: Room capacity cannot be empty.',
+                    timer: 9000
+              })
+
+              isvalid = false
+        }
+
+        // check blank selection for update_roombuilding
+        if ($('#update_roombuilding').val() == '') {
+              Toast.fire({
+                    type: 'error',
+                    title: 'Update Error: Building cannot be empty.',
+                    timer: 9000
+              })
+
+              isvalid = false
+        }
+
+
+        // check changes to assigned building
+        // get previous building assigned and currently selected building
+        var room_selected = all_rooms.filter(x=>x.id == selected_roomid)[0]
+
+        if (room_selected['buildingid'] != $('#update_roombuilding').val()) {
+              var temp_bldg_selected = all_building.filter(
+                x => x.id == room_selected['buildingid'])[0]
+
+              Swal.fire({
+                    html: `Room already assigned to ${temp_bldg_selected['description']} building.<br/>Are you sure you want to re-assign this room?`,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33', //'#3085d6'
+                    cancelButtonColor: '#6c757d', //'#d33'
+                    confirmButtonText: 'Reassign'
+              }).then((result) => {
+                console.log(result)
+                if (result.value && isvalid) {
+                  update_room()
+                }
+
+                if(result.dismiss == 'cancel') {
+                  
+                }
+              })
+        } else {
+          if (isvalid) {
+            update_room()
+          }
+        }
+
+
+
+
+        
       })
 
       $(document).on('change','#building',function(){
@@ -1917,7 +1983,7 @@
 					type:'GET',
 					url: '/rooms/delete',
           data:{
-            id:select_id,
+            id:selected_roomid,
           },
 					success:function(data) {
             if(data[0].status == 1){
@@ -1947,62 +2013,11 @@
       
       function update_room(){
 
-        var isvalid = true
-
-        // check capacity
-        // totalBldgCap = $('#totalCap div').text().trim()
-        // computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
-
-        // if (computedBldgCap < 0) {
-        //       Toast.fire({
-        //             type: 'error',
-        //             title: '<p class="text-left" style="margin-bottom: 0;">Save Error:<br/>Building capacity limit reached.</p>',
-        //             timer: 9000
-        //       })
-
-        //       isvalid = false
-        // }
-
-        // check blank input for update_roomname
-        if ($('#update_roomname').val() == '') {
-              Toast.fire({
-                    type: 'error',
-                    title: 'Update Error: Room name cannot be empty.',
-                    timer: 9000
-              })
-
-              isvalid = false
-        }
-
-        // check blank input for update_roomcap
-        if ($('#update_roomcap').val() == '') {
-              Toast.fire({
-                    type: 'error',
-                    title: 'Update Error: Room capacity cannot be empty.',
-                    timer: 9000
-              })
-
-              isvalid = false
-        }
-
-        // check blank selection for update_roombuilding
-        if ($('#update_roombuilding').val() == '') {
-              Toast.fire({
-                    type: 'error',
-                    title: 'Update Error: Building cannot be empty.',
-                    timer: 9000
-              })
-
-              isvalid = false
-        }
-
-
-        if (isvalid) {
           $('#create_room').prop('disabled', true);
 
           $.ajax({
             type:'GET',
-            // url: '/rooms/update',
+            url: '/rooms/update',
             data:{
               id:selected_roomid,
               roomname:$('#update_roomname').val(),
@@ -2014,6 +2029,7 @@
               if (data[0].status == 1) {
                 
                 rooms_datatable()
+                get_rooms()
 
                 Toast.fire({
                   type: 'success',
@@ -2029,8 +2045,6 @@
               $('#create_room').prop('disabled', false);
             }
           })
-
-        }
 
       }
 

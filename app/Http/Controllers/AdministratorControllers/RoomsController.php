@@ -244,28 +244,29 @@ class RoomsController extends \App\Http\Controllers\Controller
 
         try{
 
-            // check usage in 'rooms'
-            $check_usage = DB::table('rooms')
-                        ->where('id',$id)
-                        ->where('deleted',0)
-                        ->where('buildingid', '!=', null)
-                        ->get();
+            // // check usage in 'rooms'
+            // $check_usage = DB::table('rooms')
+            //             ->where('id',$id)
+            //             ->where('deleted',0)
+            //             ->where('buildingid', '!=', null)
+            //             ->get();
 
-            if($check_usage->count() > 0){
-                $room = $check_usage[0];
+            // if($check_usage->count() > 0){
+            //     $room = $check_usage[0];
 
-                $room_blg_assigned = DB::table('building')
-                ->where('deleted',0)
-                ->where('id', $room->buildingid)
-                ->get();
+            //     $room_blg_assigned = DB::table('building')
+            //     ->where('deleted',0)
+            //     ->where('id', $room->buildingid)
+            //     ->get();
 
-                return  array((object)[
-                    'status'=>2,
-                    'message'=>'<p class="text-left" style="margin-bottom: 0;"><b>Update Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
-                    'icon'=>'error'
-                ]);
-            }
+            //     return  array((object)[
+            //         'status'=>2,
+            //         'message'=>'<p class="text-left" style="margin-bottom: 0;"><b>Update Error:</b><br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+            //         'icon'=>'error'
+            //     ]);
+            // }
 
+            // check roomname exists
             $check_usage = DB::table('rooms')
                         ->where('roomname',$roomname)
                         ->where('id','!=',$id)
@@ -341,27 +342,27 @@ class RoomsController extends \App\Http\Controllers\Controller
                 ]);
             }
 
-            // check usage in 'rooms'
-            $check_usage = DB::table('rooms')
-                        ->where('id',$id)
-                        ->where('deleted',0)
-                        ->where('buildingid', '!=', null)
-                        ->get();
+            // // check usage in 'rooms'
+            // $check_usage = DB::table('rooms')
+            //             ->where('id',$id)
+            //             ->where('deleted',0)
+            //             ->where('buildingid', '!=', null)
+            //             ->get();
 
-            if($check_usage->count() > 0){
-                $room = $check_usage[0];
+            // if($check_usage->count() > 0){
+            //     $room = $check_usage[0];
 
-                $room_blg_assigned = DB::table('building')
-                ->where('deleted',0)
-                ->where('id', $room->buildingid)
-                ->get();
+            //     $room_blg_assigned = DB::table('building')
+            //     ->where('deleted',0)
+            //     ->where('id', $room->buildingid)
+            //     ->get();
 
-                return  array((object)[
-                    'status'=>2,
-                    'message'=>'<p class="text-left" style="margin-bottom: 0;">Delete Error:<br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
-                    'icon'=>'error'
-                ]);
-            }
+            //     return  array((object)[
+            //         'status'=>2,
+            //         'message'=>'<p class="text-left" style="margin-bottom: 0;">Delete Error:<br>Room already assigned to ' .$room_blg_assigned[0]->description. ' building.</p>',
+            //         'icon'=>'error'
+            //     ]);
+            // }
 
             // deleted column not found
             // $check_usage = DB::table('scheddetail')
