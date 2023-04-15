@@ -125,7 +125,7 @@ class RoomsController extends \App\Http\Controllers\Controller
 
     }
 
-    public static function rooms(Request $request){
+    public static function roomsDatatable(Request $request){
 
         $search = $request->get('search');
         $search = $search['value'];
