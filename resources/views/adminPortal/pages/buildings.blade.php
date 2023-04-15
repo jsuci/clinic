@@ -310,9 +310,9 @@
                         keysPressed[event.key] = true;
                         if (keysPressed['p'] && event.key == 'v') {
                               Toast.fire({
-                                          type: 'warning',
-                                          title: 'Date Version: 11/16/2022'
-                                    })
+                                    type: 'warning',
+                                    title: 'Date Version: 11/16/2022'
+                              })
                         }
                   });
       
@@ -1249,6 +1249,7 @@
 
                         isvalid = false
                   }
+                  
                   else if ($('#roomCapacity').hasClass('is-invalid')) {
                         Toast.fire({
                               type: 'warning',
@@ -1645,30 +1646,81 @@
 
                   // change create button text
                   $('#create_room').text('Update')
-                  $('#room_form_modal').modal()
 
                   // reset validation
                   $('#roomName').removeClass('is-valid')
                   $('#roomName').removeClass('is-invalid')
                   $('#roomCapacity').removeClass('is-valid')
                   $('#roomCapacity').removeClass('is-invalid')
+
+                  // check if room is already assigned to another building
+                  if (room_selected['buildingid'] != null) {
+                        var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
+
+                        Toast.fire({
+                              type: 'error',
+                              title: `<p class="text-left" style="margin-bottom: 0;"><b>Edit Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
+                              timer: 6000
+                        })
+
+                        // do not delete
+                        // pop-up modal to confirm edit
+                        // var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
+                        // Swal.fire({
+                        //       html: `Room already assigned to ${temp_bldg_selected['description']} building.<br/>Are you sure you want to edit this room?`,
+                        //       type: 'warning',
+                        //       showCancelButton: true,
+                        //       confirmButtonColor: '#d33', //'#3085d6'
+                        //       cancelButtonColor: '#6c757d', //'#d33'
+                        //       confirmButtonText: 'Reassign'
+                        // }).then((result) => {
+                        //       if (result.value) {
+                        //             // launch modal
+                        //             $('#room_form_modal').modal()
+                        //       }
+                        // })
+
+
+                  } else {
+                        // launch modal
+                        $('#room_form_modal').modal()
+                  }
+
             })
 
             // Delete Room selection button
             $(document).on('click','#delete_rooms',function(){
 
-                  Swal.fire({
-                        text: `Are you sure you want to remove room ${room_selection_name}?`,
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33', // #3085d6
-                        cancelButtonColor: '#808080', // #d33
-                        confirmButtonText: 'Remove'
-                  }).then((result) => {
-                        if (result.value) {
-                              delete_room()
-                        }
-                  })
+                  room_selection_id = $('#assignRoom').val()
+                  room_selected = all_rooms_except.filter(x=>x.id == room_selection_id)[0]
+                  room_selection_name = room_selected.text
+                  room_selection_cap = room_selected.capacity
+
+                  // check if room is already assigned to another building
+                  if (room_selected['buildingid'] != null) {
+                        var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
+
+                        Toast.fire({
+                              type: 'error',
+                              title: `<p class="text-left" style="margin-bottom: 0;"><b>Delete Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
+                              timer: 6000
+                        })
+
+                  } else {
+                        Swal.fire({
+                              text: `Are you sure you want to remove room ${room_selection_name}?`,
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#d33', // #3085d6
+                              cancelButtonColor: '#808080', // #d33
+                              confirmButtonText: 'Remove'
+                        }).then((result) => {
+                              if (result.value) {
+                                    delete_room()
+                              }
+                        })
+                  }
+
             })
 
       </script>
