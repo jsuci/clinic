@@ -187,6 +187,11 @@
                                 <i class="fa fa-save"></i> Update Information
                               </button>
                             </div>
+
+                            <div class="col-md-12 mt-2">
+                              <button class="btn btn-danger btn-sm btn-block" id="delete_information" style="font-size:.8rem !important">
+                              <i class="fa fa-trash"></i> Delete Information </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1829,10 +1834,20 @@
 
       })
 
-      // $(document).on('click','.delete_room',function(){
-      //   select_id = $(this).attr('data-id')
-      //   delete_room()
-      // })
+      $(document).on('click','#delete_information',function(){
+        Swal.fire({
+          text: `Are you sure you want to remove room ${$('#update_roomname').val()}?`,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33', // #3085d6
+          cancelButtonColor: '#808080', // #d33
+          confirmButtonText: 'Remove'
+        }).then((result) => {
+          if (result.value) {
+                delete_room()
+          }
+        })
+      })
 
       $(document).on('click','#update_information',function(){
 
@@ -1859,7 +1874,6 @@
 
                 if(result.dismiss == 'cancel') {
                   $('#update_roombuilding').val(room_selected['buildingid']).trigger('change')
-                  // return false
                 }
               })
         } else {
@@ -1916,11 +1930,22 @@
             building:$('#building').val(),
           },
 					success:function(data) {
-            $('#create_room').removeAttr('disabled')
+            
             if(data[0].status == 1){
+              // update rooms datatable
               rooms_datatable()
+
+              // update all_rooms
+              get_rooms()
+
+              // hide modal
+              $('#room_form_modal').modal('hide')
+
             }
+
             prompt(data[0].status,data[0].message)
+            $('#create_room').removeAttr('disabled')
+
 					},
           error:function(){
             prompt(0,'Something went wrong')
@@ -1937,8 +1962,14 @@
           },
 					success:function(data) {
             if(data[0].status == 1){
+              // hide modal
+              $('#view_roominfo_modal').modal('hide')
+
+              // reload rooms datatable
               rooms_datatable()
+
             }
+
             prompt(data[0].status,data[0].message)
 					},
           error:function(){
