@@ -1592,6 +1592,7 @@
 
       rooms_datatable()
       get_buildings()
+      get_rooms()
 
       // $('#secttea').select2()
       $('#sectroo').select2()
@@ -1754,27 +1755,21 @@
       })
 
       $(document).on('click','.view_info',function(){
-        var temp_id = $(this).attr('data-id')
-        var data = all_rooms.filter(x=>x.id == temp_id)
-        select_id = temp_id
+        selected_roomid = $(this).attr('data-id')
 
+        var data = all_rooms.filter(x=>x.id == selected_roomid)
 
-        $('#print_sched').attr('data-id',select_id)
+        // console.log(all_rooms)
+        // console.log(all_building)
+        // console.log(data)
 
+        $('#print_sched').attr('data-id', selected_roomid)
         $('#update_roomname').val(data[0].roomname)
         $('#update_roomcap').val(data[0].capacity)
         $('#update_roombuilding').val(data[0].buildingid).change()
         $('#room_name').text(data[0].roomname)
-        // $('#room_form_modal').modal()
-        $('#create_room').text('Update')
-        $('#create_room').removeClass('btn-primary')
-        $('#create_room').addClass('btn-success')
-        $('#create_room').attr('data-id',2)
-      })
-
-      $(document).on('click','.view_info',function(){
         $('#view_roominfo_modal').modal()
-        selected_roomid = $(this).attr('data-id')
+
         get_sched(selected_roomid)
       })
 
@@ -1791,9 +1786,6 @@
         }else{
           var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != select_id)
         }
-
-        console.log(all_rooms)
-        console.log(check_duplicate)
 
         if(check_duplicate.length > 0){
           $('#roomName').removeClass('is-valid')
@@ -1854,6 +1846,9 @@
       })
 
       $(document).on('click','#update_information',function(){
+
+        // check room reassignment
+
         update_room()
       })
 
@@ -1879,6 +1874,16 @@
                   allowClear: true,
                   placeholder: "Select Building",
             })
+					}
+				})
+      }
+
+      function get_rooms(){
+        $.ajax({
+					type:'GET',
+					url: '/rooms/get',
+					success:function(data) {
+            all_rooms = data
 					}
 				})
       }
@@ -1941,40 +1946,92 @@
       }
       
       function update_room(){
-        $('#create_room').attr('disabled','disabled')
 
-        // console.log(select_id, $('#update_roomname').val(), $('#update_roomcap').val(), $('#update_roombuilding').val())
+        var isvalid = true
 
-        $.ajax({
-					type:'GET',
-					url: '/rooms/update',
-          data:{
-            id:select_id,
-            roomname:$('#update_roomname').val(),
-            capacity:$('#update_roomcap').val(),
-            building:$('#update_roombuilding').val(),
-          },
-					success:function(data) {
-            
-            $('#create_room').removeAttr('disabled')
+        // check capacity
+        // totalBldgCap = $('#totalCap div').text().trim()
+        // computedBldgCap = parseInt(totalBldgCap) - parseInt(currRoomCapacity)
 
-            if (data[0].status == 1) {
+        // if (computedBldgCap < 0) {
+        //       Toast.fire({
+        //             type: 'error',
+        //             title: '<p class="text-left" style="margin-bottom: 0;">Save Error:<br/>Building capacity limit reached.</p>',
+        //             timer: 9000
+        //       })
 
+        //       isvalid = false
+        // }
+
+        // check blank input for update_roomname
+        if ($('#update_roomname').val() == '') {
               Toast.fire({
-                type: 'success',
-                title: 'Room Updated!'
+                    type: 'error',
+                    title: 'Update Error: Room name cannot be empty.',
+                    timer: 9000
               })
 
-              $('#room_name').text($('#update_roomname').val())
-              rooms_datatable()
+              isvalid = false
+        }
+
+        // check blank input for update_roomcap
+        if ($('#update_roomcap').val() == '') {
+              Toast.fire({
+                    type: 'error',
+                    title: 'Update Error: Room capacity cannot be empty.',
+                    timer: 9000
+              })
+
+              isvalid = false
+        }
+
+        // check blank selection for update_roombuilding
+        if ($('#update_roombuilding').val() == '') {
+              Toast.fire({
+                    type: 'error',
+                    title: 'Update Error: Building cannot be empty.',
+                    timer: 9000
+              })
+
+              isvalid = false
+        }
+
+
+        if (isvalid) {
+          $('#create_room').prop('disabled', true);
+
+          $.ajax({
+            type:'GET',
+            // url: '/rooms/update',
+            data:{
+              id:selected_roomid,
+              roomname:$('#update_roomname').val(),
+              capacity:$('#update_roomcap').val(),
+              building:$('#update_roombuilding').val(),
+            },
+            success:function(data) {
+
+              if (data[0].status == 1) {
+                
+                rooms_datatable()
+
+                Toast.fire({
+                  type: 'success',
+                  title: 'Room Updated!'
+                })
+              }
+              
+              Toast.fire({
+                    type: data[0].icon,
+                    title: data[0].message,
+              })
+
+              $('#create_room').prop('disabled', false);
             }
-            
-            Toast.fire({
-                  type: data[0].icon,
-                  title: data[0].message,
-            })
-					}
-				})
+          })
+
+        }
+
       }
 
       function rooms_datatable(){
@@ -1988,10 +2045,9 @@
               serverSide: true,
               processing: true,
               ajax:{
-                  url: 'rooms/get',
+                  url: '/rooms/datatable',
                   type: 'GET',
                   dataSrc: function ( json ) {
-                        all_rooms = json.data
                         return json.data;
                   }
               },
