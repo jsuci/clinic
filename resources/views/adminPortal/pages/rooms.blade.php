@@ -1774,26 +1774,33 @@
         var roomname = $('#roomName').val()
         var capacity = $('#roomCapacity').val()
         var building = $('#building').val()
+        var check_duplicate = []
+        var isvalid = true
 
-        if($(this).attr('data-id') == 1){
-          var check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
-        }else{
-          var check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != selected_roomid)
-        }
+        // if($(this).attr('data-id') == 1){
+        //   check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
+        // }else{
+        //   check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != selected_roomid)
+        // }
+
+        // check for duplicate name
+        check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
 
         if(check_duplicate.length > 0){
           $('#roomName').removeClass('is-valid')
           $('#roomName').addClass('is-invalid')
-          $('#invRoomName').text('Room Name already exists')
+          $('#invRoomName').text('Room name already exists')
 
           Toast.fire({
             type: 'warning',
-            title: 'Room Name already exists'
+            title: 'Room name already exists'
           })
-          return false;
+
+          isvalid =  false;
         }
 
-        if(roomname == ""){
+        // check for blank room name
+        if (roomname == "") {
           $('#roomName').addClass('is-invalid')
           $('#invRoomName').text('Please enter a room name.')
 
@@ -1801,9 +1808,11 @@
             type: 'warning',
             title: 'Room Name is empty'
           })
-          return false;
+
+          isvalid = false;
         }
         
+        // check for capacity empty
         if(capacity == ""){
           $('#roomCapacity').addClass('is-invalid')
           $('#invRoomCap').text('Please enter a valid room capacity.')
@@ -1813,9 +1822,10 @@
             title: 'Capacity is empty'
           })
 
-          return false;
+          isvalid = false;
         }
 
+        // check building selection empty
         if(building == ""){
           $('.bldg-form').addClass('has-error')
 
@@ -1823,15 +1833,13 @@
             type: 'warning',
             title: 'Building is empty'
           })
-          return false;
+          isvalid = false;
         }
         
-        if($(this).attr('data-id') == 1){
-          create_room()
-        }else{
-          update_room()
-        }
 
+        if (isvalid) {
+          create_room()
+        }
       })
 
       $(document).on('click','#delete_information',function(){
@@ -2028,6 +2036,23 @@
 
               isvalid = false
         }
+
+        // check capacity
+        var selected_bldg_id = $('#update_roombuilding').val()
+        var selected_bldg_cap = all_building.filter(x => x)
+
+        // UPDATE ROOM
+
+        // get the selected bldg id
+        // get the selected bldg cap
+
+        // get the selected room cap
+        
+        console.log(all_rooms)
+        console.log(all_building)
+        console.log(selected_roomid)
+
+
 
         if (isvalid) {
           $('#create_room').prop('disabled', true);
