@@ -932,7 +932,7 @@
                                     </div>
                                     <div class="row">
                                           <div class="col-md-12">
-                                                <button type="submit" class="btn btn-sm btn-success" id="building_create_button"><i class="fa fa-save"></i> Save</button>
+                                                <button type="submit" class="btn btn-sm btn-primary" id="building_create_button"><i class="fa fa-save"></i> Create</button>
                                                 <button class="btn btn-success btn-success btn-sm" id="building_update_button" hidden><i class="fa fa-save"></i> Update</button>
                                           </div>
                               </div>`
