@@ -499,42 +499,28 @@ class AdministratorController extends \App\Http\Controllers\Controller
 	public static function rooms(){
 
         $rooms = DB::table('rooms')
-                    ->join('building',function($join){
-                        $join->on('rooms.buildingid','=','building.id');
-                        $join->where('building.deleted',0);
-                    })  
-                    ->where('rooms.deleted',0)
+                    ->where('deleted', 0)
                     ->orderBy('roomname')
-                    ->select(
-                        'rooms.id',
-                        'rooms.roomname',
-                        'rooms.capacity',
-                        'buildingid',
-                        'description'
-                    )
                     ->get();
 
-                
-        // return collect($rooms)->sortBy('roomname')->values();
-
         return $rooms;
-
+        
     }
 
     public static function buildings(){
 
-    $buildings = DB::table('building')
-            ->where('building.deleted',0)
-            ->orderBy('description')
-            ->select(
-                'building.id',
-                'building.description',
-                'building.capacity',
-                'building.description as text'
-            )
-            ->get();
+        $buildings = DB::table('building')
+                ->where('building.deleted', 0)
+                ->orderBy('description')
+                ->select(
+                    'building.id',
+                    'building.description',
+                    'building.capacity',
+                    'building.description as text'
+                )
+                ->get();
 
-    return $buildings;
+        return $buildings;
 
     }
 
