@@ -6104,16 +6104,13 @@ Route::middleware(['auth'])->group(function () {
 // rooms
 Route::middleware(['cors'])->group(function () {
     Route::view('/rooms','adminPortal.pages.rooms');
-    Route::get('/rooms/get','AdministratorControllers\RoomsController@rooms');
+    Route::get('/rooms/datatable','AdministratorControllers\RoomsController@roomsDatatable');
+    Route::get('/rooms/get','AdministratorControllers\AdministratorController@rooms');
     Route::get('/rooms/update','AdministratorControllers\RoomsController@udpate_room');
     Route::get('/rooms/create','AdministratorControllers\RoomsController@create_room');
     Route::get('/rooms/delete','AdministratorControllers\RoomsController@delete_room');
     Route::get('/rooms/getsections','AdministratorControllers\RoomsController@getsections');
     Route::get('/rooms/getsubjects','AdministratorControllers\RoomsController@getsubjects');
-
-    // Route::get('/buildings/get','AdministratorControllers\AdministratorController@buildings');
-    // Route::get('/buildings/create','AdministratorControllers\AdministratorController@buildings_create');
-    
 });
 
 Route::middleware(['auth'])->group(function () {
