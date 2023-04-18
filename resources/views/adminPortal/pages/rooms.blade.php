@@ -1770,6 +1770,10 @@
         })
       })
 
+      $('#view_roominfo_modal').on('hide.bs.modal', function (e) {
+        rooms_datatable()
+      })
+
       $(document).on('click','#create_room',function(){
 
         var roomname = $('#roomName').val()
@@ -2055,35 +2059,39 @@
         }
 
         // check blank selection for update_roombuilding
-        if ($('#update_roombuilding').val() == '') {
-              Toast.fire({
-                    type: 'error',
-                    title: 'Update Error: Building cannot be empty.',
-                    timer: 9000
-              })
+        // if ($('#update_roombuilding').val() == '') {
+        //       Toast.fire({
+        //             type: 'error',
+        //             title: 'Update Error: Building cannot be empty.',
+        //             timer: 9000
+        //       })
 
-              isvalid = false
+        //       isvalid = false
+        // }
+
+
+        if ($('#update_roombuilding').val() != '') {
+          // check capacity
+          var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
+          var total_bldg_cap = selected_bldg[0].capacity
+          var total_room_cap = all_rooms.filter(
+            x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
+
+          var curr_room_cap = $('#update_roomcap').val()
+          var bldg_cap_left = total_bldg_cap - curr_room_cap
+
+          if (bldg_cap_left < 0) {
+            Toast.fire({
+              type: 'error',
+              title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Building capacity limit reached.</p>',
+              timer: 9000
+            })
+
+            isvalid = false
+            bldg_cap_left = 0
+          }
         }
 
-        // check capacity
-        var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
-        var total_bldg_cap = selected_bldg[0].capacity
-        var total_room_cap = all_rooms.filter(
-          x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
-
-        var curr_room_cap = $('#update_roomcap').val()
-        var bldg_cap_left = total_bldg_cap - curr_room_cap
-
-        if (bldg_cap_left < 0) {
-          Toast.fire({
-            type: 'error',
-            title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Building capacity limit reached.</p>',
-            timer: 9000
-          })
-
-          isvalid = false
-          bldg_cap_left = 0
-        }
 
         if (isvalid) {
           $('#create_room').prop('disabled', true);
