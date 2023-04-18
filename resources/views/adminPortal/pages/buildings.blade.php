@@ -758,7 +758,7 @@
             function roomUnassign() {
 
                   Swal.fire({
-                        text: `Are you sure you want to unassign room ${selected_room_name} to ${selected_bldg_name} building?`,
+                        html: `Are you sure you want to unassign room<br/><b>${selected_room_name}</b> to <b>${selected_bldg_name}</b> building?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
@@ -1519,7 +1519,7 @@
                         var temp_bldg_selected = all_buildings.filter(x => x.id == temp_room_selected['buildingid'])[0]
 
                         Swal.fire({
-                              html: `Room <b>${temp_room_selected['text']}</b> already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room?`,
+                              html: `Room <b>${temp_room_selected['text']}</b> is already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#d33', //'#3085d6'
