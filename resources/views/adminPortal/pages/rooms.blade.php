@@ -1755,18 +1755,19 @@
       })
 
       $(document).on('click','.view_info',function(){
-        selected_roomid = $(this).attr('data-id')
+        get_rooms().then(() => {
+          selected_roomid = $(this).attr('data-id')
+          var data = all_rooms.filter(x=>x.id == selected_roomid)
 
-        var data = all_rooms.filter(x=>x.id == selected_roomid)
+          $('#print_sched').attr('data-id', selected_roomid)
+          $('#update_roomname').val(data[0].roomname)
+          $('#update_roomcap').val(data[0].capacity)
+          $('#update_roombuilding').val(data[0].buildingid).change()
+          $('#room_name').text(data[0].roomname)
+          $('#view_roominfo_modal').modal()
 
-        $('#print_sched').attr('data-id', selected_roomid)
-        $('#update_roomname').val(data[0].roomname)
-        $('#update_roomcap').val(data[0].capacity)
-        $('#update_roombuilding').val(data[0].buildingid).change()
-        $('#room_name').text(data[0].roomname)
-        $('#view_roominfo_modal').modal()
-
-        get_sched(selected_roomid)
+          get_sched(selected_roomid)
+        })
       })
 
       $(document).on('click','#create_room',function(){
@@ -1890,7 +1891,7 @@
         // get previous building assigned and currently selected building
         var room_selected = all_rooms.filter(x=>x.id == selected_roomid)[0]
 
-        if (room_selected['buildingid'] != $('#update_roombuilding').val()) {
+        if (room_selected['buildingid'] != null && (room_selected['buildingid'] != $('#update_roombuilding').val())) {
               var temp_bldg_selected = all_building.filter(
                 x => x.id == room_selected['buildingid'])[0]
 
@@ -1944,7 +1945,7 @@
       }
 
       function get_rooms(){
-        $.ajax({
+        return $.ajax({
 					type:'GET',
 					url: '/rooms/get',
 					success:function(data) {
@@ -2067,15 +2068,13 @@
         // check capacity
         var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
         var total_bldg_cap = selected_bldg[0].capacity
-        
         var total_room_cap = all_rooms.filter(
           x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
-        
-        var selected_room_cap = all_rooms.filter(x => x.id == selected_roomid)[0].capacity
-        var selected_bldg_cap_left = total_bldg_cap - (total_room_cap - selected_room_cap)
-        var updated_capacity = selected_bldg_cap_left - $('#update_roomcap').val()
 
-        if (updated_capacity < 0) {
+        var curr_room_cap = $('#update_roomcap').val()
+        var bldg_cap_left = total_bldg_cap - curr_room_cap
+
+        if (bldg_cap_left < 0) {
           Toast.fire({
             type: 'error',
             title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Building capacity limit reached.</p>',
@@ -2083,8 +2082,7 @@
           })
 
           isvalid = false
-          updated_capacity = 0
-          selected_bldg_cap_left = 0
+          bldg_cap_left = 0
         }
 
         if (isvalid) {
