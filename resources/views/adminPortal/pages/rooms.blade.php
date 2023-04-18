@@ -1827,13 +1827,46 @@
             type: 'warning',
             title: 'Building is empty'
           })
+
           isvalid = false;
         }
-        
+
+        // check capacity before creating room
+        var selected_bldg = all_building.filter(x => x.id == $('#building').val())
+
+        if (selected_bldg.length != 0) {
+          console.log(selected_bldg)
+
+          var total_bldg_cap = selected_bldg[0].capacity
+          var total_room_cap = all_rooms.filter(
+            x => x.buildingid == $('#building').val()).reduce((sum, x) => sum + x.capacity, 0);
+          
+          // var selected_room_cap = all_rooms.filter(x => x.id == selected_roomid)[0].capacity
+          var selected_bldg_cap_left = total_bldg_cap - total_room_cap
+          var updated_capacity = selected_bldg_cap_left - $('#roomCapacity').val()
+
+          console.log(total_bldg_cap)
+          console.log(total_room_cap)
+          console.log(selected_bldg_cap_left)
+          console.log(updated_capacity)
+
+          if (updated_capacity < 0) {
+            Toast.fire({
+              type: 'error',
+              title: '<p class="text-left" style="margin-bottom: 0;">Create Error:<br/>Building capacity limit reached.</p>',
+              timer: 7000
+            })
+
+            isvalid = false
+            updated_capacity = 0
+            selected_bldg_cap_left = 0
+          }
+        }
 
         if (isvalid) {
           create_room()
         }
+
       })
 
       $(document).on('click','#delete_information',function(){
@@ -2117,6 +2150,17 @@
                     { "data": null },
               ],
               columnDefs: [
+                {
+                  'targets': 1,
+                  'orderable': false, 
+                  'createdCell':  function (td, cellData, rowData, row, col) {
+                    if (rowData.description != '') {
+                      $(td)[0].innerHTML = rowData.description
+                    } else {
+                      $(td).text(null)
+                    }
+                  }
+                },
                 {
                   'targets': 2,
                   'orderable': false, 
