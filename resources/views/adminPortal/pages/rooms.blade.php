@@ -1777,12 +1777,6 @@
         var check_duplicate = []
         var isvalid = true
 
-        // if($(this).attr('data-id') == 1){
-        //   check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
-        // }else{
-        //   check_duplicate = all_rooms.filter(x=>x.roomname == roomname && x.id != selected_roomid)
-        // }
-
         // check for duplicate name
         check_duplicate = all_rooms.filter(x=>x.roomname == roomname)
 
@@ -2038,21 +2032,27 @@
         }
 
         // check capacity
-        var selected_bldg_id = $('#update_roombuilding').val()
-        var selected_bldg_cap = all_building.filter(x => x)
-
-        // UPDATE ROOM
-
-        // get the selected bldg id
-        // get the selected bldg cap
-
-        // get the selected room cap
+        var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
+        var total_bldg_cap = selected_bldg[0].capacity
         
-        console.log(all_rooms)
-        console.log(all_building)
-        console.log(selected_roomid)
+        var total_room_cap = all_rooms.filter(
+          x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
+        
+        var selected_room_cap = all_rooms.filter(x => x.id == selected_roomid)[0].capacity
+        var selected_bldg_cap_left = total_bldg_cap - (total_room_cap - selected_room_cap)
+        var updated_capacity = selected_bldg_cap_left - $('#update_roomcap').val()
 
+        if (updated_capacity < 0) {
+          Toast.fire({
+            type: 'error',
+            title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Building capacity limit reached.</p>',
+            timer: 9000
+          })
 
+          isvalid = false
+          updated_capacity = 0
+          selected_bldg_cap_left = 0
+        }
 
         if (isvalid) {
           $('#create_room').prop('disabled', true);
