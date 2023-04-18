@@ -107,7 +107,9 @@
                 <div class="form-group">
                     <label>Room Name</label>
                     <input id="roomName"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                    <div id="invRoomName" class="invalid-feedback"></div>
+                    <div id="invRoomName" class="invalid-feedback">
+                      Room name empty
+                    </div>
                     <div class="valid-feedback">
                       Room name looks good!
                     </div>
@@ -116,7 +118,9 @@
                 <div class="form-group">
                   <label>Room Capacity</label>
                   <input id="roomCapacity" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                  <div id="invRoomCap" class="invalid-feedback"></div>
+                  <div id="invRoomCap" class="invalid-feedback">
+                    Room capacity empty
+                  </div>
                   <div class="valid-feedback">
                     Room capacity looks good!
                   </div>
@@ -157,7 +161,9 @@
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Name</label>
                               <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                              <div id="invRoomName" class="invalid-feedback"></div>
+                              <div id="invRoomName" class="invalid-feedback">
+                                Room name empty!
+                              </div>
                               <div class="valid-feedback">
                                     Room name looks good!
                               </div>
@@ -167,7 +173,9 @@
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Capacity</label>
                               <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                              <div id="invRoomCap" class="invalid-feedback"></div>
+                              <div id="invRoomCap" class="invalid-feedback">
+                                Room capacity empty!
+                              </div>
                               <div class="valid-feedback">
                                     Room capacity looks good!
                               </div>
@@ -1756,6 +1764,9 @@
 
       $(document).on('click','.view_info',function(){
         get_rooms().then(() => {
+          resetValidation('#update_roomname')
+          resetValidation('#update_roomcap')
+
           selected_roomid = $(this).attr('data-id')
           var data = all_rooms.filter(x=>x.id == selected_roomid)
 
@@ -1765,6 +1776,9 @@
           $('#update_roombuilding').val(data[0].buildingid).change()
           $('#room_name').text(data[0].roomname)
           $('#view_roominfo_modal').modal()
+
+          dynamicValidate('#update_roomname', '', /\S+/, (result) => {return result})
+          dynamicValidate('#update_roomcap', '', /\S+/, (result) => {return result})
 
           get_sched(selected_roomid)
         })
@@ -1840,7 +1854,6 @@
         var selected_bldg = all_building.filter(x => x.id == $('#building').val())
 
         if (selected_bldg.length != 0) {
-          console.log(selected_bldg)
 
           var total_bldg_cap = selected_bldg[0].capacity
           var total_room_cap = all_rooms.filter(
@@ -1850,15 +1863,11 @@
           var selected_bldg_cap_left = total_bldg_cap - total_room_cap
           var updated_capacity = selected_bldg_cap_left - $('#roomCapacity').val()
 
-          console.log(total_bldg_cap)
-          console.log(total_room_cap)
-          console.log(selected_bldg_cap_left)
-          console.log(updated_capacity)
 
           if (updated_capacity < 0) {
             Toast.fire({
               type: 'error',
-              title: '<p class="text-left" style="margin-bottom: 0;">Create Error:<br/>Building capacity limit reached.</p>',
+              title: `<p class="text-left" style="margin-bottom: 0;">Create Error:<br/>${selected_bldg[0].description} building capacity limit reached.</p>`,
               timer: 7000
             })
 
@@ -2083,8 +2092,8 @@
           if (bldg_cap_left < 0) {
             Toast.fire({
               type: 'error',
-              title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Building capacity limit reached.</p>',
-              timer: 9000
+              title: `<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>${selected_bldg[0].description} building capacity limit reached.</p>`,
+              timer: 7000
             })
 
             isvalid = false
@@ -2248,20 +2257,19 @@
         var pattern = new RegExp(patternStr);
 
         function validateInput(inputSel, btnSelector, pattern) {
-
-              if (!pattern.test(inputSel.val().trim())) {
-                    if (btnSelector !== '') {
-                          $(btnSelector).prop("disabled", true);
-                    }
-                    inputSel.removeClass("is-valid").addClass("is-invalid");
-                    return false;
-              } else {
-                    if (btnSelector !== '') {
-                          $(btnSelector).prop("disabled", false);
-                    }
-                    inputSel.removeClass("is-invalid").addClass("is-valid");
-                    return true;
-              }
+          if (!pattern.test(inputSel.val().trim())) {
+                if (btnSelector !== '') {
+                      $(btnSelector).prop("disabled", true);
+                }
+                inputSel.removeClass("is-valid").addClass("is-invalid");
+                return false;
+          } else {
+                if (btnSelector !== '') {
+                      $(btnSelector).prop("disabled", false);
+                }
+                inputSel.removeClass("is-invalid").addClass("is-valid");
+                return true;
+          }
         }
 
         inputSel.on("input", () => {
@@ -2270,7 +2278,11 @@
         });
       }
 
-    })
+      function resetValidation(selector) {
+        $(selector).removeClass('is-valid').removeClass('is-invalid');
+      }
+
+  })
 
   </script>
 
