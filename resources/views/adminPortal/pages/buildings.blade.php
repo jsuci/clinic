@@ -287,8 +287,6 @@
     </div>
 @endsection
 
-
-
 @section('footerjavascript')
       <script src="{{asset('plugins/moment/moment.min.js') }}"></script>
       <script src="{{asset('plugins/select2/js/select2.full.min.js') }}"></script>
@@ -297,9 +295,6 @@
       <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
       <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
       {{-- <script src="{{asset('js/setupjs/buildings.js') }}"></script> --}}
-      <script>
-
-      </script>
 
       <script>
             $(document).ready(function(){
@@ -1727,7 +1722,10 @@
 
             // Capture Selection Close
             $('#assignRoom').on('select2:close', function (e) {
-                  $('#select2-assignRoom-container').text(`${room_selection_name} (${room_selection_cap})`)
+                  if (room_selection_name != '' && room_selection_cap != '') {
+                        $('#select2-assignRoom-container').text(`${room_selection_name} (${room_selection_cap})`)
+                  }
+                  
             });
 
       </script>
