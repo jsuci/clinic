@@ -1654,28 +1654,30 @@
                   if (room_selected['buildingid'] != null) {
                         var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
 
-                        Toast.fire({
-                              type: 'error',
-                              title: `<p class="text-left" style="margin-bottom: 0;"><b>Edit Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
-                              timer: 6000
+                        Swal.fire({
+                              html: `Room already assigned to <b>${temp_bldg_selected['description']} building</b>.<br/>Are you sure you want to edit this room?`,
+                              type: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#d33', //'#3085d6'
+                              cancelButtonColor: '#6c757d', //'#d33'
+                              confirmButtonText: 'Edit'
+                        }).then((result) => {
+                              if (result.value) {
+                                    // launch modal
+                                    $('#room_form_modal').modal()
+                              }
                         })
+
+                        // Toast.fire({
+                        //       type: 'error',
+                        //       title: `<p class="text-left" style="margin-bottom: 0;"><b>Edit Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
+                        //       timer: 6000
+                        // })
 
                         // do not delete
                         // pop-up modal to confirm edit
                         // var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
-                        // Swal.fire({
-                        //       html: `Room already assigned to ${temp_bldg_selected['description']} building.<br/>Are you sure you want to edit this room?`,
-                        //       type: 'warning',
-                        //       showCancelButton: true,
-                        //       confirmButtonColor: '#d33', //'#3085d6'
-                        //       cancelButtonColor: '#6c757d', //'#d33'
-                        //       confirmButtonText: 'Reassign'
-                        // }).then((result) => {
-                        //       if (result.value) {
-                        //             // launch modal
-                        //             $('#room_form_modal').modal()
-                        //       }
-                        // })
+
 
 
                   } else {
@@ -1695,17 +1697,11 @@
 
                   // check if room is already assigned to another building
                   if (room_selected['buildingid'] != null) {
+
                         var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
 
-                        Toast.fire({
-                              type: 'error',
-                              title: `<p class="text-left" style="margin-bottom: 0;"><b>Delete Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
-                              timer: 6000
-                        })
-
-                  } else {
                         Swal.fire({
-                              text: `Are you sure you want to remove room ${room_selection_name}?`,
+                              html: `Room already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to remove <b>${room_selection_name}</b>?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#d33', // #3085d6
@@ -1716,6 +1712,13 @@
                                     delete_room()
                               }
                         })
+
+                        // Toast.fire({
+                        //       type: 'error',
+                        //       title: `<p class="text-left" style="margin-bottom: 0;"><b>Delete Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
+                        //       timer: 6000
+                        // })
+
                   }
 
             })
