@@ -22,25 +22,24 @@ use JoisarJignesh\Bigbluebutton\Facades\Bigbluebutton;
 Route::middleware(['cors'])->group(function () {
 
     Route::view('/buildings','adminPortal.pages.buildings');
-    Route::get('api/buildings/select','AdministratorControllers\BuildingController@getBuildingsSelect');
-    Route::get('api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
-    Route::get('api/building/create','AdministratorControllers\BuildingController@buildingCreate');
-    Route::get('api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
+    Route::get('/api/buildings/select','AdministratorControllers\BuildingController@getBuildingsSelect');
+    Route::get('/api/building/update','AdministratorControllers\BuildingController@buildingUpdate');
+    Route::get('/api/building/create','AdministratorControllers\BuildingController@buildingCreate');
+    Route::get('/api/building/delete','AdministratorControllers\BuildingController@buildingDelete');
 
-    // JAM: custom routes
-    Route::get('api/buildings','AdministratorControllers\BuildingController@getBuildings');
-    Route::get('api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
+    Route::get('/api/buildings','AdministratorControllers\BuildingController@getBuildings');
+    Route::get('/api/buildings/datatable','AdministratorControllers\BuildingController@getBuildingsDatatable');
 
-    Route::get('api/building/rooms/datatable','AdministratorControllers\BuildingController@getRoomsDataTable');
-    Route::get('api/building/all-rooms-except','AdministratorControllers\BuildingController@getAllRoomsExcept');
+    Route::get('/api/building/rooms/datatable','AdministratorControllers\BuildingController@getRoomsDataTable');
+    Route::get('/api/building/all-rooms-except','AdministratorControllers\BuildingController@getAllRoomsExcept');
     
-    Route::get('api/rooms/assign','AdministratorControllers\BuildingController@assignRoomsToBuilding');
-    Route::get('api/room/unassign','AdministratorControllers\BuildingController@unAssignRoomsToBuilding');
+    Route::get('/api/rooms/assign','AdministratorControllers\BuildingController@assignRoomsToBuilding');
+    Route::get('/api/room/unassign','AdministratorControllers\BuildingController@unAssignRoomsToBuilding');
 
     //building sync
-    Route::get('api/building/syncnew','AdministratorControllers\BuildingController@syncNew');
-    Route::get('api/building/syncupdate','AdministratorControllers\BuildingController@syncUpdate');
-    Route::get('api/building/syncdelete','AdministratorControllers\BuildingController@syncDelete');
+    Route::get('/api/building/syncnew','AdministratorControllers\BuildingController@syncNew');
+    Route::get('/api/building/syncupdate','AdministratorControllers\BuildingController@syncUpdate');
+    Route::get('/api/building/syncdelete','AdministratorControllers\BuildingController@syncDelete');
     Route::get('/api/building/getnewinfo','AdministratorControllers\BuildingController@getNewInfo');
     Route::get('/api/building/getupdated','AdministratorControllers\BuildingController@getUpdateInfo');
     Route::get('/api/building/getdeleted','AdministratorControllers\BuildingController@getDeleteInfo');
@@ -5567,8 +5566,6 @@ Route::middleware([ 'auth'])->group(function () {
 
 });
 //subject plot
-
-
 
 
 //All API
