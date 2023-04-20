@@ -21,9 +21,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $stage = $request->get('stage');
             $subjdesc = $request->get('subjdesc');
             $subjcode = $request->get('subjcode');
-            // JAM START: catch subjunit
             $subjunit = $request->get('subjunit');
-            // JAM END: catch subjunit
             $isCon = $request->get('isCon');
             $isSP = $request->get('isSP');
             $comp = $request->get('comp');
@@ -135,9 +133,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
       public static function create_sh(
             $subjdesc = null,
             $subjcode = null,
-            // JAM START: add new variable subjunit
             $subjunit = null,
-            // JAM END: add new variable subjunit
             $type = null,
             $isInSF9 = 1,
             $isVisible = 1
@@ -181,9 +177,7 @@ class SubjectSetupController extends \App\Http\Controllers\Controller
             $id = null,
             $subjdesc = null,
             $subjcode = null,
-            // JAM START: add new variable subjunit
             $subjunit = null,
-            // JAM END: add new variable subjunit
             $isCon = null,
             $isSP = null,
             $comp = array(),
