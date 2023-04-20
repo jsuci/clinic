@@ -174,10 +174,10 @@
                               <label>Room Capacity</label>
                               <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
                               <div id="invRoomCap" class="invalid-feedback">
-                                Room capacity empty!
+                                Room capacity empty
                               </div>
                               <div class="valid-feedback">
-                                    Room capacity looks good!
+                                Room capacity looks good!
                               </div>
                             </div>
                           </div>
@@ -2090,6 +2090,10 @@
           var bldg_cap_left = total_bldg_cap - curr_room_cap
 
           if (bldg_cap_left < 0) {
+            // $('#invRoomCap').html('Max capacity value entered')
+            $('#update_roomcap').removeClass('is-valid')
+            // $('#update_roomcap').addClass('is-invalid')
+
             Toast.fire({
               type: 'error',
               title: `<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>${selected_bldg[0].description} building capacity limit reached.</p>`,
