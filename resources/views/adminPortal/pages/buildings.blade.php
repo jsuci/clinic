@@ -1731,6 +1731,11 @@
                   
             });
 
+            // Update building datatable on modal close
+            $('#view_bldginfo_modal').on('hide.bs.modal', function (e) {
+                  buildingDatatable()
+            })
+
       </script>
 @endsection
 
