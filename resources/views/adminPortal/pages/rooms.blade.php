@@ -1903,13 +1903,14 @@
         // check changes to assigned building
         // get previous building assigned and currently selected building
         var room_selected = all_rooms.filter(x=>x.id == selected_roomid)[0]
+        var bldg_selected = all_building.filter(x=>x.id == $('#update_roombuilding').val())[0]
 
         if (room_selected['buildingid'] != null && (room_selected['buildingid'] != $('#update_roombuilding').val())) {
               var temp_bldg_selected = all_building.filter(
                 x => x.id == room_selected['buildingid'])[0]
 
               Swal.fire({
-                    html: `Room already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room?`,
+                    html: `Room already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room to <b>${bldg_selected['description']}</b> building?`,
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33', //'#3085d6'
