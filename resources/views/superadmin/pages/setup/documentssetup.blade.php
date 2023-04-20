@@ -329,8 +329,6 @@
       
 
       <script>
-
-      
             $(document).ready(function(){
 
                   var all_document = []
@@ -430,12 +428,12 @@
 
                   function get_document(){
                         $.ajax({
-					type:'GET',
-					url: '/superadmin/setup/document/list',
+                              type:'GET',
+                              url: '/superadmin/setup/document/list',
                               data:{
                                     levelid:$('#filter_gradelevel').val()
                               },
-					success:function(data) {
+                              success:function(data) {
                                     if(data.length == 0){
                                           Toast.fire({
                                                 type: 'warning',
@@ -451,8 +449,8 @@
                                           all_document = data
                                           loaddatatable()
                                     }
-					}
-				})
+                              }
+                        })
                   }
 
                   function create_document(){
@@ -898,20 +896,20 @@
                                                 })
                                           }
                                     }
-				      })
+                              })
                         }
 
                   }
 
                   function update_docdesc(){
                         $.ajax({
-					type:'GET',
-					url: '/superadmin/setup/docdesc/update',
+                              type:'GET',
+                              url: '/superadmin/setup/docdesc/update',
                               data:{
                                     docdescid: selected_docdescid,
                                     description: $('#input_document').val()
                               },
-					success:function(data) {
+                              success:function(data) {
                                     if(data[0].status == 2) {
 
                                           Toast.fire({
@@ -935,18 +933,18 @@
                                                 title: data[0].message
                                           })
                                     }
-					}
-				})
+                              }
+                        })
                   }
 
                   function delete_docdesc(){
                         $.ajax({
-					type:'GET',
-					url: '/superadmin/setup/docdesc/delete',
+                              type:'GET',
+                              url: '/superadmin/setup/docdesc/delete',
                               data:{
                                     docdescid: selected_docdescid
                               },
-					success:function(data) {
+                              success:function(data) {
                                     if(data[0].status == 2){
                                           Toast.fire({
                                                 type: 'warning',
@@ -969,8 +967,8 @@
                                                 title: data[0].message
                                           })
                                     }
-					}
-				})
+                              }
+                        })
                   }
 
                   function list_all_docdesc(prompt=false){
@@ -1139,7 +1137,7 @@
                                     paging: false,
                                     bInfo: false,
                                     data:all_document,
-                                   
+                                    
                                     columns: [
                                           { "data": "docsort"},
                                           { "data": "description" },
@@ -1149,82 +1147,82 @@
                                           { "data": null },
                                           { "data": null },
                                           { "data": null },
-                                        
+                                          
                                     ],
 
                                     columnDefs: [
                                                       {
-										'targets': 0,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
+                                                            'targets': 0,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
                                                                   $(td).addClass('text-center')
-										}
-                                    			},
+                                                            }
+                                                      },
                                                       {
-										'targets': 2,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
+                                                            'targets': 2,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
                                                                   var doc_studtype = rowData.doc_studtype
                                                                   if(rowData.doc_studtype == null){
                                                                         doc_studtype = 'All'
                                                                   }
                                                                   $(td).text(doc_studtype)
-										}
-                                    			},
+                                                            }
+                                                      },
                                                       {
-										'targets': 3,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
+                                                            'targets': 3,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
                                                                   if(rowData.isActive == 1){
                                                                         $(td)[0]. innerHTML = '<i class="fas fa-check-square text-success"></i>'
                                                                   }else{
                                                                         $(td)[0]. innerHTML = '<i class="fas fa-times-circle text-danger"></i>'
                                                                   }
                                                                   $(td).addClass('text-center')
-										}
-                                    			},
+                                                            }
+                                                      },
                                                       {
-										'targets': 4,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
+                                                            'targets': 4,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
                                                                   if(rowData.isRequired == 1){
                                                                         $(td)[0]. innerHTML = '<i class="fas fa-check-square text-success"></i>'
                                                                   }else{
                                                                         $(td)[0]. innerHTML = '<i class="fas fa-times-circle  text-danger"></i>'
                                                                   }
                                                                   $(td).addClass('text-center')
-										}
-                                    			},
+                                                            }
+                                                      },
                                                       {
-										'targets': 5,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
-											var buttons = '<a href="#" class="copy_document" data-id="'+rowData.id+'"><i class="fas fa-copy text-primary"></i></a>';
-											$(td)[0].innerHTML =  buttons
-											$(td).addClass('text-center')
-										}
-                                    			},
-                                                     
+                                                            'targets': 5,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
+                                                                  var buttons = '<a href="#" class="copy_document" data-id="'+rowData.id+'"><i class="fas fa-copy text-primary"></i></a>';
+                                                                  $(td)[0].innerHTML =  buttons
+                                                                  $(td).addClass('text-center')
+                                                            }
+                                                      },
+                                                      
                                                       {
-										'targets': 6,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
-											var buttons = '<a href="#" class="edit_document" data-id="'+rowData.id+'"><i class="far fa-edit"></i></a>';
-											$(td)[0].innerHTML =  buttons
-											$(td).addClass('text-center')
-                                                              
-										}
-                                    			},
+                                                            'targets': 6,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
+                                                                  var buttons = '<a href="#" class="edit_document" data-id="'+rowData.id+'"><i class="far fa-edit"></i></a>';
+                                                                  $(td)[0].innerHTML =  buttons
+                                                                  $(td).addClass('text-center')
+                                                                  
+                                                            }
+                                                      },
                                                       {
-										'targets': 7,
-										'orderable': true, 
-										'createdCell':  function (td, cellData, rowData, row, col) {
-											var buttons = '<a href="#" class="delete_document" data-id="'+rowData.id+'"><i class="far fa-trash-alt text-danger"></i></a>';
-											$(td)[0].innerHTML =  buttons
-											$(td).addClass('text-center')
-										}
-                                    			},
-								]
+                                                            'targets': 7,
+                                                            'orderable': true, 
+                                                            'createdCell':  function (td, cellData, rowData, row, col) {
+                                                                  var buttons = '<a href="#" class="delete_document" data-id="'+rowData.id+'"><i class="far fa-trash-alt text-danger"></i></a>';
+                                                                  $(td)[0].innerHTML =  buttons
+                                                                  $(td).addClass('text-center')
+                                                            }
+                                                      },
+                                                ]
                         });
                   
                   }
