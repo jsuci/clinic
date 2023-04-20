@@ -1066,7 +1066,7 @@
                         var isPrevBtnDisabled = prevBtn.hasClass('disabled')
                         var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
-                        if (!isPrevBtnDisabled && noRecordsCount == 2) {
+                        if (!isPrevBtnDisabled && noRecordsCount > 0) {
                               // click the previous button
                               prevBtn.click()
                         }

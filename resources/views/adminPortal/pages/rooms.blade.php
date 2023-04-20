@@ -2145,6 +2145,8 @@
 
       function rooms_datatable(){
 
+        var dtDeferred = $.Deferred();
+
         $("#rooms_datatable").DataTable({
               destroy: true,
               // data:all_rooms,
@@ -2159,6 +2161,10 @@
                   dataSrc: function ( json ) {
                         return json.data;
                   }
+              },
+              initComplete: function(settings, json) {
+                // Resolve the Deferred object
+                dtDeferred.resolve();
               },
               columns: [
                     { "data": "roomname" },
@@ -2252,7 +2258,19 @@
         var label_text = $($('#rooms_datatable_wrapper')[0].children[0])[0].children[0]
         $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" title="Room" id="create_room_button">Create Room</button>'
 
-        // return temp_room;
+        dtDeferred.promise().then(function() {
+              // code to execute after the DataTable has finished initializing
+              var prevBtn = $('#rooms_datatable_previous')
+              var isPrevBtnDisabled = prevBtn.hasClass('disabled')
+              var noRecordsCount = $(`td[class='dataTables_empty']`).length
+
+              console.log(noRecordsCount)
+
+              if (!isPrevBtnDisabled && noRecordsCount > 0) {
+                    // click the previous button
+                    prevBtn.click()
+              }
+        });
 
       }
 
