@@ -1406,7 +1406,7 @@
                         } else {
                               Toast.fire({
                                     type: 'error',
-                                    title: 'Building Update Error: Total Room Capacity is greater than Total Bldg Capacity Left',
+                                    title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Total room capacity is greater than total building capacity left.</p>',
                                     timer: 8000
                               })
                         }

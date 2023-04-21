@@ -194,7 +194,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if($check > 0){
                 return array((object)[
                     'status'=>0,
-                    'message'=>'Building is currently in used',
+                    'message'=>'<p class="text-left" style="margin-bottom: 0;">Delete Error:<br/>Building is currently in used</p>',
                     'icon'=>'error'
                 ]);
             }
