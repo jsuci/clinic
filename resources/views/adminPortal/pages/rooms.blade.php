@@ -1601,8 +1601,10 @@
       var selected_roomid = null
 
       rooms_datatable()
-      get_buildings()
-      get_rooms()
+      // get_buildings()
+      // get_rooms()
+
+      get_room_bldg_selection()
 
       // $('#secttea').select2()
       $('#sectroo').select2()
@@ -1910,7 +1912,7 @@
                 x => x.id == room_selected['buildingid'])[0]
 
               Swal.fire({
-                    html: `Room already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room to <b>${bldg_selected['description']}</b> building?`,
+                    html: `This room is already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room to<br><b>${bldg_selected['description']}</b> building?`,
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33', //'#3085d6'
@@ -1947,15 +1949,103 @@
                   data: data,
                   allowClear: true,
                   placeholder: "Select Building",
+                  templateResult: function(data) {
+                    return data
+                  }
             })
 
             $("#update_roombuilding").select2({
                   data: all_building,
                   allowClear: true,
                   placeholder: "Select Building",
+                  templateResult: function(data) {
+                    return data
+                  }
             })
 					}
 				})
+      }
+
+      function get_room_bldg_selection(){
+
+        // call building
+        var bldg_ajax = $.ajax({
+          url: "/buildings/get",
+          type: "GET",
+          success: function(data) {
+            // Handle successful response here
+            all_building = data
+          },
+          error: function(error) {
+            // Handle error response here
+            console.log(error)
+          }
+        });
+
+        // call rooms
+        var room_ajax = $.ajax({
+          url: "/rooms/get",
+          type: "GET",
+          success: function(data) {
+            // Handle successful response here
+            all_rooms = data
+          },
+          error: function(error) {
+            // Handle error response here
+            console.log(error)
+          }
+        });
+
+        $.when(bldg_ajax, room_ajax).done(function(resp1, resp2) {
+          // Handle successful responses here
+          // console.log(resp1[0], resp2[0])
+
+          var new_all_bldg = $.map(all_building, (bldg, index) => {
+            var totalRoomCap = 0
+            var total
+
+            var assocRooms = all_rooms.filter(room  => room.buildingid === bldg.id)
+            $.each(assocRooms, (index, val) => {
+              totalRoomCap += val.capacity
+            })
+
+            bldg['totalRoomCap'] = totalRoomCap
+
+            return bldg
+          })
+
+          $("#building").select2({
+                  data: new_all_bldg,
+                  allowClear: true,
+                  placeholder: "Select Building",
+                  templateResult: function(data) {
+                    return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
+                  },
+                  templateSelection: function(data) {
+                    if (!data.id) { return ''; }
+                    return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
+                  }
+            })
+
+          $("#update_roombuilding").select2({
+                data: new_all_bldg,
+                allowClear: true,
+                placeholder: "Select Building",
+                templateResult: function(data) {
+                    return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
+                  },
+                templateSelection: function(data) {
+                  if (!data.id) { return ''; }
+                  return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
+                }
+          })
+
+
+        }).fail(function(error) {
+          // Handle error response here
+          console.log(error)
+        });
+
       }
 
       function get_rooms(){
