@@ -129,9 +129,15 @@ class RoomsController extends \App\Http\Controllers\Controller
 
         $search = $request->get('search');
         $search = $search['value'];
+        
+        $order = $request->get('order')[0];
+        $order_col = $order['column'];
+        $order_dir = $order['dir'];
 
+        $columns = ['rooms.roomname', 'description', 'rooms.capacity'];
 
         $rooms = DB::table('rooms')
+            ->orderBy($columns[$order_col], $order_dir)
             ->leftJoin('building',function($join){
                 $join->on('rooms.buildingid','=','building.id');
                 $join->where('building.deleted',0);
@@ -155,6 +161,7 @@ class RoomsController extends \App\Http\Controllers\Controller
             ->get();
 
         $room_count = DB::table('rooms')
+            ->orderBy($columns[$order_col], $order_dir)
             ->leftJoin('building',function($join){
                 $join->on('rooms.buildingid','=','building.id');
                 $join->where('building.deleted',0);

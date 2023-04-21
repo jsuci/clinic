@@ -2272,7 +2272,6 @@
 
         $("#rooms_datatable").DataTable({
               destroy: true,
-              // data:all_rooms,
               lengthChange : false,
               stateSave: true,
               autoWidth: false,
@@ -2301,7 +2300,7 @@
               columnDefs: [
                 {
                   'targets': 1,
-                  'orderable': false, 
+                  'orderable': true, 
                   'createdCell':  function (td, cellData, rowData, row, col) {
                     if (rowData.description != '') {
                       $(td)[0].innerHTML = rowData.description
@@ -2312,15 +2311,13 @@
                 },
                 {
                   'targets': 2,
-                  'orderable': false, 
+                  'orderable': true, 
                   'createdCell':  function (td, cellData, rowData, row, col) {
                       $(td)[0].innerHTML = rowData.capacity
                       $(td).addClass('align-middle')
                       $(td).addClass('text-center')
                   }
                 },
-                
-
                 {
                   'targets': 3,
                   'orderable': false, 
@@ -2333,7 +2330,6 @@
                         
                   }
                 },
-
                 {
                   'targets': 4,
                   'orderable': false, 
