@@ -176,53 +176,6 @@ class RoomsController extends \App\Http\Controllers\Controller
             )
             ->count();
 
-        // $rooms = DB::table('rooms')
-        //     ->join('building',function($join){
-        //         $join->on('rooms.buildingid','=','building.id');
-        //         $join->where('building.deleted',0);
-        //     })  
-        //     ->where(function($query) use($search){
-        //         if($search != null){
-        //             $query->orWhere('roomname','like','%'.$search.'%');
-        //             $query->orWhere('description','like','%'.$search.'%');
-        //         }
-        //     })
-        //     ->take($request->get('length'))
-        //     ->skip($request->get('start'))
-        //     ->where('rooms.deleted',0)
-        //     ->select(
-        //         'rooms.id',
-        //         'rooms.roomname',
-        //         'rooms.capacity',
-        //         'buildingid',
-        //         'description'
-        //     )
-        //     ->get();
-
-
-        // $room_count = DB::table('rooms')
-        //     ->join('building',function($join){
-        //         $join->on('rooms.buildingid','=','building.id');
-        //         $join->where('building.deleted',0);
-        //     })  
-        //     ->where(function($query) use($search){
-        //         if($search != null){
-        //             $query->orWhere('roomname','like','%'.$search.'%');
-        //             $query->orWhere('description','like','%'.$search.'%');
-        //         }
-        //     })
-        //     ->where('rooms.deleted',0)
-        //     ->select(
-        //         'rooms.id',
-        //         'rooms.roomname',
-        //         'rooms.capacity',
-        //         'buildingid',
-        //         'description'
-        //     )
-        //     ->count();
-
-
-        // return collect($rooms)->sortBy('roomname')->values();
         return @json_encode((object)[
             'data'=>$rooms,
             'recordsTotal'=>$room_count,
