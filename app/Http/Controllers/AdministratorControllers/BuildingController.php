@@ -194,7 +194,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if($check > 0){
                 return array((object)[
                     'status'=>0,
-                    'message'=>'Building in used',
+                    'message'=>'Building is currently in used',
                     'icon'=>'error'
                 ]);
             }
