@@ -638,7 +638,22 @@
                                           if(data.id == 'add') {
                                                 return $('<option value="add">Add Room</option>');
                                           }
+                                    },
+                                    templateSelection: function(data) {
+
+                                          console.log(data)
+                                          
+                                          if (data.id == 'add') {
+                                                return ``
+                                          }
+
+                                          if (data.id == '') {
+                                                return `Select Room`
+                                          }
+
+                                          return `${data.text} (${data.capacity})`
                                     }
+
                               })
                         }
                   }).then(() => {
@@ -863,7 +878,7 @@
             function buildingDelete(){
 
                   Swal.fire({
-                        text: `Are you sure you want to delete ${selected_bldg_name} building?`,
+                        html: `Are you sure you want to delete <b>${selected_bldg_name}</b> building?`,
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33', //'#3085d6'
@@ -1655,7 +1670,7 @@
                         var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
 
                         Swal.fire({
-                              html: `Room already assigned to <b>${temp_bldg_selected['description']} building</b>.<br/>Are you sure you want to edit this room?`,
+                              html: `This room is already assigned to <b>${temp_bldg_selected['description']} building</b>.<br/>Are you sure you want to edit this room?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#d33', //'#3085d6'
@@ -1667,17 +1682,6 @@
                                     $('#room_form_modal').modal()
                               }
                         })
-
-                        // Toast.fire({
-                        //       type: 'error',
-                        //       title: `<p class="text-left" style="margin-bottom: 0;"><b>Edit Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
-                        //       timer: 6000
-                        // })
-
-                        // do not delete
-                        // pop-up modal to confirm edit
-                        // var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
-
 
 
                   } else {
@@ -1701,7 +1705,7 @@
                         var temp_bldg_selected = all_buildings.filter(x => x.id == room_selected['buildingid'])[0]
 
                         Swal.fire({
-                              html: `Room already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to remove <b>${room_selection_name}</b>?`,
+                              html: `This room is already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to remove <b>${room_selection_name}</b>?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#d33', // #3085d6
@@ -1713,23 +1717,16 @@
                               }
                         })
 
-                        // Toast.fire({
-                        //       type: 'error',
-                        //       title: `<p class="text-left" style="margin-bottom: 0;"><b>Delete Error:</b><br>Room already assigned to ${temp_bldg_selected['description']} building.</p>`,
-                        //       timer: 6000
-                        // })
-
                   }
 
             })
 
-            // Capture Selection Close
-            $('#assignRoom').on('select2:close', function (e) {
-                  if (room_selection_name != '' && room_selection_cap != '') {
-                        $('#select2-assignRoom-container').text(`${room_selection_name} (${room_selection_cap})`)
-                  }
-                  
-            });
+            // // Add capacity on selected selection
+            // $('#assignRoom').on('select2:close', function (e) {
+            //       if (room_selection_name != '' && room_selection_cap != '') {
+            //             $('#select2-assignRoom-container').text(`${room_selection_name} (${room_selection_cap})`)
+            //       }
+            // });
 
             // Update building datatable on modal close
             $('#view_bldginfo_modal').on('hide.bs.modal', function (e) {
