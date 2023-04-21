@@ -1908,7 +1908,7 @@
 
       $(document).on('click','#delete_information',function(){
         Swal.fire({
-          text: `Are you sure you want to remove room ${$('#update_roomname').val()}?`,
+          html: `Are you sure you want to remove room <b>${$('#update_roomname').val()}</b>?`,
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#d33', // #3085d6
