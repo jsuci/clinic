@@ -2134,6 +2134,7 @@
 
               // reload rooms datatable
               rooms_datatable()
+              get_room_bldg_selection()
 
             }
 
@@ -2382,6 +2383,8 @@
               var prevBtn = $('#rooms_datatable_previous')
               var isPrevBtnDisabled = prevBtn.hasClass('disabled')
               var noRecordsCount = $(`td[class='dataTables_empty']`).length
+
+              console.log(isPrevBtnDisabled, noRecordsCount)
 
               if (!isPrevBtnDisabled && noRecordsCount > 0) {
                     // click the previous button
