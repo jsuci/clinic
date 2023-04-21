@@ -161,11 +161,11 @@
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Name</label>
                               <input id="update_roomname"  name="roomName" class="form-control form-control-sm" placeholder="Room Name" onkeyup="this.value = this.value.toUpperCase();">
-                              <div id="invRoomName" class="invalid-feedback">
+                              <div id="invRoomNameUpdate" class="invalid-feedback">
                                 Room name empty!
                               </div>
                               <div class="valid-feedback">
-                                    Room name looks good!
+                                Room name looks good!
                               </div>
                             </div>
                           </div>
@@ -173,7 +173,7 @@
                             <div class="col-md-12 form-group mb-2">
                               <label>Room Capacity</label>
                               <input id="update_roomcap" placeholder="Room Capacity" name="roomCapacity" class="form-control form-control-sm" min="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');" >
-                              <div id="invRoomCap" class="invalid-feedback">
+                              <div id="invRoomCapUpdate" class="invalid-feedback">
                                 Room capacity empty
                               </div>
                               <div class="valid-feedback">
@@ -1765,7 +1765,8 @@
       })
 
       $(document).on('click','.view_info',function(){
-        get_rooms().then(() => {
+        
+        get_room_bldg_selection().then(() => {
           resetValidation('#update_roomname')
           resetValidation('#update_roomcap')
 
@@ -1784,6 +1785,26 @@
 
           get_sched(selected_roomid)
         })
+
+        // get_rooms().then(() => {
+        //   resetValidation('#update_roomname')
+        //   resetValidation('#update_roomcap')
+
+        //   selected_roomid = $(this).attr('data-id')
+        //   var data = all_rooms.filter(x=>x.id == selected_roomid)
+
+        //   $('#print_sched').attr('data-id', selected_roomid)
+        //   $('#update_roomname').val(data[0].roomname)
+        //   $('#update_roomcap').val(data[0].capacity)
+        //   $('#update_roombuilding').val(data[0].buildingid).change()
+        //   $('#room_name').text(data[0].roomname)
+        //   $('#view_roominfo_modal').modal()
+
+        //   dynamicValidate('#update_roomname', '', /\S+/, (result) => {return result})
+        //   dynamicValidate('#update_roomcap', '', /\S+/, (result) => {return result})
+
+        //   get_sched(selected_roomid)
+        // })
       })
 
       $('#view_roominfo_modal').on('hide.bs.modal', function (e) {
@@ -1862,20 +1883,20 @@
             x => x.buildingid == $('#building').val()).reduce((sum, x) => sum + x.capacity, 0);
           
           // var selected_room_cap = all_rooms.filter(x => x.id == selected_roomid)[0].capacity
-          var selected_bldg_cap_left = total_bldg_cap - total_room_cap
-          var updated_capacity = selected_bldg_cap_left - $('#roomCapacity').val()
+          var new_total_room_cap = parseInt(total_room_cap) + parseInt($('#roomCapacity').val())
 
-
-          if (updated_capacity < 0) {
+          if (new_total_room_cap > total_bldg_cap) {
             Toast.fire({
               type: 'error',
               title: `<p class="text-left" style="margin-bottom: 0;">Create Error:<br/>${selected_bldg[0].description} building capacity limit reached.</p>`,
               timer: 7000
             })
 
+            $('#invRoomCap').text('Max capacity limit reached.')
+            $('#roomCapacity').removeClass('is-valid')
+            $('#roomCapacity').addClass('is-invalid')
+
             isvalid = false
-            updated_capacity = 0
-            selected_bldg_cap_left = 0
           }
         }
 
@@ -1968,6 +1989,8 @@
 
       function get_room_bldg_selection(){
 
+        var deferred = $.Deferred();
+
         // call building
         var bldg_ajax = $.ajax({
           url: "/buildings/get",
@@ -2022,7 +2045,7 @@
                     return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
                   },
                   templateSelection: function(data) {
-                    if (!data.id) { return ''; }
+                    if (!data.id) { return 'Select Building'; }
                     return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
                   }
             })
@@ -2035,16 +2058,19 @@
                     return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
                   },
                 templateSelection: function(data) {
-                  if (!data.id) { return ''; }
+                  if (!data.id) { return 'Select Building'; }
                   return `${data.description} (${data.totalRoomCap} / ${data.capacity})`
                 }
           })
 
+          deferred.resolve();
 
         }).fail(function(error) {
           // Handle error response here
           console.log(error)
         });
+
+        return deferred.promise();
 
       }
 
@@ -2076,7 +2102,8 @@
               rooms_datatable()
 
               // update all_rooms
-              get_rooms()
+              // get_rooms()
+              get_room_bldg_selection()
 
               // hide modal
               $('#room_form_modal').modal('hide')
@@ -2174,16 +2201,17 @@
           // check capacity
           var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
           var total_bldg_cap = selected_bldg[0].capacity
-          var total_room_cap = all_rooms.filter(
+
+
+          var prev_total_room_cap = all_rooms.filter(
             x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
-
+          var prev_room_cap = all_rooms.filter(x => x.id == selected_roomid)[0].capacity
           var curr_room_cap = $('#update_roomcap').val()
-          var bldg_cap_left = total_bldg_cap - curr_room_cap
+
+          var new_total_room_cap = (parseInt(prev_total_room_cap) - parseInt(prev_room_cap)) + parseInt(curr_room_cap)
 
 
-          console.log(bldg_cap_left)
-
-          if (bldg_cap_left < 0) {
+          if (new_total_room_cap > total_bldg_cap) {
             $('#update_roomcap').removeClass('is-valid')
 
             Toast.fire({
@@ -2192,8 +2220,11 @@
               timer: 7000
             })
 
+            $('#invRoomCapUpdate').text('Max capacity limit reached.')
+            $('#update_roomcap').removeClass('is-valid')
+            $('#update_roomcap').addClass('is-invalid')
+
             isvalid = false
-            bldg_cap_left = 0
           }
         }
 
@@ -2215,7 +2246,8 @@
               if (data[0].status == 1) {
                 
                 rooms_datatable()
-                get_rooms()
+                // get_rooms()
+                get_room_bldg_selection()
 
                 Toast.fire({
                   type: 'success',
