@@ -641,8 +641,6 @@
                                     },
                                     templateSelection: function(data) {
 
-                                          console.log(data)
-                                          
                                           if (data.id == 'add') {
                                                 return ``
                                           }
