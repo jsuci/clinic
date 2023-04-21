@@ -2386,10 +2386,10 @@
 
               console.log(isPrevBtnDisabled, noRecordsCount)
 
-              if (!isPrevBtnDisabled && noRecordsCount > 0) {
-                    // click the previous button
-                    prevBtn.click()
-              }
+              // if (!isPrevBtnDisabled && noRecordsCount > 0) {
+              //       // click the previous button
+              //       prevBtn.click()
+              // }
         });
 
       }
