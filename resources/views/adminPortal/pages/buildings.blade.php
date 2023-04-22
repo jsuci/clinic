@@ -1753,6 +1753,9 @@
                               }
                         })
 
+                  } else {
+                        // launch modal
+                        delete_room()
                   }
 
             })
