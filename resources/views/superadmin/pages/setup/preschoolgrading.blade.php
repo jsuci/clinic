@@ -70,16 +70,16 @@
 
 @section('content')
 
-<div class="modal fade" id="modal_1" style="display: none;" aria-hidden="true">
+{{-- <div class="modal fade" id="modal_1" style="display: none;" aria-hidden="true">
       <div class="modal-dialog">
             <div class="modal-content">
                   <div class="modal-body">
                         <div class="row">
                               <div class="col-md-6 form-group">
                                     <div class="icheck-primary d-inline pt-2">
-                                        <input type="checkbox" id="header" >
-                                        <label for="header">Header
-                                        </label>
+                                          <input type="checkbox" id="header" >
+                                          <label for="header">Header
+                                          </label>
                                     </div>
                               </div>
                         </div>
@@ -89,31 +89,30 @@
                                     <textarea class="form-control form-control-sm" id="description" rows="3"></textarea>
                               </div>
                         </div>
-                        {{-- <div class="row">
+                        <div class="row">
                               <div class="col-md-12 form-group">
                                     <label for="">Value</label>
                                     <input type="text" class="form-control form-control-sm" id="value">
                               </div>
-                        </div> --}}
-                        {{-- <div class="row" >
+                        </div>
+                        <div class="row" >
                               <div class="col-md-12 form-group">
                                     <label for="">Sort</label>
                                     <input type="text" class="form-control form-control-sm" id="sort">
                               </div>
                         </div>
-                         --}}
-                       
-                        {{-- <div class="row">
+
+                        <div class="row">
                               <div class="col-md-12 form-group">
                                     <label for="">Group</label>
                                     <input type="text" class="form-control form-control-sm" id="group">
                               </div>
-                        </div> --}}
-                        {{-- <div class="row">
+                        </div>
+                        <div class="row">
                               <div class="col-md-12" id="group_list">
 
                               </div>
-                        </div> --}}
+                        </div>
                   </div>
                   <div class="modal-footer border-0">
                         <button class="btn btn-primary btn-sm" id="create_button_1"><i class="fas fa-copy"></i> CREATE</button>
@@ -121,7 +120,35 @@
                   </div>
             </div>
       </div>
-</div>   
+</div> --}}
+
+<!-- Modal for adding new item -->
+<div class="modal fade" id="item-modal" tabindex="-1" aria-labelledby="item-modal-label" aria-hidden="true">
+      <div class="modal-dialog">
+            <div class="modal-content">
+                  <div class="modal-header">
+                  <h5 class="modal-title" id="item-modal-label">Add Item</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+                  <div class="modal-body">
+                  <div class="form-group">
+                        <label for="header-checkbox">Header</label>
+                        <input id="header-checkbox" name="is_header" type="checkbox" class="form-control">
+                  </div>
+                  <div class="form-group">
+                        <label for="description-input">Description</label>
+                        <input id="description-input" name="description" type="text" class="form-control">
+                  </div>
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button id="create-item-btn" type="button" class="btn btn-primary">Create</button>
+                  </div>
+            </div>
+      </div>
+</div>
 
 <section class="content-header">
       <div class="container-fluid">
@@ -138,14 +165,34 @@
             </div>
       </div>
 </section>
-    
+
 <section class="content pt-0">
       <div class="container-fluid">
             <div class="row">
+                  <div class="col-md-6 text-left">
+                        <button id="add-item-btn" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Add Item</button>
+                        {{-- <button class="btn btn-primary btn-md" id="button_to_modal_1"><i class="fas fa-plus"></i> Add Item</button> --}}
+                  </div>
+                  <div class="col-md-6 text-right">
+                        <div class="input-group">
+                              <input type="search" class="form-control form-control-md" placeholder="Type your keywords here">
+                              <div class="input-group-append">
+                                    <button type="submit" class="btn btn-md btn-default">
+                                          <i class="fa fa-search"></i>
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+
+            <div id="item-container" class="row mt-4">
+                  <!-- items will be added dynamically here -->
+            </div>
+            
+            {{-- <div class="row mt-3">
                   <div class="col-md-12">
                         <div class="card shadow" >
                               <div class="card-header">
-                                   
                               </div>
                               <div class="card-body">
                                     <div class="row ">
@@ -169,7 +216,7 @@
                               </div>
                         </div>
                   </div>
-            </div>
+            </div> --}}
       </div>
 </section>
 
@@ -181,7 +228,37 @@
       <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
       <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
 
-      <script>
+      <script type="text/javascript">
+            // add item button click event
+            $('#add-item-btn').on('click', function() {
+                  $('#item-modal').modal('show');
+            });
+
+            // create item on click of create button
+            $('#create-item-btn').on('click', function() {
+                  // get values from modal
+                  var isHeader = $('#header-checkbox').prop('checked');
+                  var description = $('#description-input').val();
+
+                  // create card html
+                  var cardHtml = '<div class="col-md-12 mb-3">' +
+                                          '<div class="card">' +
+                                          '<div class="card-body">' +
+                                                '<p ' + (isHeader ? 'class="card-header"' : '') + '>' + description + '</p>' +
+                                                '<p class="card-text">This is a sample card.</p>' +
+                                          '</div>' +
+                                          '</div>' +
+                                    '</div>';
+
+                  // append card to container
+                  $('#item-container').append(cardHtml);
+
+                  // hide modal
+                  $('#item-modal').modal('hide');
+            });
+      </script>
+
+      {{-- <script>
             $(document).ready(function(){
 
                   const Toast = Swal.mixin({
@@ -393,7 +470,7 @@
 
 
             })
-      </script>
+      </script> --}}
 
       <script>
             $(document).ready(function(){
