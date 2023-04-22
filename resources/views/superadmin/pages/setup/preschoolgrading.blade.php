@@ -1,12 +1,49 @@
 @php
-      if(auth()->user()->type == 17){
-            $extend = 'superadmin.layouts.app2';
-      }else if(auth()->user()->type == 2){
-            $extend = 'principalsportal.layouts.app2';
-      }
+
+    
+    $check_refid = DB::table('usertype')->where('id',Session::get('currentPortal'))->select('refid')->first();
+
+    if(Session::get('currentPortal') == 14){    
+		$extend = 'deanportal.layouts.app2';
+	}else if(Session::get('currentPortal') == 3){
+        $extend = 'registrar.layouts.app';
+    }else if(Session::get('currentPortal') == 8){
+        $extend = 'admission.layouts.app2';
+    }else if(Session::get('currentPortal') == 1){
+        $extend = 'teacher.layouts.app';
+    }else if(Session::get('currentPortal') == 2){
+        $extend = 'principalsportal.layouts.app2';
+    }else if(Session::get('currentPortal') == 4){
+         $extend = 'finance.layouts.app';
+    }else if(Session::get('currentPortal') == 15){
+         $extend = 'finance.layouts.app';
+    }else if(Session::get('currentPortal') == 18){
+        $extend = 'ctportal.layouts.app2';
+    }else if(Session::get('currentPortal') == 10){
+        $extend = 'hr.layouts.app';
+    }else if(Session::get('currentPortal') == 16){
+        $extend = 'chairpersonportal.layouts.app2';
+    }else if(auth()->user()->type == 16){
+        $extend = 'chairpersonportal.layouts.app2';
+    }else{
+        if(isset($check_refid->refid)){
+            if($check_refid->refid == 27){
+                $extend = 'academiccoor.layouts.app2';
+            }else if($check_refid->refid == 22){
+                $extend = 'principalcoor.layouts.app2';
+            }else if($check_refid->refid == 29){
+                $extend = 'idmanagement.layouts.app2';
+            }else{
+                $extend = 'general.defaultportal.layouts.app';
+            }
+        }else{
+            $extend = 'general.defaultportal.layouts.app';
+        }
+    }
 @endphp
 
 @extends($extend)
+ 
 
 @section('pagespecificscripts')
       <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
