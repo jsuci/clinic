@@ -1032,7 +1032,6 @@
                               // Resolve the Deferred object
                               dtDeferred.resolve(json);
                         },
-                        order: [[0, 'asc']],
                         columns: [
                                     { "data": "description" },
                                     { "data": "capacity" },
@@ -1056,14 +1055,14 @@
                               },
                               {
                                     'targets': 2,
-                                    'orderable': true, 
+                                    'orderable': false, 
                                     'createdCell':  function (td, cellData, rowData, row, col) {
                                                 $(td).addClass('align-middle')
                                     }
                               },
                               {
                                     'targets': 3,
-                                    'orderable': true, 
+                                    'orderable': false, 
                                     'createdCell':  function (td, cellData, rowData, row, col) {
                                           $(td).addClass('align-middle')
                                     }
@@ -1755,7 +1754,7 @@
 
                   } else {
                         // launch modal
-                        delete_room()
+                        $('#room_form_modal').modal()
                   }
 
             })
