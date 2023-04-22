@@ -331,12 +331,16 @@
       <script>
             
             var all_buildings = []
+            var all_rooms_except = []
+
             var buildings_datatable = []
             var rooms_datatable_instance = null
+
             var selected_bldg_id = null
+            var selected_bldg_name = ''
+
             var selected_room_id = null
             var selected_room_name = ''
-            var selected_bldg_name = ''
 
             var currRoomCapacity = 0
             var currBldgCapacity = 0
@@ -350,7 +354,7 @@
             var connected_stat = false
             var is_form_valid = false;
             var room_process = null;
-            var all_rooms_except = []
+            
 
             var room_selection_id = ''
             var room_selection_name = ''
@@ -1246,25 +1250,61 @@
             function update_room() {
                   var isvalid = true
 
+                  // check empty string for roomName
                   if ($('#roomName').hasClass('is-invalid')) {
                         Toast.fire({
-                              type: 'warning',
-                              title: 'Room Name empty',
+                              type: 'error',
+                              title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Room Name empty</p>',
                               timer: 5000
                         })
 
                         isvalid = false
                   }
                   
-                  else if ($('#roomCapacity').hasClass('is-invalid')) {
+                  // check empty value for roomCapacity
+                  if ($('#roomCapacity').hasClass('is-invalid')) {
                         Toast.fire({
-                              type: 'warning',
-                              title: 'Room Capacity empty',
+                              type: 'error',
+                              title: '<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>Room Capacity empty</p>',
                               timer: 5000
                         })
 
                         isvalid = false
                   }
+
+                  // check capacity
+                  console.log(room_selected)
+                  console.log(all_buildings)
+
+                  if (room_selected['buildingid'] != null) {
+                        var bldg_data = all_buildings.filter(x => x.id == room_selected['buildingid'])
+                        var total_bldg_cap = bldg_data[0].capacity
+                        var blg_name = bldg_data[0].description
+                        var total_room_cap = all_rooms_except.filter(x => x.buildingid == room_selected['buildingid']).reduce((sum, x) => sum + x.capacity, 0);
+
+                        var prev_room_cap = all_rooms_except.filter(x => x.id == room_selected['id'])[0].capacity
+                        var curr_room_cap = $('#roomCapacity').val()
+
+                        var new_total_bldg_cap = (parseInt(total_room_cap) - parseInt(prev_room_cap)) + parseInt(curr_room_cap)
+
+                        if (new_total_bldg_cap > total_bldg_cap) {
+                              $('#roomCapacity').removeClass('is-valid')
+                              $('#roomCapacity').addClass('is-invalid')
+
+                              $('#invRoomCap').text('Max capacity limit reached.')
+
+                              Toast.fire({
+                              type: 'error',
+                              title: `<p class="text-left" style="margin-bottom: 0;">Update Error:<br/>${blg_name} building capacity limit reached.</p>`,
+                              timer: 7000
+                              })
+
+                              isvalid = false
+                        }
+                  }
+
+
+
 
                   if (isvalid) {
                         $("#create_room").prop("disabled", true);
@@ -1274,7 +1314,7 @@
                               url: '/rooms/update',
                               data:{
                                     // do not attach to a building
-                                    building: null,
+                                    building: room_selected['buildingid'],
                                     roomname: $('#roomName').val(),
                                     capacity: $('#roomCapacity').val(),
                                     id: $('#assignRoom').val()
@@ -1525,7 +1565,7 @@
                         var temp_bldg_selected = all_buildings.filter(x => x.id == temp_room_selected['buildingid'])[0]
 
                         Swal.fire({
-                              html: `Room <b>${temp_room_selected['text']}</b> is already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room?`,
+                              html: `This room <b>${temp_room_selected['text']}</b> is already assigned to <b>${temp_bldg_selected['description']}</b> building.<br/>Are you sure you want to re-assign this room to <b>${selected_bldg_name}</b>?`,
                               type: 'warning',
                               showCancelButton: true,
                               confirmButtonColor: '#d33', //'#3085d6'
