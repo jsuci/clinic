@@ -1601,9 +1601,6 @@
       var selected_roomid = null
 
       rooms_datatable()
-      // get_buildings()
-      // get_rooms()
-
       get_room_bldg_selection()
 
       // $('#secttea').select2()
@@ -2198,23 +2195,10 @@
               isvalid = false
         }
 
-        // check blank selection for update_roombuilding
-        // if ($('#update_roombuilding').val() == '') {
-        //       Toast.fire({
-        //             type: 'error',
-        //             title: 'Update Error: Building cannot be empty.',
-        //             timer: 9000
-        //       })
-
-        //       isvalid = false
-        // }
-
-
+        // check capacity
         if ($('#update_roombuilding').val() != '') {
-          // check capacity
           var selected_bldg = all_building.filter(x => x.id == $('#update_roombuilding').val())
           var total_bldg_cap = selected_bldg[0].capacity
-
 
           var prev_total_room_cap = all_rooms.filter(
             x => x.buildingid == $('#update_roombuilding').val()).reduce((sum, x) => sum + x.capacity, 0);
