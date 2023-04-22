@@ -893,9 +893,16 @@
                                     success:function(data) {
                                           if(data[0].status == 1){
 
-                                                // var bldgTable = $('#buildings_datatable').DataTable()
-                                                // bldgTable.state.clear()
-                                                buildingDatatable()
+                                                // render building datatable
+                                                buildingDatatable().then(data => {
+                                                      var table = $('#buildings_datatable').DataTable();
+                                                      var pageLength = table.page.len();
+                                                      var totalRecords = data.recordsFiltered
+
+                                                      if (totalRecords % pageLength == 0) {
+                                                            table.page('previous').draw('page');
+                                                      }
+                                                })
 
                                                 // get latest building data
                                                 getBuildings()
@@ -1019,7 +1026,7 @@
                         },
                         initComplete: function(settings, json) {
                               // Resolve the Deferred object
-                              dtDeferred.resolve();
+                              dtDeferred.resolve(json);
                         },
                         order: [[0, 'asc']],
                         columns: [
@@ -1072,18 +1079,9 @@
                   }else{
                         $(label_text)[0].innerHTML = ''
                   }
-
-                  dtDeferred.promise().then(function() {
-                        // code to execute after the DataTable has finished initializing
-                        var prevBtn = $('#buildings_datatable_previous')
-                        var isPrevBtnDisabled = prevBtn.hasClass('disabled')
-                        var noRecordsCount = $(`td[class='dataTables_empty']`).length
-
-                        if (!isPrevBtnDisabled && noRecordsCount == 2) {
-                              // click the previous button
-                              prevBtn.click()
-                        }
-                  });
+                  
+                  
+                  return dtDeferred.promise()
 
 
             }
@@ -1118,7 +1116,7 @@
                         ],
                         initComplete: function(settings, json) {
                               // Resolve the Deferred object
-                              dtDeferred.resolve();
+                              dtDeferred.resolve(json);
                         },
                         columnDefs: [
                               {
@@ -1290,7 +1288,7 @@
                                           getRoomsExcept(selected_bldg_id)
 
                                           // update rooms datatable
-                                          // roomDatatable()
+                                          roomDatatable()
 
                                           // update capacity
                                           updateTotalBldgLeftRoomCap()
