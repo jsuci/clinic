@@ -194,7 +194,7 @@ class BuildingController extends \App\Http\Controllers\Controller
             if($check > 0){
                 return array((object)[
                     'status'=>0,
-                    'message'=>'<p class="text-left" style="margin-bottom: 0;">Delete Error:<br/>Building is currently in used</p>',
+                    'message'=>'Building in used',
                     'icon'=>'error'
                 ]);
             }
@@ -438,8 +438,14 @@ class BuildingController extends \App\Http\Controllers\Controller
             $search = $request->get('search');
             $search = $search['value'];
 
+            $order = $request->get('order')[0];
+            $order_col = $order['column'];
+            $order_dir = $order['dir'];
+    
+            $columns = ['description', 'capacity'];
+
             $all_buildings = DB::table('building')
-            ->orderBy('createddatetime', 'asc')
+            ->orderBy($columns[$order_col], $order_dir)
             ->where('deleted', 0)
             ->where(function($query) use($search){
                 if($search != null){
