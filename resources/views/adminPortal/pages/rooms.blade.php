@@ -2132,8 +2132,20 @@
               // hide modal
               $('#view_roominfo_modal').modal('hide')
 
-              // reload rooms datatable
-              rooms_datatable()
+              // render datatable
+
+              rooms_datatable().then(data => {
+                var table = $('#rooms_datatable').DataTable();
+                var pageLength = table.page.len();
+                var totalRecords = data.recordsFiltered
+
+
+                if (totalRecords % pageLength == 0) {
+                  table.page( 'previous' ).draw( 'page' );
+                }
+              })
+
+              // update selections
               get_room_bldg_selection()
 
             }
@@ -2287,7 +2299,7 @@
               },
               initComplete: function(settings, json) {
                 // Resolve the Deferred object
-                dtDeferred.resolve();
+                dtDeferred.resolve(json);
               },
               columns: [
                     { "data": "roomname" },
@@ -2378,20 +2390,8 @@
         var label_text = $($('#rooms_datatable_wrapper')[0].children[0])[0].children[0]
         $(label_text)[0].innerHTML = '<button class="btn btn-sm btn-primary" title="Room" id="create_room_button">Create Room</button>'
 
-        dtDeferred.promise().then(function() {
-              // code to execute after the DataTable has finished initializing
-              var prevBtn = $('#rooms_datatable_previous')
-              var isPrevBtnDisabled = prevBtn.hasClass('disabled')
-              var noRecordsCount = $(`td[class='dataTables_empty']`).length
 
-              console.log(isPrevBtnDisabled, noRecordsCount)
-
-              // if (!isPrevBtnDisabled && noRecordsCount > 0) {
-              //       // click the previous button
-              //       prevBtn.click()
-              // }
-        });
-
+        return dtDeferred.promise()
       }
 
       function dynamicValidate(inputSelector, btnSelector, patternStr, callback) {
