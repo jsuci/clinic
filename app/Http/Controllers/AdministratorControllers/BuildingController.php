@@ -471,6 +471,7 @@ class BuildingController extends \App\Http\Controllers\Controller
 
             // Combine the data and calculate totalBldgCapacityLeft
             $buildings = collect($all_buildings)->map(function ($building) use ($all_rooms) {
+
                 $totalRoomCapacity = $all_rooms->where('buildingid', $building->id)->sum('capacity');
                 $totalBldgCapacityLeft = $building->capacity - $totalRoomCapacity;
                 return [
@@ -480,6 +481,7 @@ class BuildingController extends \App\Http\Controllers\Controller
                     'totalBldgCapacityLeft' => $totalBldgCapacityLeft,
                     'totalRoomCapacity' => $totalRoomCapacity,
                 ];
+                
             });
 
             // dd($buildings);
