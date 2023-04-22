@@ -243,10 +243,12 @@
                   // create card html
                   var cardHtml = '<div class="col-md-12 mb-3">' +
                                           '<div class="card">' +
-                                          '<div class="card-body">' +
-                                                '<p ' + (isHeader ? 'class="card-header"' : '') + '>' + description + '</p>' +
-                                                '<p class="card-text">This is a sample card.</p>' +
-                                          '</div>' +
+                                                '<div class="card-header bg-primary">' +
+                                                      '<h3 ' + (isHeader ? 'class="card-header"' : '') + '>' + description + '</h3>' +
+                                                '</div>' +
+                                                '<div class="card-body">' +
+                                                      '<p class="card-text">This is a sample card.</p>' +
+                                                '</div>' +
                                           '</div>' +
                                     '</div>';
 
