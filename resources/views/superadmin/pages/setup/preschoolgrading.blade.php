@@ -267,8 +267,7 @@
                                                 <p class="card-text">This is a sample card.</p>
                                           </div>
                                     </div>
-                              </div>
-                        `;
+                              </div>`;
 
                         // append card to container
                         $('#item-container').append(cardHtml);
@@ -279,12 +278,8 @@
 
                   // maximize button click event
                   $(document).on('click', '.btn-maximize', function() {
-                        var card = $(this).closest('.card');
-                        if (card.hasClass('maximized-card')) {
-                              card.removeClass('maximized-card');
-                        } else {
-                              card.addClass('maximized-card');
-                        }
+                        $(this).find("i").toggleClass("fa-expand fa-compress");
+                        $(this).closest(".card").toggleClass("maximized-card");
                   });
 
 
