@@ -282,6 +282,11 @@
                         $(this).closest(".card").toggleClass("maximized-card");
                   });
 
+                  // add event listener to collapse button
+                  $(document).on('click', '.btn-collapse', function() {
+                        $(this).find("i").toggleClass("fa-plus fa-minus");
+                        $(this).closest(".card").find(".card-body").slideToggle();
+                  });
 
             })
       </script>
