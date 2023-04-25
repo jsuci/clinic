@@ -229,35 +229,66 @@
       <script src="{{asset('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.js') }}"></script>
 
       <script type="text/javascript">
-            // add item button click event
-            $('#add-item-btn').on('click', function() {
-                  $('#item-modal').modal('show');
-            });
+            $(document).ready(function(){
 
-            // create item on click of create button
-            $('#create-item-btn').on('click', function() {
-                  // get values from modal
-                  var isHeader = $('#header-checkbox').prop('checked');
-                  var description = $('#description-input').val();
+                  // add item button click event
+                  $('#add-item-btn').on('click', function() {
+                        $('#item-modal').modal('show');
+                  });
 
-                  // create card html
-                  var cardHtml = '<div class="col-md-12 mb-3">' +
-                                          '<div class="card">' +
-                                                '<div class="card-header bg-primary">' +
-                                                      '<h3 ' + (isHeader ? 'class="card-header"' : '') + '>' + description + '</h3>' +
-                                                '</div>' +
-                                                '<div class="card-body">' +
-                                                      '<p class="card-text">This is a sample card.</p>' +
-                                                '</div>' +
-                                          '</div>' +
-                                    '</div>';
+                  // create item on click of create button
+                  $('#create-item-btn').on('click', function() {
+                        // get values from modal
+                        var isHeader = $('#header-checkbox').prop('checked');
+                        var description = $('#description-input').val();
 
-                  // append card to container
-                  $('#item-container').append(cardHtml);
+                        // create card html
+                        var cardHtml = `
+                              <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                          <div class="card-header bg-primary">
+                                                <div class="row" style="align-items:center;">
+                                                      <div class="col-md-10 text-left">
+                                                            <h3 ${isHeader ? 'class="card-title"' : ''}>${description}</h3>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                            <div class="row" style="justify-content:flex-end;">
+                                                                  <button type="button" class="btn btn-tool btn-collapse">
+                                                                        <i class="fa fa-plus"></i>
+                                                                  </button>
+                                                                  <button type="button" class="btn btn-tool btn-maximize">
+                                                                        <i class="fas fa-expand"></i>
+                                                                  </button>
+                                                            </div>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                          <div class="card-body">
+                                                <p class="card-text">This is a sample card.</p>
+                                          </div>
+                                    </div>
+                              </div>
+                        `;
 
-                  // hide modal
-                  $('#item-modal').modal('hide');
-            });
+                        // append card to container
+                        $('#item-container').append(cardHtml);
+
+                        // hide modal
+                        $('#item-modal').modal('hide');
+                  });
+
+                  // maximize button click event
+                  $(document).on('click', '.btn-maximize', function() {
+                        var card = $(this).closest('.card');
+                        if (card.hasClass('maximized-card')) {
+                              card.removeClass('maximized-card');
+                        } else {
+                              card.addClass('maximized-card');
+                        }
+                  });
+
+
+            })
       </script>
 
       {{-- <script>
