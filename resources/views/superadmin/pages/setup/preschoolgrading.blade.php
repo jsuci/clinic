@@ -152,7 +152,7 @@
 
 <section class="content-header">
       <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row mb-4">
                   <div class="col-sm-6">
                         <h1>Pre-School Grading</h1>
                   </div>
@@ -163,14 +163,10 @@
                   </ol>
                   </div>
             </div>
-      </div>
-</section>
 
-<section class="content pt-0">
-      <div class="container-fluid">
             <div class="row">
                   <div class="col-md-6 text-left">
-                        <button id="add-item-btn" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Add Item</button>
+                        <button id="add-item-btn" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Add Entry</button>
                         {{-- <button class="btn btn-primary btn-md" id="button_to_modal_1"><i class="fas fa-plus"></i> Add Item</button> --}}
                   </div>
                   <div class="col-md-6 text-right">
@@ -184,6 +180,11 @@
                         </div>
                   </div>
             </div>
+      </div>
+</section>
+
+<section class="content px-2">
+      <div class="container-fluid">
 
             <div id="item-container" class="row mt-4">
                   <!-- items will be added dynamically here -->
