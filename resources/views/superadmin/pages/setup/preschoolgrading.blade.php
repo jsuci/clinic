@@ -238,73 +238,78 @@
       <script type="text/javascript">
             $(document).ready(function(){
 
-                  // add item button click event
-                  $('#add-item-btn').on('click', function() {
-                        $('#item-modal').modal('show');
-                  });
+                var SYID = 3;
 
-                  // create item on click of create button
-                  $('#create-item-btn').on('click', function() {
-                        // get values from modal
-                        var isHeader = $('#header-checkbox').prop('checked');
-                        var description = $('#description-input').val();
-                        var cardHtml = ''
+                // add item button click event
+                $('#add-item-btn').on('click', function() {
+                    $('#item-modal').modal('show');
+                });
 
-                        if (isHeader) {
-                              cardHtml = `
-                              <div class="col-md-12 mb-3">
-                                    <div class="card">
-                                          <div class="card-header bg-primary">
-                                                <div class="row" style="align-items:center;">
-                                                      <div class="col-md-10 text-left">
-                                                            <h3 class="card-title">${description}</h3>
-                                                      </div>
-                                                      <div class="col-md-2">
-                                                            <div class="row" style="justify-content:flex-end;">
-                                                            <button type="button" class="btn btn-tool btn-collapse">
-                                                                  <i class="fa fa-plus"></i>
-                                                            </button>
-                                                            <button type="button" class="btn btn-tool btn-maximize">
-                                                                  <i class="fas fa-expand"></i>
-                                                            </button>
-                                                            </div>
-                                                      </div>
-                                                </div>
-                                          </div>
-                                          <div class="card-body">
-                                                <p class="card-text"></p>
-                                          </div>
-                                    </div>
-                              </div>`;
-                        } else {
-                              cardHtml = `
-                              <div class="col-md-12 mb-3">
-                                    <div class="card">
-                                          <div class="card-body">
-                                                <p class="card-text">${description}</p>
-                                          </div>
-                                    </div>
-                              </div>`;
-                        }
+                // create item on click of create button
+                $('#create-item-btn').on('click', function() {
+                    // get values from modal
+                    var isHeader = $('#header-checkbox').prop('checked');
+                    var description = $('#description-input').val();
+                    var cardHtml = ''
 
-                        // append card to container
-                        $('#item-container').append(cardHtml);
+                    if (isHeader) {
+                            cardHtml = `
+                            <div class="col-md-12 mb-3">
+                                <div class="card">
+                                        <div class="card-header bg-primary">
+                                            <div class="row" style="align-items:center;">
+                                                    <div class="col-md-10 text-left">
+                                                        <h3 class="card-title">${description}</h3>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="row" style="justify-content:flex-end;">
+                                                        <button type="button" class="btn btn-tool btn-collapse">
+                                                                <i class="fa fa-plus"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-tool btn-maximize">
+                                                                <i class="fas fa-expand"></i>
+                                                        </button>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                            </div>
+                                            <div class="row">
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>`;
+                    } else {
+                            cardHtml = `
+                            <div class="col-md-12 mb-3">
+                                <div class="card">
+                                        <div class="card-body">
+                                            <p class="card-text">${description}</p>
+                                        </div>
+                                </div>
+                            </div>`;
+                    }
 
-                        // hide modal
-                        $('#item-modal').modal('hide');
-                  });
+                    // append card to container
+                    $('#item-container').append(cardHtml);
 
-                  // maximize button click event
-                  $(document).on('click', '.btn-maximize', function() {
-                        $(this).find("i").toggleClass("fa-expand fa-compress");
-                        $(this).closest(".card").toggleClass("maximized-card");
-                  });
+                    // hide modal
+                    $('#item-modal').modal('hide');
+                });
 
-                  // add event listener to collapse button
-                  $(document).on('click', '.btn-collapse', function() {
-                        $(this).find("i").toggleClass("fa-plus fa-minus");
-                        $(this).closest(".card").find(".card-body").slideToggle();
-                  });
+                // maximize button click event
+                $(document).on('click', '.btn-maximize', function() {
+                    $(this).find("i").toggleClass("fa-expand fa-compress");
+                    $(this).closest(".card").toggleClass("maximized-card");
+                });
+
+                // add event listener to collapse button
+                $(document).on('click', '.btn-collapse', function() {
+                    $(this).find("i").toggleClass("fa-plus fa-minus");
+                    $(this).closest(".card").find(".card-body").slideToggle();
+                });
 
             })
       </script>
@@ -352,7 +357,6 @@
                         }else{
                               udpate_1()
                         }
-                        
                   })
 
                   function udpate_1(){
