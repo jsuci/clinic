@@ -127,24 +127,30 @@
       <div class="modal-dialog">
             <div class="modal-content">
                   <div class="modal-header">
-                  <h5 class="modal-title" id="item-modal-label">Add Item</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                  </button>
+                        <h5 class="modal-title" id="item-modal-label">Add Entry</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                        </button>
                   </div>
                   <div class="modal-body">
-                  <div class="form-group">
-                        <label for="header-checkbox">Header</label>
-                        <input id="header-checkbox" name="is_header" type="checkbox" class="form-control">
-                  </div>
-                  <div class="form-group">
-                        <label for="description-input">Description</label>
-                        <input id="description-input" name="description" type="text" class="form-control">
-                  </div>
+                        {{-- <div class="form-group">
+                              <label for="header-checkbox">Header</label>
+                              <input id="header-checkbox" name="is_header" type="checkbox" class="form-control">
+                        </div> --}}
+                        <div class="form-group">
+                              <label for="description-input">Description</label>
+                              {{-- <input id="description-input" name="description" type="text" class="form-control"> --}}
+                              <textarea id="description-input" name="description" type="text" class="form-control"></textarea>
+                        </div>
+                        <div class="form-check">
+                              <input id="header-checkbox" name="is_header" type="checkbox" class="form-check-input">
+                              <label for="header-checkbox">Header</label>
+                              {{-- <label for="header-checkbox">Header</label> --}}
+                        </div>
                   </div>
                   <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button id="create-item-btn" type="button" class="btn btn-primary">Create</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="create-item-btn" type="button" class="btn btn-primary">Create</button>
                   </div>
             </div>
       </div>
@@ -242,33 +248,44 @@
                         // get values from modal
                         var isHeader = $('#header-checkbox').prop('checked');
                         var description = $('#description-input').val();
+                        var cardHtml = ''
 
-                        // create card html
-                        var cardHtml = `
+                        if (isHeader) {
+                              cardHtml = `
                               <div class="col-md-12 mb-3">
                                     <div class="card">
                                           <div class="card-header bg-primary">
                                                 <div class="row" style="align-items:center;">
                                                       <div class="col-md-10 text-left">
-                                                            <h3 ${isHeader ? 'class="card-title"' : ''}>${description}</h3>
+                                                            <h3 class="card-title">${description}</h3>
                                                       </div>
                                                       <div class="col-md-2">
                                                             <div class="row" style="justify-content:flex-end;">
-                                                                  <button type="button" class="btn btn-tool btn-collapse">
-                                                                        <i class="fa fa-plus"></i>
-                                                                  </button>
-                                                                  <button type="button" class="btn btn-tool btn-maximize">
-                                                                        <i class="fas fa-expand"></i>
-                                                                  </button>
+                                                            <button type="button" class="btn btn-tool btn-collapse">
+                                                                  <i class="fa fa-plus"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-tool btn-maximize">
+                                                                  <i class="fas fa-expand"></i>
+                                                            </button>
                                                             </div>
                                                       </div>
                                                 </div>
                                           </div>
                                           <div class="card-body">
-                                                <p class="card-text">This is a sample card.</p>
+                                                <p class="card-text"></p>
                                           </div>
                                     </div>
                               </div>`;
+                        } else {
+                              cardHtml = `
+                              <div class="col-md-12 mb-3">
+                                    <div class="card">
+                                          <div class="card-body">
+                                                <p class="card-text">${description}</p>
+                                          </div>
+                                    </div>
+                              </div>`;
+                        }
 
                         // append card to container
                         $('#item-container').append(cardHtml);
